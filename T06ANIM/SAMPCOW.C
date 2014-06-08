@@ -1,7 +1,7 @@
 /* FILENAME: SAMPCOW.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #include <stdio.h>
@@ -11,31 +11,34 @@
 
 #include "anim.h"
 
-/* Структура описания объекта анимации */
+/* Unit cow struct definition */
 typedef struct tagrk2UNIT_COW
 {
-  RK2_UNIT_BASE_FIELDS; /* Включение базовых полей */
-  DBL ShiftX, ShiftY;   /* Смещение */
-  INT Type;             /* Вид */
+  RK2_UNIT_BASE_FIELDS; /* Base fields */
+  DBL ShiftX, ShiftY;   /* shift from screen left top point */
+  INT Type;             /* Type */
 } rk2UNIT_COW;
 
-/* Функция инициализации объекта анимации.
+/* Unit Cow initialization function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT_COW *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
 static VOID CowUnitInit( rk2UNIT_COW *Unit, rk2ANIM *Ani )
 {
+  Unit->ShiftX = (DBL)Ani->W * rand() / RAND_MAX;
+  Unit->ShiftY = (DBL)Ani->H * rand() / RAND_MAX;
+  Unit->Type = rand() % 2;
 } /* End of 'CowUnitInit' function */
 
-/* Функция деинициализации объекта анимации.
+/* Unit Cow destructor function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT_COW *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -43,11 +46,11 @@ static VOID CowUnitClose( rk2UNIT_COW *Unit, rk2ANIM *Ani )
 {
 } /* End of 'CowUnitClose' function */
 
-/* Функция обновления межкадровых параметров объекта анимации.
+/* Unit Cow update unit function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT_COW *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -55,11 +58,11 @@ static VOID CowUnitResponse( rk2UNIT_COW *Unit, rk2ANIM *Ani )
 {
 } /* End of 'CowUnitResponse' function */
 
-/* Функция построения объекта анимации.
+/* Unit Cow rendering function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT_COW *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -75,25 +78,23 @@ static VOID CowUnitRender( rk2UNIT_COW *Unit, rk2ANIM *Ani )
     Ellipse(Ani->hDC, x, y, x + 30, y + 30);
 } /* End of 'RK2_AnimUnitRender' function */
 
-/* Функция создания объекта анимации.
+/* Creating unit cow animation function.
  * ARGUMENTS: None.
  * RETURNS:
- *   (rk2UNIT *) указатель на созданный объект анимации.
+ *   (rk2UNIT *) Pointer for created animation object.
  */
-rk2UNIT * RK2_CowUnitCreate( VOID )
+rk2UNIT *RK2_CowUnitCreate( VOID )
 {
   rk2UNIT_COW *Unit;
 
   if ((Unit = (rk2UNIT_COW *)RK2_AnimUnitCreate(sizeof(rk2UNIT_COW))) == NULL)
     return NULL;
-  /* заполняем поля по-умолчанию */
+  /* Filling standart pointers */
   Unit->Init = (VOID *)CowUnitInit;
   Unit->Close = (VOID *)CowUnitClose;
   Unit->Response = (VOID *)CowUnitResponse;
   Unit->Render = (VOID *)CowUnitRender;
-  Unit->ShiftX = 30 * 30.59 * rand() / RAND_MAX;
-  Unit->ShiftY = 30 * 30.59 * rand() / RAND_MAX;
-  Unit->Type = rand() % 2;
+
   return (rk2UNIT *)Unit;
 } /* End of 'RK2_CowUnitCreate' function */
 

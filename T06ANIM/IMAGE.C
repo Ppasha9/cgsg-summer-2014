@@ -1,17 +1,17 @@
 /* FILENAME: IMAGE.C
  * PROGRAMMER: RK2
  * PURPOSE: Image handle functions
- * LAST UPDATE: 06.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #include "image.h"
 
-/* Функция загрузки изображения.
+/* Loading picture from file function.
  * ARGUMENTS:
- *   - указатель на обрабатываемую картинку:
+ *   - Pointer to new picture:
  *       IMAGE *Img;
- *   - имя загружаемого файла:
- *       HDC hDC;
+ *   - File Name:
+ *       CHAR *FileName;
  * RETURNS:
  *   (BOOL) результат загрузки (TRUE - успешно).
  */
@@ -66,9 +66,9 @@ BOOL ImageLoad( IMAGE *Img, CHAR *FileName )
   return Img->hBm != NULL;
 } /* End of 'ImageLoad' function */
 
-/* Функция освобождения памяти из-под изображения.
+/* Free image memory function.
  * ARGUMENTS:
- *   - указатель на обрабатываемую картинку:
+ *   - pointer for picture:
  *       IMAGE *Img;
  * RETURNS: None.
  */
@@ -83,14 +83,14 @@ VOID ImageFree( IMAGE *Img )
   Img->Bits = NULL;
 } /* End of 'ImageFree' function */
 
-/* Функция получения цвета точки изображения.
+/* Getting imager point color function.
  * ARGUMENTS:
- *   - указатель на обрабатываемую картинку:
+ *   - Pointer for image::
  *       IMAGE *Img;
- *   - координаты получаемой точки:
+ *   - Position of point:
  *       INT X, Y;
  * RETURNS:
- *   (DWORD) цвет получаемой точки.
+ *   (DWORD) Color of point.
  */
 DWORD ImageGetP( IMAGE *Img, INT X, INT Y )
 {

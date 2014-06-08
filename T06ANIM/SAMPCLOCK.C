@@ -1,7 +1,7 @@
 /* FILENAME: SAMPCLOCK.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #include <stdio.h>
@@ -11,17 +11,17 @@
 
 #include "anim.h"
 
-/* Структура описания объекта анимации */
+/* Clock unit struct definition. */
 typedef struct tagrk2UNIT_CLOCK
 {
-  RK2_UNIT_BASE_FIELDS; /* Включение базовых полей */
+  RK2_UNIT_BASE_FIELDS; /* Include bas fields */
 } rk2UNIT_CLOCK;
 
-/* Функция инициализации объекта анимации.
+/* Clock unit initialization function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT_CLOCK *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -29,11 +29,11 @@ static VOID UnitClockInit( rk2UNIT_CLOCK *Unit, rk2ANIM *Ani )
 {
 } /* End of 'UnitClockInit' function */
 
-/* Функция деинициализации объекта анимации.
+/* Clock unit destructor function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT_CLOCK *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -41,11 +41,12 @@ static VOID UnitClockClose( rk2UNIT_CLOCK *Unit, rk2ANIM *Ani )
 {
 } /* End of 'UnitClockClose' function */
 
-/* Функция обновления межкадровых параметров объекта анимации.
+/* Clock Unit changing parametres function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ * ARGUMENTS:
+ *   - Self pointer:
  *       rk2UNIT_CLOCK *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -53,7 +54,7 @@ static VOID UnitClockResponse( rk2UNIT_CLOCK *Unit, rk2ANIM *Ani )
 {
 } /* End of 'UnitClockResponse' function */
 
-/* Drawing clock arrow function
+/* Drawing clock arrow function.
  * ARGUMENTS:
  *   - handle to draw:
  *       HDC hDC;
@@ -65,37 +66,38 @@ static VOID UnitClockResponse( rk2UNIT_CLOCK *Unit, rk2ANIM *Ani )
  *       DBL Angle;
  * RETURNS: None.
  */
-static VOID UnitClockDrawArrow( HDC hDC, INT X, INT Y, DBL LenArrow, DBL Angle, DWORD Color )
+static VOID UnitClockDrawArrow( HDC hDC, INT X, INT Y, DBL LenArrowX, DBL LenArrowY, DBL Angle, DWORD Color )
 {
-  DBL X0, Y0, X1, Y1, ancos = cos(Angle - 3.14 / 2), ansin = sin(Angle - 3.14 / 2);
-  
-  
+  DBL ancos = cos(Angle + MATH_PI * 3 / 2), ansin = sin(Angle + MATH_PI * 3 / 2);
+    
   POINT pts[] = 
   {
     {X, Y}, 
-    {X + ancos * LenArrow, Y + ansin * LenArrow},
-    {X + ansin * LenArrow / 6, Y - ancos * LenArrow / 6},
-    {X - ansin * LenArrow / 6, Y + ancos * LenArrow / 6}
+    {X + ansin * LenArrowY, Y - ancos * LenArrowY},
+    {X + ancos * LenArrowX, Y + ansin * LenArrowX },
+    {X - ansin * LenArrowY, Y + ancos * LenArrowY},
+    {X - ancos * LenArrowY, Y - ansin * LenArrowY},
+    {X + ansin * LenArrowY, Y - ancos * LenArrowY},
+    {X, Y}
   };
-  /*
-  POINT pts[] = 
-  {
-    {10, 10},
-    {20, 20},
-    {30, 50},
-    {200, 400}
-  };
-  */
+
+  /* Angle += MATH_PI * 3 / 2; */
+
+  /* Setting colors to draw */
+  SelectObject(hDC, GetStockObject(DC_BRUSH));
+  SelectObject(hDC, GetStockObject(NULL_PEN));
+  SetDCBrushColor(hDC, Color);
+  SetDCPenColor(hDC, 0x0);
+
   Polygon(hDC, pts, sizeof(pts) / sizeof(pts[0]));
 
-///  Polygon(hDC, pts, 4);
 } /* End of 'UnitClockDrawArrow' function */
 
-/* Функция построения объекта анимации.
+/* Clock unit rendering function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT_CLOCK *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -103,18 +105,31 @@ static VOID UnitClockRender( rk2UNIT_CLOCK *Unit, rk2ANIM *Ani )
 {
   SYSTEMTIME SysTime;
   CHAR Str[1000];
-  GetSystemTime(&SysTime);
-  
-  UnitClockDrawArrow(Ani->hDC, Ani->W / 2, Ani->H / 2, (Ani->W + Ani->H) / 4, (SysTime.wSecond * 1000 + SysTime.wMilliseconds) / 60000.0 * 3.14 * 2, 0xF00F0F);
-  UnitClockDrawArrow(Ani->hDC, Ani->W / 2, Ani->H / 2, (Ani->W + Ani->H) / 6, (SysTime.wMinute * 60 + SysTime.wSecond) / 3600.0 * 3.14 * 2, 0x00FFFF);
-  UnitClockDrawArrow(Ani->hDC, Ani->W / 2, Ani->H / 2, (Ani->W + Ani->H) / 8, (SysTime.wHour * 60 + SysTime.wMinute) / 12.0 * 60 * 3.14 * 2, 0xFFF0FF);
-  TextOut(Ani->hDC, 0, 30, Str, sprintf(Str, "%d:%d:%d", SysTime.wHour, SysTime.wMinute, SysTime.wSecond));
+  DBL Sum = (Ani->W + Ani->H) / 2;
+  /* GetSystemTime(&SysTime); */
+  GetLocalTime(&SysTime);
+
+  /* Hour arrow */
+  UnitClockDrawArrow(Ani->hDC, Ani->W / 2, Ani->H / 2, Sum / 6, Sum / 48,
+                    ((SysTime.wHour % 12) * 60 + SysTime.wMinute) / 12.0 / 60 * MATH_PI * 2 + MATH_PI * 2, 
+                    0xFFF0FF);
+  /* Minute arrow */
+  UnitClockDrawArrow(Ani->hDC, Ani->W / 2, Ani->H / 2, Sum / 4, Sum / 64,
+                    (SysTime.wMinute * 60 + SysTime.wSecond) / 3600.0 * MATH_PI * 2,
+                    0xF03030);
+
+  /* Second arrow */
+  UnitClockDrawArrow(Ani->hDC, Ani->W / 2, Ani->H / 2, Sum / 2.5, Sum / 96,
+                    (SysTime.wSecond * 1000 + SysTime.wMilliseconds) / 60000.0 * MATH_PI * 2, 
+                    0xF00F0F);
+
+  TextOut(Ani->hDC, 30, 30, Str, sprintf(Str, "%2d:%2d:%2d", SysTime.wHour, SysTime.wMinute, SysTime.wSecond));
 } /* End of 'RK2_UnitClockRender' function */
 
-/* Creating unit clock function
+/* Creating unit clock function.
  * ARGUMENTS: None.
  * RETURNS:
- *   (rk2UNIT *) pointer to new unit.
+ *   (rk2UNIT *) - pointer to new unit.
  */
 rk2UNIT *RK2_UnitClockCreate( VOID )
 {

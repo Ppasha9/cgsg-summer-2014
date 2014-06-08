@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.C
  * PROGRAMMER: RK2
  * PURPOSE: Base animation module
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #include <stdlib.h>
@@ -10,7 +10,7 @@
 #include "anim.h"
 
 /* System animation context */
-static rk2ANIM RK2_Anim;
+rk2ANIM RK2_Anim;
 
 /* Synchronisation time data */
 static INT64
@@ -137,10 +137,10 @@ VOID RK2_AnimRender( VOID )
   /* setting last frame time */
   TimeOld = li.QuadPart;
 
-  /* clearing background */
+  /* Clearing background */
   SelectObject(RK2_Anim.hDC, GetStockObject(DC_BRUSH));
   SelectObject(RK2_Anim.hDC, GetStockObject(NULL_PEN));
-  SetDCBrushColor(RK2_Anim.hDC, RGB(0, 110, 0));
+  SetDCBrushColor(RK2_Anim.hDC, RGB(0, 110, 100));
   Rectangle(RK2_Anim.hDC, 0, 0, RK2_Anim.W, RK2_Anim.H);
 
   /* Response caller for units */
@@ -189,8 +189,7 @@ VOID RK2_AnimAddUnit( rk2UNIT *Unit )
   }
 } /* End of 'RK2_AnimAddUnit' function */
 
-/* Switching to/from fullscreenв function
- * с учетом нескольких мониторов.
+/* Switching to/from fullscreen function
  * ARGUMENTS: None.
  * RETURNS: None.
  */
@@ -203,7 +202,8 @@ VOID RK2_AnimFlipFullScreen( VOID )
   {
     RECT rc;
     HMONITOR hmon;
-    MONITORINFOEX moninfo;
+    /* MONITORINFOEX moninfo;  For WinXP */
+    MONITORINFO moninfo;      /* Windows 8 */
 
     /* Old sizes saving */
     GetWindowRect(RK2_Anim.hWnd, &SaveRC);
@@ -223,7 +223,7 @@ VOID RK2_AnimFlipFullScreen( VOID )
     rc.bottom = GetSystemMetrics(SM_CYSCREEN);
     */
     rc = moninfo.rcMonitor;
-
+    
     AdjustWindowRect(&rc, GetWindowLong(RK2_Anim.hWnd, GWL_STYLE), FALSE);
 
     SetWindowPos(RK2_Anim.hWnd, HWND_TOP,

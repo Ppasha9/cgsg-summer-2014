@@ -11,6 +11,8 @@
 
 #include <windows.h>
 
+#define MATH_PI 3.1415
+
 /* Large integer data types */
 typedef __int64 INT64;
 typedef unsigned __int64 UINT64;

@@ -1,7 +1,7 @@
 /* FILENAME: STARTUP.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation startup module
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #include <stdio.h>
@@ -12,23 +12,23 @@
 
 #define WND_CLASS_NAME "My Window Class Name"
 
-/* Ссылки вперед */
+/* Declaration Main Window Loop function */
 LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
                                  WPARAM wParam, LPARAM lParam );
 
-/* Главная функция программы.
+/* Main program function.
  * ARGUMENTS:
- *   - дескриптор экземпляра приложения:
+ *   - Descriptor of application:
  *       HINSTANCE hInstance;
- *   - дескриптор предыдущего экземпляра приложения
- *     (не используется и должно быть NULL):
+ *   - Descriptor of last application:
+ *     (Don't use in WinNT: NULL):
  *       HINSTANCE hPrevInstance;
- *   - командная строка:
+ *   - Command line:
  *       CHAR *CmdLine;
- *   - флаг показа окна (см. SW_SHOWNORMAL, SW_SHOWMINIMIZED, SW_***):
+ *   - Flag of showing window (см. SW_SHOWNORMAL, SW_SHOWMINIMIZED, SW_***):
  *       INT ShowCmd;
  * RETURNS:
- *   (INT) код возврата в операционную систему.
+ *   (INT) Return code to system.
  */
 INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                     CHAR *CmdLine, INT ShowCmd )
@@ -38,68 +38,68 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   MSG msg;
   INT i;
 
-  /* Регистрация - создание собственного класса окна */
+  /* Mainwindow class registration */
   wc.style = CS_HREDRAW | CS_VREDRAW;
-  wc.cbClsExtra = 0; /* Дополнительное количество байт для класса */
-  wc.cbWndExtra = 0; /* Дополнительное количество байт для окна */
-  wc.hbrBackground = (HBRUSH)COLOR_WINDOW; /* Фоновый цвет - выбранный в системе */
+  wc.cbClsExtra = 0; /* Extra count of bytes for class */
+  wc.cbWndExtra = 0; /* Extra count of bytes for windows */
+  wc.hbrBackground = (HBRUSH)COLOR_WINDOW; /* Background */
   wc.hCursor = LoadCursor(NULL, IDC_HAND);
-  wc.hIcon = LoadIcon(NULL, IDI_ERROR);
+  wc.hIcon = LoadIcon(NULL, IDI_HAND);
   wc.lpszMenuName = NULL;
   wc.hInstance = hInstance;
   wc.lpfnWndProc = MainWindowFunc;
   wc.lpszClassName = WND_CLASS_NAME;
 
-  /* Регистрируем класс */
+  /* Class register */
   if (!RegisterClass(&wc))
   {
     MessageBox(NULL, "Error register window class", "Error", MB_ICONERROR | MB_OK);
     return 0;
   }
 
-  /* Создание окна */
-  hWnd = CreateWindow(WND_CLASS_NAME, "First Window Sample",
+  /* Creating window */
+  hWnd = CreateWindow(WND_CLASS_NAME, "Main Window",
     WS_OVERLAPPEDWINDOW,
-    CW_USEDEFAULT, CW_USEDEFAULT, /* Позиция окна (x, y) - по умолчанию */
-    CW_USEDEFAULT, CW_USEDEFAULT, /* Размеры окна (w, h) - по умолчанию */
-    NULL,                         /* Дескриптор родительского окна */
-    NULL,                         /* Дескриптор загруженного меню */
-    hInstance,                    /* Дескриптор приложения */
-    NULL);                        /* Указатель на дополнительные параметры */
+    CW_USEDEFAULT, CW_USEDEFAULT, /* window position - default */
+    CW_USEDEFAULT, CW_USEDEFAULT, /* Размеры окна (w, h) - default */
+    NULL,                         /* Parent window descriptor */
+    NULL,                         /* Menu descriptor */
+    hInstance,                    /* Application Descriptor */
+    NULL);                        /* Another parametres */
 
   ShowWindow(hWnd, ShowCmd);
   UpdateWindow(hWnd);
 
-  /*** Добавление объектов ***/
+  /*** Adding units ***/
   for (i = 0; i < 30 * 30; i++)
     RK2_AnimAddUnit(RK2_CowUnitCreate());
   RK2_AnimAddUnit(RK2_InfoUnitCreate());
 
   RK2_AnimAddUnit(RK2_UnitClockCreate());
 
-  /* Запуск цикла обработки сообщений */
+  /* Main message loop running */
   while (GetMessage(&msg, NULL, 0, 0))
   {
     TranslateMessage(&msg);
-    /* Передача сообщений в функцию окна */
+    /* Sending messages */
     DispatchMessage(&msg);
   }
 
   return msg.wParam;
 } /* End of 'WinMain' function */
 
-/* Функция обработки сообщения окна.
+/* Main window message loop function.
  * ARGUMENTS:
- *   - дескриптор окна:
+ *   - Window descriptor:
  *       HWND hWnd;
- *   - номер сообщения:
+ *   - Message ID:
  *       UINT Msg;
- *   - параметр сообшения ('word parameter'):
+ *   - word message parameter:
  *       WPARAM wParam;
- *   - параметр сообшения ('long parameter'):
+ *   - long message parameter::
  *       LPARAM lParam;
  * RETURNS:
- *   (LRESULT) - в зависимости от сообщения.
+ *   (LRESULT) - depends from message.
  */
 LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
                                  WPARAM wParam, LPARAM lParam )

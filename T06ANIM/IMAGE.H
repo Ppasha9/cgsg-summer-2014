@@ -9,21 +9,21 @@
 
 #include "def.h"
 
-/* Структура хранения изображения */
+/* Image struct definition */
 typedef struct tagIMAGE
 {
-  INT W, H;    /* Размер изображения */
-  HBITMAP hBm; /* Дескриптор загруженного изображения */
-  DWORD *Bits; /* Цвета точек */
+  INT W, H;    /* Picture size */
+  HBITMAP hBm; /* Descriptor of loaded picture */
+  DWORD *Bits; /* Image row */
 } IMAGE;
 
-/* Функция загрузки изображения */
+/* Loading picture from file function. */
 BOOL ImageLoad( IMAGE *Img, CHAR *FileName );
 
-/* Функция освобождения памяти из-под изображения */
+/* Picture memory free function. */
 VOID ImageFree( IMAGE *Img );
 
-/* Функция получения цвета точки изображения */
+/* Getting image point color function. */
 DWORD ImageGetP( IMAGE *Img, INT X, INT Y );
 
 #endif /* __IMAGE_H_ */

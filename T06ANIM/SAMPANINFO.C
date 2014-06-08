@@ -1,7 +1,7 @@
 /* FILENAME: SAMPANINFO.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #include <stdio.h>
@@ -11,11 +11,11 @@
 
 #include "anim.h"
 
-/* /* Animation info unit render function.
+/* Animation info unit render function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -32,7 +32,7 @@ static VOID InfoUnitRender( rk2UNIT *Unit, rk2ANIM *Ani )
 /* Animation info unit create function.
  * ARGUMENTS: None.
  * RETURNS:
- *   (rk2UNIT *) указатель на созданный объект анимации.
+ *   (rk2UNIT *) - pointer for new animation unit.
  */
 rk2UNIT *RK2_InfoUnitCreate( VOID )
 {
@@ -40,7 +40,7 @@ rk2UNIT *RK2_InfoUnitCreate( VOID )
 
   if ((Unit = RK2_AnimUnitCreate(sizeof(rk2UNIT))) == NULL)
     return NULL;
-  /* заполняем поля по-умолчанию */
+  /* Base fields filling */
   Unit->Render = (VOID *)InfoUnitRender;
   return Unit;
 } /* End of 'RK2_InfoUnitCreate' function */

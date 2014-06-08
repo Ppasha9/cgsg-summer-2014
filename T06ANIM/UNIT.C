@@ -1,7 +1,7 @@
 /* FILENAME: UNIT.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #include <stdlib.h>
@@ -9,11 +9,11 @@
 
 #include "anim.h"
 
-/* Функция по-умолчанию инициализации объекта анимации.
+/* Default Unit init function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -21,11 +21,11 @@ static VOID RK2_AnimUnitInit( rk2UNIT *Unit, rk2ANIM *Ani )
 {
 } /* End of 'RK2_AnimUnitInit' function */
 
-/* Функция по-умолчанию деинициализации объекта анимации.
+/* Default unit destructor function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -33,11 +33,11 @@ static VOID RK2_AnimUnitClose( rk2UNIT *Unit, rk2ANIM *Ani )
 {
 } /* End of 'RK2_AnimUnitClose' function */
 
-/* Функция по-умолчанию обновления межкадровых параметров объекта анимации.
+/* Default unit response function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -45,11 +45,11 @@ static VOID RK2_AnimUnitResponse( rk2UNIT *Unit, rk2ANIM *Ani )
 {
 } /* End of 'RK2_AnimUnitResponse' function */
 
-/* Функция по-умолчанию построения объекта анимации.
+/* Default unit render function.
  * ARGUMENTS:
- *   - указатель на "себя" - сам объект анимации:
+ *   - Self pointer:
  *       rk2UNIT *Unit;
- *   - указатель на контекст анимации:
+ *   - Animation context pointer:
  *       rk2ANIM *Ani;
  * RETURNS: None.
  */
@@ -57,12 +57,13 @@ static VOID RK2_AnimUnitRender( rk2UNIT *Unit, rk2ANIM *Ani )
 {
 } /* End of 'RK2_AnimUnitRender' function */
 
-/* Функция создания объекта анимации.
+/* Animation default unit create function.
  * ARGUMENTS:
- *   - размер структуры объекта анимации:
- *       INT Size;
- * RETURNS:
- *   (rk2UNIT *) указатель на созданный объект анимации.
+ *   - Self pointer:
+ *       rk2UNIT *Unit;
+ *   - Animation context pointer:
+ *       rk2ANIM *Ani;
+ * RETURNS: None.
  */
 rk2UNIT * RK2_AnimUnitCreate( INT Size )
 {
@@ -72,7 +73,7 @@ rk2UNIT * RK2_AnimUnitCreate( INT Size )
       (Unit = malloc(Size)) == NULL)
     return NULL;
   memset(Unit, 0, Size);
-  /* заполняем поля по-умолчанию */
+  /* Base fields */
   Unit->Size = Size;
   Unit->Init = RK2_AnimUnitInit;
   Unit->Close = RK2_AnimUnitClose;

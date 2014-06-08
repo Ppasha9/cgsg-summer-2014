@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.H
  * PROGRAMMER: RK2
  * PURPOSE: Globe project declaration module.
- * LAST UPDATE: 07.06.2014
+ * LAST UPDATE: 08.06.2014
  */
 
 #ifndef __ANIM_H_
@@ -9,48 +9,50 @@
 
 #include "image.h"
 
-/* Максимальное количество элементов анимации */
+/* Max of animation units */
 #define RK2_MAX_UNITS 3000
 
-/* Объявление типа объектов анимации "вперед" */
+/* definition unit base struct */
 typedef struct tagrk2UNIT rk2UNIT;
 
-/* Структура хранения контекста анимации */
+/* animation context declaration */
 typedef struct tagrk2ANIM
 {
-  HWND hWnd;          /* Окно вывода */
-  INT W, H;           /* Размер окна вывода */
-  HBITMAP hBmFrame;   /* Буфер кадра */
-  HDC hDC;            /* Контекст вывода */
+  HWND hWnd;          /* Work window */
+  INT W, H;           /* Window size */
+  HBITMAP hBmFrame;   /* Frame buffer */
+  HDC hDC;            /* Output context */
 
-  /* Массив элементов анимации и их количество */
+  /* Array of units and number of elements */
   rk2UNIT *Units[RK2_MAX_UNITS]; 
   INT NumOfUnits;
 
-  /* Подсистема синхронизации */
+  /* Syncronisation system */
   DBL
-    Time,            /* время в секундах со старта анимации */
-    GlobalTime,      /* время -"-, но без паузы */
-    DeltaTime,       /* межкадровое время в секундах */
-    GlobalDeltaTime, /* межкадровое время в секундах без паузы */
-    FPS;             /* количество кадров в секунду */
+    Time,            /* time from beginning animation */
+    GlobalTime,      /* time from beginning animation without pause */
+    DeltaTime,       /* time between frames in seconds */
+    GlobalDeltaTime, /* time between frames in seconds without pause */
+    FPS;             /* Frames per second */
   BOOL
-    IsPause;         /* флаг паузы */
+    IsPause;         /* Pause flag */
 
-  /* Подсистема ввода */
-  BYTE Keys[256];     /* Сотояние клавиш клавиатуры и мыши */
+  /* Input system */
+  BYTE Keys[256];     /* Keyboard and mouse state */
 } rk2ANIM;
 
-/* Базовые поля объекта анимации:
- * - размер структуры для наследования
+/* extern rk2ANIM RK2_Anim; *//* Global animation context */
+
+/* Base fields for animation unit struct:
+ * - Size of struct:
  *     INT Size;
- * - указатель на функцию инициализации
+ * - Pointer for init unit function:
  *     VOID (*Init)( rk2UNIT *Unit, rk2ANIM *Ani );
- * - указатель на функцию деинициализации
+ * - Pointer for destructor unit function:
  *     VOID (*Close)( rk2UNIT *Unit, rk2ANIM *Ani );
- * - указатель на функцию обновления межкадровых параметров
+ * - Pointer for response unit function:
  *     VOID (*Response)( rk2UNIT *Unit, rk2ANIM *Ani );
- * - указатель на функцию построения
+ * -Pointer for rendering unit function:
  *     VOID (*Render)( rk2UNIT *Unit, rk2ANIM *Ani );
  */
 #define RK2_UNIT_BASE_FIELDS \
@@ -60,40 +62,41 @@ typedef struct tagrk2ANIM
   VOID (*Response)( rk2UNIT *Unit, rk2ANIM *Ani );   \
   VOID (*Render)( rk2UNIT *Unit, rk2ANIM *Ani )
 
-/* Базовый тип объекта анимации */
+/* Base type of animation unit */
 struct tagrk2UNIT
 {
-  RK2_UNIT_BASE_FIELDS; /* Базовые поля */
+  RK2_UNIT_BASE_FIELDS; /* Base fields */
 };
 
 /***
- * Функции управления анимацией
+ * Animation controll functions
  ***/
 
-/* Функция инициализации анимации */
-VOID RK2_AnimInit( HWND hWnd );
+/* Animation init function */
+VOID RK2_AnimInit(HWND hWnd);
 
-/* Функция деинициализации анимации */
-VOID RK2_AnimClose( VOID );
+/* Animation destructot function */
+VOID RK2_AnimClose(VOID);
 
-/* Функция обработки изменения размера области вывода */
-VOID RK2_AnimResize( INT W, INT H );
+/* Resize window animation function */
+VOID RK2_AnimResize(INT W, INT H);
 
-/* Функция построения кадра анимации */
-VOID RK2_AnimRender( VOID );
+/* Anmation rendering function */
+VOID RK2_AnimRender(VOID);
 
-/* Функция вывода кадра анимации */
-VOID RK2_AnimCopyFrame( VOID );
+/* Drawing to frame animation function */
+VOID RK2_AnimCopyFrame(VOID);
 
-/* Функция переключения в/из полноэкранного режима
- * с учетом нескольких мониторов */
-VOID RK2_AnimFlipFullScreen( VOID );
+/* Adding object to animation list function */
+VOID RK2_AnimAddUnit(rk2UNIT *Unit);
 
-/* Функция установки паузы анимации */
-VOID RK2_AnimSetPause( BOOL NewPauseFlag );
+/* Switching to/from fullscreen function */
+VOID RK2_AnimFlipFullScreen(VOID);
 
+/* Setting animation pause function */
+VOID RK2_AnimSetPause(BOOL NewPauseFlag);
 /***
- * Функции обработки объектов анимации
+ * Working with animation units functions
  ***/
 
 /* Функция добавления в систему объекта анимации */
