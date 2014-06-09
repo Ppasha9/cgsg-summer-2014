@@ -9,11 +9,14 @@
 
 #include "anim.h"
 
-/* Cow Unit create function. */
-rk2UNIT *RK2_CowUnitCreate( VOID );
+/* Unit Animation control create function. */
+rk2UNIT *RK2_UnitAnimContolCreate(VOID);
 
 /* Anim Info Unit create function. */
 rk2UNIT *RK2_InfoUnitCreate( VOID );
+
+/* Cow Unit create function. */
+rk2UNIT *RK2_CowUnitCreate(VOID);
 
 /* Creating unit clock function. */
 rk2UNIT *RK2_UnitClockCreate( VOID );

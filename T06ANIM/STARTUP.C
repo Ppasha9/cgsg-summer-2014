@@ -41,7 +41,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   HWND hWnd;
   MSG msg;
   INT i;
-
+  
   /* Mainwindow class registration */
   wc.style = CS_HREDRAW | CS_VREDRAW;
   wc.cbClsExtra = 0; /* Extra count of bytes for class */
@@ -75,16 +75,15 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   /*** Adding units ***/
-  
-  for (i = 0; i < 30 * 30; i++)
-    RK2_AnimAddUnitP(RK2_CowUnitCreate());
-  RK2_AnimAddUnitP(RK2_InfoUnitCreate());
+  RK2_AnimAddUnit(RK2_UnitAnimContolCreate()); /* Main anim response unit */
 
-  RK2_AnimAddUnitP(RK2_UnitClockCreate());
-  RK2_AnimAddUnitP(RK2_UnitClockCreate());
-  
-  RK2_AnimAddUnitP(RK2_UnitLogoCreate(30, 30));
-  
+  for (i = 0; i < 30 * 30; i++)
+    RK2_AnimAddUnit(RK2_CowUnitCreate());
+  RK2_AnimAddUnit(RK2_UnitClockCreate());
+  RK2_AnimAddUnit(RK2_UnitLogoCreate(30, 30));
+
+  RK2_AnimAddUnit(RK2_InfoUnitCreate());
+
   /* Main message loop running */
   while (GetMessage(&msg, NULL, 0, 0))
   {
@@ -133,20 +132,6 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
   case WM_TIMER:
     RK2_AnimRender();
     RK2_AnimCopyFrame();
-    return 0;
-  case WM_CHAR:
-    switch ((CHAR)wParam)
-    {
-    case 27:
-      DestroyWindow(hWnd);
-      return 0;
-    case 'f':
-      /* RK2_AnimFlipFullScreen(); */
-      return 0;
-    case 'p':
-      /* RK2_AnimSetPause(); */
-      return 0;
-    }
     return 0;
   case WM_ERASEBKGND:
     return 1;

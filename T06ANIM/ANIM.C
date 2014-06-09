@@ -101,7 +101,7 @@ VOID RK2_AnimResize( INT W, INT H )
   ReleaseDC(RK2_Anim.hWnd, hDC);
 } /* End of 'RK2_AnimResize' function */
 
-/* Mouse main loop messages function..
+/* Mouse main loop messages function.
  * ARGUMENTS:
  *   - Code of catching:
  *       INT Code;
@@ -157,14 +157,11 @@ static VOID RK2_AnimResponseMouse( VOID )
   for (i = 0; i < 256; i++)
   {
     RK2_Anim.Keys[i] >>= 7;
-    if (!RK2_Anim.KeysOld[i] && RK2_Anim.Keys[i])
+    if (RK2_Anim.KeysOld[i] && RK2_Anim.Keys[i])
       RK2_Anim.KeysClicked[i] = TRUE;
+    else
+      RK2_Anim.KeysClicked[i] = FALSE;
   }
-
-  if (!RK2_Anim.KeysClicked['F'] && RK2_Anim.Keys['F'])
-    RK2_AnimFlipFullScreen();
-  if (!RK2_Anim.KeysClicked['F'] && RK2_Anim.Keys['P'])
-    RK2_AnimSetPause();
 } /* End of 'RK2_AnimResponseMouse' function */
 
 /* Animation joystick repsonse function.
@@ -318,21 +315,6 @@ VOID RK2_AnimAddUnit( rk2UNIT *Unit )
   }
 } /* End of 'RK2_AnimAddUnit' function */
 
-/* Adding unit with parametres to animation list function.
- * ARGUMENTS:
- *   - new object:
- *       rk2UNIT *Unit;
- * RETURNS: None.
- */
-VOID RK2_AnimAddUnitP( rk2UNIT *Unit )
-{
-  if (RK2_Anim.NumOfUnits < RK2_MAX_UNITS)
-  {
-    RK2_Anim.Units[RK2_Anim.NumOfUnits++] = Unit;
-    Unit->Init(Unit, &RK2_Anim);
-  }
-} /* End of 'RK2_AnimAddUnit' function */
-
 /* Switching to/from fullscreen function.
  * ARGUMENTS: None.
  * RETURNS: None.
@@ -393,7 +375,7 @@ VOID RK2_AnimFlipFullScreen( VOID )
  */
 VOID RK2_AnimSetPause( VOID )
 {
-  static Pause = TRUE;
+  static Pause = FALSE;
   Pause = !Pause;
   RK2_Anim.IsPause = Pause;
 } /* End of 'RK2_AnimSetPause' function */

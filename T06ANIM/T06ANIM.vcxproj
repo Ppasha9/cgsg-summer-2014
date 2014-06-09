@@ -91,6 +91,7 @@
     <ClCompile Include="IMAGE.C" />
     <ClCompile Include="STARTUP.C" />
     <ClCompile Include="UNIT.C" />
+    <ClCompile Include="UNITS\SAMPANCONTROL.C" />
     <ClCompile Include="UNITS\SAMPANINFO.C" />
     <ClCompile Include="UNITS\SAMPCLOCK.C" />
     <ClCompile Include="UNITS\SAMPCOW.C" />
