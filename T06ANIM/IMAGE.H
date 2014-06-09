@@ -1,7 +1,7 @@
 /* FILENAME: IMAGE.H
  * PROGRAMMER: RK2
  * PURPOSE: Image handle declaration module.
- * LAST UPDATE: 06.06.2014
+ * LAST UPDATE: 09.06.2014
  */
 
 #ifndef __IMAGE_H_
@@ -10,21 +10,24 @@
 #include "def.h"
 
 /* Image struct definition */
-typedef struct tagIMAGE
+typedef struct tagrk2IMAGE
 {
   INT W, H;    /* Picture size */
   HBITMAP hBm; /* Descriptor of loaded picture */
   DWORD *Bits; /* Image row */
-} IMAGE;
+} rk2IMAGE;
 
 /* Loading picture from file function. */
-BOOL ImageLoad( IMAGE *Img, CHAR *FileName );
+BOOL ImageLoad( rk2IMAGE *Img, CHAR *FileName );
 
 /* Picture memory free function. */
-VOID ImageFree( IMAGE *Img );
+VOID ImageFree( rk2IMAGE *Img );
 
 /* Getting image point color function. */
-DWORD ImageGetP( IMAGE *Img, INT X, INT Y );
+DWORD ImageGetP( rk2IMAGE *Img, INT X, INT Y );
+
+/* Image Blit to hDC function. */
+VOID ImageDraw( HDC hDC, rk2IMAGE *Img, DWORD Rop, INT X0, INT Y0, INT X1, INT Y1 );
 
 #endif /* __IMAGE_H_ */
 

@@ -1,7 +1,7 @@
 /* FILENAME: IMAGE.C
  * PROGRAMMER: RK2
  * PURPOSE: Image handle functions
- * LAST UPDATE: 08.06.2014
+ * LAST UPDATE: 09.06.2014
  */
 
 #include "image.h"
@@ -9,13 +9,13 @@
 /* Loading picture from file function.
  * ARGUMENTS:
  *   - Pointer to new picture:
- *       IMAGE *Img;
+ *       rk2IMAGE *Img;
  *   - File Name:
  *       CHAR *FileName;
  * RETURNS:
- *   (BOOL) результат загрузки (TRUE - успешно).
+ *   (BOOL) result (TRUE - done).
  */
-BOOL ImageLoad( IMAGE *Img, CHAR *FileName )
+BOOL ImageLoad( rk2IMAGE *Img, CHAR *FileName )
 {
   HBITMAP hBmLoad;
 
@@ -69,10 +69,10 @@ BOOL ImageLoad( IMAGE *Img, CHAR *FileName )
 /* Free image memory function.
  * ARGUMENTS:
  *   - pointer for picture:
- *       IMAGE *Img;
+ *       rk2IMAGE *Img;
  * RETURNS: None.
  */
-VOID ImageFree( IMAGE *Img )
+VOID ImageFree( rk2IMAGE *Img )
 {
   if (Img == NULL)
     return;
@@ -86,13 +86,13 @@ VOID ImageFree( IMAGE *Img )
 /* Getting imager point color function.
  * ARGUMENTS:
  *   - Pointer for image::
- *       IMAGE *Img;
+ *       rk2IMAGE *Img;
  *   - Position of point:
  *       INT X, Y;
  * RETURNS:
  *   (DWORD) Color of point.
  */
-DWORD ImageGetP( IMAGE *Img, INT X, INT Y )
+DWORD ImageGetP( rk2IMAGE *Img, INT X, INT Y )
 {
   if (Img == NULL)
     return 0;
@@ -111,5 +111,29 @@ DWORD ImageGetP( IMAGE *Img, INT X, INT Y )
   }
   return 0;
 } /* End of 'ImageGetP' function */
+
+/* Image Blit to hDC function.
+ * ARGUMENTS:
+ *   - Destination hDC:
+ *      HDC hDestDC
+ *   - Pointer for image:
+ *       rk2IMAGE *Img;
+ *   - RECT position on window:
+ *       INT X0, Y0, X1, Y1;
+ * RETURNS:
+ *   (VOID) None.
+ */
+VOID ImageDraw( HDC hDC, rk2IMAGE *Img, DWORD Rop, INT X0, INT Y0, INT X1, INT Y1 )
+{
+  /* HDC hDC = GetDC(hWnd); */
+  HDC hMemDC = CreateCompatibleDC(hDC);
+
+  /* Blit picture */
+  SelectObject(hMemDC, Img->hBm);
+  StretchBlt(hDC, X0, Y0, Img->W, Img->H, hMemDC, 0, 0, Img->W, Img->H, Rop);
+
+  /* Free tmp hDC */
+  DeleteDC(hMemDC);
+} /* End of 'ImageDraw' function */
 
 /* END OF 'IMAGE.C' FILE */

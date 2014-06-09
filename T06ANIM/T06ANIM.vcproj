@@ -198,23 +198,31 @@
 				RelativePath=".\UNIT.C"
 				>
 			</File>
-			<File
-				RelativePath=".\UNITS.H"
-				>
-			</File>
 			<Filter
 				Name="Unit Samples"
 				>
 				<File
-					RelativePath=".\SAMPANINFO.C"
+					RelativePath=".\UNITS\SAMPANINFO.C"
 					>
 				</File>
 				<File
-					RelativePath=".\SAMPCLOCK.C"
+					RelativePath=".\UNITS\SAMPCLOCK.C"
 					>
 				</File>
 				<File
-					RelativePath=".\SAMPCOW.C"
+					RelativePath=".\UNITS\SAMPCOW.C"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS\SAMPLOGO.C"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS\SAMPPIC.C"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS.H"
 					>
 				</File>
 			</Filter>

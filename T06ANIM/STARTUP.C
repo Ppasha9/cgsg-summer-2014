@@ -1,7 +1,7 @@
 /* FILENAME: STARTUP.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation startup module
- * LAST UPDATE: 08.06.2014
+ * LAST UPDATE: 09.06.2014
  */
 
 #include <stdio.h>
@@ -9,6 +9,10 @@
 #include <time.h>
 
 #include "units.h"
+
+#pragma comment(lib, "winmm")
+
+#include <mmsystem.h>
 
 #define WND_CLASS_NAME "My Window Class Name"
 
@@ -44,7 +48,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   wc.cbWndExtra = 0; /* Extra count of bytes for windows */
   wc.hbrBackground = (HBRUSH)COLOR_WINDOW; /* Background */
   wc.hCursor = LoadCursor(NULL, IDC_HAND);
-  wc.hIcon = LoadIcon(NULL, IDI_HAND);
+  wc.hIcon = LoadIcon(NULL, IDI_ASTERISK);
   wc.lpszMenuName = NULL;
   wc.hInstance = hInstance;
   wc.lpfnWndProc = MainWindowFunc;
@@ -71,12 +75,16 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   /*** Adding units ***/
+  
   for (i = 0; i < 30 * 30; i++)
-    RK2_AnimAddUnit(RK2_CowUnitCreate());
-  RK2_AnimAddUnit(RK2_InfoUnitCreate());
+    RK2_AnimAddUnitP(RK2_CowUnitCreate());
+  RK2_AnimAddUnitP(RK2_InfoUnitCreate());
 
-  RK2_AnimAddUnit(RK2_UnitClockCreate());
-
+  RK2_AnimAddUnitP(RK2_UnitClockCreate());
+  RK2_AnimAddUnitP(RK2_UnitClockCreate());
+  
+  RK2_AnimAddUnitP(RK2_UnitLogoCreate(30, 30));
+  
   /* Main message loop running */
   while (GetMessage(&msg, NULL, 0, 0))
   {
@@ -133,10 +141,10 @@ LRESULT CALLBACK MainWindowFunc( HWND hWnd, UINT Msg,
       DestroyWindow(hWnd);
       return 0;
     case 'f':
-      RK2_AnimFlipFullScreen();
+      /* RK2_AnimFlipFullScreen(); */
       return 0;
     case 'p':
-      RK2_AnimSetPause(pause = !pause);
+      /* RK2_AnimSetPause(); */
       return 0;
     }
     return 0;

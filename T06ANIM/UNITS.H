@@ -1,7 +1,7 @@
 /* FILENAME: UNITS.H
  * PROGRAMMER: RK2
  * PURPOSE: Globe project declaration module.
- * LAST UPDATE: 08.06.2014
+ * LAST UPDATE: 09.06.2014
  */
 
 #ifndef __UNITS_H_
@@ -18,6 +18,11 @@ rk2UNIT *RK2_InfoUnitCreate( VOID );
 /* Creating unit clock function. */
 rk2UNIT *RK2_UnitClockCreate( VOID );
 
+/* Creating unit pict animation function. */
+rk2UNIT *RK2_UnitPictCreate( CHAR *FileName, INT PosX, INT PosY, DWORD DrawingType );
+
+/* Creating unit pict animation function. */
+rk2UNIT *RK2_UnitLogoCreate( INT PosX, INT PosY );
 
 #endif /* __UNITS_H_ */
 

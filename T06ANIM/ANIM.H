@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.H
  * PROGRAMMER: RK2
  * PURPOSE: Globe project declaration module.
- * LAST UPDATE: 08.06.2014
+ * LAST UPDATE: 09.06.2014
  */
 
 #ifndef __ANIM_H_
@@ -38,10 +38,25 @@ typedef struct tagrk2ANIM
     IsPause;         /* Pause flag */
 
   /* Input system */
-  BYTE Keys[256];     /* Keyboard and mouse state */
-} rk2ANIM;
 
-/* extern rk2ANIM RK2_Anim; *//* Global animation context */
+  /* Keyboard */
+  BYTE Keys[256], 
+       KeysOld[256],
+       KeysClicked[256];        /* Keyboard and mouse state */
+  
+  /* Mouse */
+  INT
+    MouseX, MouseY,             /* Mouse coords */
+    MouseXOld, MouseYOld,       /* Last mouse coords */
+    MouseDeltaX, MouseDeltaY,   /* Differrence of new coords */
+    MouseWheel;                 /* Mouse Wheel state */
+  
+  /* Joystick */
+  DBL 
+    JoyX, JoyY, JoyZ, JoyU, JoyR,                         /* Joystick axis positions [-1..1] */
+    JoyPOV;                                               /* Joystick Point-of-view position */
+  BYTE JoyButs[32], JoyButsOld[32], JoyButsClicked[32];   /* Joystick buttons state */ 
+} rk2ANIM;
 
 /* Base fields for animation unit struct:
  * - Size of struct:
@@ -94,7 +109,8 @@ VOID RK2_AnimAddUnit(rk2UNIT *Unit);
 VOID RK2_AnimFlipFullScreen(VOID);
 
 /* Setting animation pause function */
-VOID RK2_AnimSetPause(BOOL NewPauseFlag);
+VOID RK2_AnimSetPause( VOID );
+
 /***
  * Working with animation units functions
  ***/
@@ -102,7 +118,10 @@ VOID RK2_AnimSetPause(BOOL NewPauseFlag);
 /* Функция добавления в систему объекта анимации */
 VOID RK2_AnimAddUnit( rk2UNIT *Unit );
 
-/* Функция создания объекта анимации */
+/* Adding created object to animation list function. */
+VOID RK2_AnimAddUnitP( rk2UNIT *Unit );
+
+/* Animation default unit create function. */
 rk2UNIT *RK2_AnimUnitCreate( INT Size );
 
 #endif /* __ANIM_H_ */
