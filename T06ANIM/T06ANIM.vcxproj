@@ -91,9 +91,11 @@
     <ClCompile Include="IMAGE.C" />
     <ClCompile Include="STARTUP.C" />
     <ClCompile Include="UNIT.C" />
-    <ClCompile Include="SAMPANINFO.C" />
-    <ClCompile Include="SAMPCLOCK.C" />
-    <ClCompile Include="SAMPCOW.C" />
+    <ClCompile Include="UNITS\SAMPANINFO.C" />
+    <ClCompile Include="UNITS\SAMPCLOCK.C" />
+    <ClCompile Include="UNITS\SAMPCOW.C" />
+    <ClCompile Include="UNITS\SAMPLOGO.C" />
+    <ClCompile Include="UNITS\SAMPPIC.C" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ANIM.H" />
