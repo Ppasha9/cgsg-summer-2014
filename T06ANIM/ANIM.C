@@ -64,7 +64,7 @@ VOID RK2_AnimInit( HWND hWnd )
 
 
   RK2_RndSetRenderProp(RK2_Anim.W, RK2_Anim.H);
-  RK2_RndSetCamera(RK2_Vec(-1, -1, -1), 
+  RK2_RndCameraSet(RK2_Vec(-1, -1, -1), 
                    RK2_Vec(0, 1, 0), 
                    RK2_Vec(1, 0, 0), 
                    RK2_Vec(-1, -1, -1), 

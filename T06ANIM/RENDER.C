@@ -34,9 +34,10 @@ RK2_RndMatrView =
   }
 };
 
-DBL 
-  RK2_ImageW = 30, RK2_ImageH = 30,   /* Screen sizes */
-  RK2_ImageWp = 3, RK2_ImageHp = 4; /* Screen sizes */
+DBL
+RK2_ImageW = 30, RK2_ImageH = 30,   /* Screen sizes */
+RK2_ImageWp = 3, RK2_ImageHp = 4,   /* Screen sizes */
+RK2_ProjDist = 30;                   /* Project distance */
 
 /* User camera */
 rk2CAMERA RK2_Camera;
@@ -57,6 +58,9 @@ rk2VEC RK2_RndWorldToScreen( rk2VEC VecSrc )
   /* getting coords */
   RK2_MatrMultMatr(&TmpMatr.Arr[0][0], &RK2_RndMatrWorld.Arr[0][0], 4, 4, &RK2_RndMatrView.Arr[0][0], 4, 4);
   VecN = RK2_VecMultMatr4x4(VecSrc, &TmpMatr);
+
+  VecN.X *= RK2_ProjDist / VecN.Z;
+  VecN.Y *= RK2_ProjDist / VecN.Z;
 
   /* Proection */
   Ps.X = (VecN.X + RK2_ImageW / 2) / RK2_ImageWp * (RK2_ImageW - 1);
@@ -123,13 +127,13 @@ VOID RK2_RndBuildMatrView( VOID )
  * RETURNS:
  *   (VOID) None.
  */
-VOID RK2_RndSetCamera( rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At )
+VOID RK2_RndCameraSet( rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At )
 {
   RK2_Camera.At = At;
   RK2_Camera.Up = Up;
   RK2_Camera.Right = Right;
   RK2_Camera.Dir = Dir;
-} /* End of 'RK2_RndSetCamera' function */
+} /* End of 'RK2_RndCameraSet' function */
 
 /* Adding RK2_Camera properties function.
  * ARGUMENTS:
@@ -138,14 +142,14 @@ VOID RK2_RndSetCamera( rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC A
  * RETURNS:
  *   (VOID) None.
  */
-VOID RK2_RndUpdateCamera( rk2VEC DtLoc, rk2VEC DtUp, rk2VEC DtRight, rk2VEC DtDir, rk2VEC DtAt )
+VOID RK2_RndCameraUpdate( rk2VEC DtLoc, rk2VEC DtUp, rk2VEC DtRight, rk2VEC DtDir, rk2VEC DtAt )
 {
   RK2_Camera.At = RK2_VecSumVec(RK2_Camera.At, DtAt);
   RK2_Camera.Dir = RK2_VecSumVec(RK2_Camera.Dir, DtDir);
   RK2_Camera.Loc = RK2_VecSumVec(RK2_Camera.Loc, DtLoc);
   RK2_Camera.Right = RK2_VecSumVec(RK2_Camera.Right, DtRight);
   RK2_Camera.Up = RK2_VecSumVec(RK2_Camera.Up, DtUp);
-} /* End of 'RK2_RndUpdateCamera' function */
+} /* End of 'RK2_RndCameraUpdate' function */
 
 /* Setting Global properties for render function.
  * ARGUMENTS:
@@ -156,12 +160,12 @@ VOID RK2_RndUpdateCamera( rk2VEC DtLoc, rk2VEC DtUp, rk2VEC DtRight, rk2VEC DtDi
  */
 VOID RK2_RndSetRenderProp( INT ScreenW, INT ScreenH )
 {
-  
   RK2_ImageW = ScreenW;
   RK2_ImageH = ScreenH;
-  RK2_ImageWp = RK2_ImageHp * ScreenW / ScreenH;
-  /* RK2_ImageHp = ScreenH; */
-  
+  RK2_ImageWp = ScreenW;
+  RK2_ImageHp = ScreenH;
+
+  RK2_ProjDist = ScreenW / 30;
 } /* End of 'RK2_RndSetRenderProp' function */
 
 /* END OF 'RENDER.C' FILE */

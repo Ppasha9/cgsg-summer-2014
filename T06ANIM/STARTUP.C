@@ -42,7 +42,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   HWND hWnd;
   MSG msg;
-  INT i;
+  /* INT i; */
 
   /*
   rk2MATR4x4 Matr1 =
@@ -110,8 +110,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\cow.object"));
   RK2_AnimAddUnit(RK2_UnitCubeCreate());
   
-  
-  RK2_AnimAddUnit(RK2_UnitClockCreate());
+  /// RK2_AnimAddUnit(RK2_UnitClockCreate());
   RK2_AnimAddUnit(RK2_UnitLogoCreate(30, 30));
   RK2_AnimAddUnit(RK2_UnitCubeCreate());
   RK2_AnimAddUnit(RK2_InfoUnitCreate());

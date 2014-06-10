@@ -10,6 +10,7 @@
 #include <math.h>
 
 #include "../anim.h"
+#include "../render.h"
 
 /* Unit Animation control response function.
 * ARGUMENTS:
@@ -26,6 +27,9 @@ static VOID UnitAnimContolResponse(rk2UNIT *Unit, rk2ANIM *Ani)
   if (!Ani->KeysClicked['P'] && Ani->Keys['P'])
     RK2_AnimSetPause();
 
+  /* 3D Render camera controller */
+  /// if (Ani->KeysClicked['W'])
+    /// RK2_RndCameraUpdate(RK2)
   if (Ani->Keys[VK_ESCAPE])
     DestroyWindow(Ani->hWnd);
 

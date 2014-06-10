@@ -115,5 +115,4 @@ VOID RK2_GObjDraw( rk2GOBJ *GObj, HDC hDC )
   }
 } /* End of 'RK2_GObjDraw' function */
 
-
 /* END OF 'GOBG.C' FILE */

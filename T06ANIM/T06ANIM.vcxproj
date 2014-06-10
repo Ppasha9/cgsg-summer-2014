@@ -88,21 +88,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ANIM.C" />
+    <ClCompile Include="GOBJ.C" />
     <ClCompile Include="IMAGE.C" />
+    <ClCompile Include="RENDER.C" />
     <ClCompile Include="STARTUP.C" />
-    <ClCompile Include="UNIT.C" />
     <ClCompile Include="UNITS\SAMPANCONTROL.C" />
     <ClCompile Include="UNITS\SAMPANINFO.C" />
     <ClCompile Include="UNITS\SAMPCLOCK.C" />
     <ClCompile Include="UNITS\SAMPCOW.C" />
+    <ClCompile Include="UNITS\SAMPCUBE.C" />
+    <ClCompile Include="UNITS\SAMPGOBJ.C" />
     <ClCompile Include="UNITS\SAMPLOGO.C" />
     <ClCompile Include="UNITS\SAMPPIC.C" />
+    <ClCompile Include="UNIT.C" />
+    <ClCompile Include="MATR.C" />
+    <ClCompile Include="VEC.C" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ANIM.H" />
     <ClInclude Include="DEF.H" />
     <ClInclude Include="IMAGE.H" />
+    <ClInclude Include="RENDER.H" />
     <ClInclude Include="UNITS.H" />
+    <ClInclude Include="MTH.H" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
