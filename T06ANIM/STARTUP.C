@@ -10,6 +10,8 @@
 
 #include "units.h"
 
+#include "mth.h"
+
 #pragma comment(lib, "winmm")
 
 #include <mmsystem.h>
@@ -41,8 +43,29 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   HWND hWnd;
   MSG msg;
   INT i;
+
+  /*
+  rk2MATR4x4 Matr1 =
+  {
+    {
+      {1, 2, 3, 4},
+      {5, 6, 7, 8},
+      {3, 4, 5, 7},
+      {3, 2, 5, 1}
+    }
+  };
+  rk2VEC Vec1;
+
+  Vec1.X = 1;
+  Vec1.Y = 2;
+  Vec1.Z = 3;
+  Vec1.At = 4;
   
-  /* Mainwindow class registration */
+  RK2_VecMultMatr4x4(&Vec1, &Matr1);
+  */
+
+
+  /* Main window class registration */
   wc.style = CS_HREDRAW | CS_VREDRAW;
   wc.cbClsExtra = 0; /* Extra count of bytes for class */
   wc.cbWndExtra = 0; /* Extra count of bytes for windows */
@@ -75,12 +98,17 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   /*** Adding units ***/
-  RK2_AnimAddUnit(RK2_UnitAnimContolCreate()); /* Main anim response unit */
-
+  /*
   for (i = 0; i < 30 * 30; i++)
     RK2_AnimAddUnit(RK2_CowUnitCreate());
   RK2_AnimAddUnit(RK2_UnitClockCreate());
   RK2_AnimAddUnit(RK2_UnitLogoCreate(30, 30));
+  */
+
+  RK2_AnimAddUnit(RK2_UnitAnimContolCreate()); /* Main anim response unit */
+  
+  RK2_AnimAddUnit(RK2_UnitLogoCreate(30, 30));
+  RK2_AnimAddUnit(RK2_UnitCubeCreate());
 
   RK2_AnimAddUnit(RK2_InfoUnitCreate());
 

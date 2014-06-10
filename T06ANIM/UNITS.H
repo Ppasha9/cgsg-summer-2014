@@ -27,6 +27,9 @@ rk2UNIT *RK2_UnitPictCreate( CHAR *FileName, INT PosX, INT PosY, DWORD DrawingTy
 /* Creating unit pict animation function. */
 rk2UNIT *RK2_UnitLogoCreate( INT PosX, INT PosY );
 
+/* Unit cube create function. */
+rk2UNIT *RK2_UnitCubeCreate( VOID );
+
 #endif /* __UNITS_H_ */
 
 /* END OF 'UNITS.H' FILE */

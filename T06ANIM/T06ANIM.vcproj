@@ -191,16 +191,24 @@
 				>
 			</File>
 			<File
-				RelativePath=".\STARTUP.C"
+				RelativePath=".\RENDER.C"
 				>
 			</File>
 			<File
-				RelativePath=".\UNIT.C"
+				RelativePath=".\RENDER.H"
+				>
+			</File>
+			<File
+				RelativePath=".\STARTUP.C"
 				>
 			</File>
 			<Filter
 				Name="Unit Samples"
 				>
+				<File
+					RelativePath=".\UNITS\SAMPANCONTROL.C"
+					>
+				</File>
 				<File
 					RelativePath=".\UNITS\SAMPANINFO.C"
 					>
@@ -214,6 +222,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UNITS\SAMPCUBE.C"
+					>
+				</File>
+				<File
 					RelativePath=".\UNITS\SAMPLOGO.C"
 					>
 				</File>
@@ -222,7 +234,27 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UNIT.C"
+					>
+				</File>
+				<File
 					RelativePath=".\UNITS.H"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Math"
+				>
+				<File
+					RelativePath=".\MATR.C"
+					>
+				</File>
+				<File
+					RelativePath=".\MTH.H"
+					>
+				</File>
+				<File
+					RelativePath=".\VEC.C"
 					>
 				</File>
 			</Filter>
