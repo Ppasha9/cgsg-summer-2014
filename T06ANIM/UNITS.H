@@ -30,6 +30,10 @@ rk2UNIT *RK2_UnitLogoCreate( INT PosX, INT PosY );
 /* Unit cube create function. */
 rk2UNIT *RK2_UnitCubeCreate( VOID );
 
+/* Unit GObject create function. */
+rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName );
+
+
 #endif /* __UNITS_H_ */
 
 /* END OF 'UNITS.H' FILE */

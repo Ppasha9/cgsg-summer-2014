@@ -9,9 +9,15 @@
 #include "mth.h"
 
 /* World to screen coords setting function. */
-POINT RK2_RndWorldToScreen( rk2VEC VecSrc, rk2ANIM *Ani );
+rk2VEC RK2_RndWorldToScreen( rk2VEC VecSrc );
 
 /* Setting RK2_RndMatrView matrix function. */
-VOID RK2_RndBuildMatrView( rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At );
+VOID RK2_RndBuildMatrView( VOID );
+
+/* Setting RK2_Camera properties function. */
+VOID RK2_RndSetCamera( rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At );
+
+/* SettingGlobal properties for render function. */
+VOID RK2_RndSetRenderProp( INT ScreenW, INT ScreenH );
 
 /* END OF 'RENDER.H' FILE */

@@ -32,6 +32,25 @@ VOID RK2_MatrMultMatr( DBL *Dest, DBL *SrcA, INT SrcAw, INT SrcAh, DBL *SrcB, IN
     }
 } /* End of 'RK2_MatrMultMatr' function */
 
+/* Matrix adding number function.
+ * ARGUMENTS:
+ *   - Dest matr:
+ *       rk2MATR4x4 *Dest;
+ *   - Source Matrs:
+ *       rk2MATR4x4 *SrcA, *SrcB;
+ *   - Matr sizes:
+ *       INT SrcAw, SrcAh, SrcBw, SrcBh;
+ * RETURNS:
+ *   (VOID) None.
+ */
+VOID RK2_MatrAddNum( DBL *Dest, DBL *Src, INT SrcW, INT SrcH, DBL Num )
+{
+  INT j, i;
+  for (j = 0; j < SrcH; j++)
+    for (i = 0; i < SrcW; i++)
+      Dest[j * SrcW + i] += Num;
+} /* End of 'RK2_MatrAddNum' function */
+
 /* Vec mult with matr function.
  * ARGUMENTS:
  *   - Vector:
@@ -57,5 +76,23 @@ rk2VEC RK2_VecMultMatr4x4( rk2VEC Vec, rk2MATR4x4 *SrcMatr )
 
   return Vec;
 } /* End of 'RK2_VecMultMatr4x4' function */
+
+/* Vector create function.
+ * ARGUMENTS:
+ *   - Vector properties:
+ *       DBL X, Y, Z;
+ * RETURNS:
+ *   (rk2VEC) Result vector.
+ */
+rk2VEC RK2_Vec( DBL X, DBL Y, DBL Z )
+{
+  rk2VEC RetVec;
+  RetVec.X = X;
+  RetVec.Y = Y;
+  RetVec.Z = Z;
+  RetVec.At = 1;
+  return RetVec;
+} /* End of 'RK2_VecMultMatr4x4' function */
+
 
 /* END OF 'MATR.C' FILE */

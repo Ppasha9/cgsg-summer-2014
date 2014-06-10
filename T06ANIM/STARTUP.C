@@ -98,18 +98,22 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   /*** Adding units ***/
+  
   /*
   for (i = 0; i < 30 * 30; i++)
     RK2_AnimAddUnit(RK2_CowUnitCreate());
-  RK2_AnimAddUnit(RK2_UnitClockCreate());
-  RK2_AnimAddUnit(RK2_UnitLogoCreate(30, 30));
   */
+  
 
   RK2_AnimAddUnit(RK2_UnitAnimContolCreate()); /* Main anim response unit */
   
+  RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\cow.object"));
+  RK2_AnimAddUnit(RK2_UnitCubeCreate());
+  
+  
+  RK2_AnimAddUnit(RK2_UnitClockCreate());
   RK2_AnimAddUnit(RK2_UnitLogoCreate(30, 30));
   RK2_AnimAddUnit(RK2_UnitCubeCreate());
-
   RK2_AnimAddUnit(RK2_InfoUnitCreate());
 
   /* Main message loop running */

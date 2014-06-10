@@ -19,6 +19,7 @@ typedef struct tagrk2UNIT_CUBE
   INT PosX, PosY, PosZ;           /* Position on window */
   DBL Rotation;                   /* Angle of rotation */
   rk2VEC Points[9];               /* Points of cube */
+  DBL FacetLen;                   /* Length of facets */
 } rk2UNIT_CUBE;
 
 /* Unit cube init function.
@@ -31,9 +32,17 @@ typedef struct tagrk2UNIT_CUBE
  */
 static VOID UnitCubeInit( rk2UNIT_CUBE *Unit, rk2ANIM *Ani )
 {
-  Unit->Points[0].X = Unit->PosX;       Unit->Points[0].Y = Unit->PosY;       Unit->Points[0].Z = Unit->PosZ;
-  Unit->Points[1].X = Unit->PosX + 3;   Unit->Points[1].Y = Unit->PosY + 2;   Unit->Points[1].Z = Unit->PosZ + 2;
-  Unit->Points[2].X = Unit->PosX + 100;  Unit->Points[2].Y = Unit->PosY + 6;   Unit->Points[1].Z = Unit->PosZ + 4;
+  Unit->Points[0].X = Unit->PosX;                   Unit->Points[0].Y = Unit->PosY;                   Unit->Points[0].Z = Unit->PosZ;
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  /*
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  Unit->Points[1].X = Unit->PosX + Unit->FacetLen;  Unit->Points[1].Y = Unit->PosY + Unit->FacetLen;  Unit->Points[1].Z = Unit->PosZ;
+  */
 } /* End of 'RK2_UnitCubeInit' function */
 
 /* Unit cube response function.
@@ -46,7 +55,13 @@ static VOID UnitCubeInit( rk2UNIT_CUBE *Unit, rk2ANIM *Ani )
  */
 static VOID UnitCubeResponse( rk2UNIT_CUBE *Unit, rk2ANIM *Ani )
 {
-  ;
+  INT i;
+  for (i = 0; i < 9; i++)
+  {
+    Unit->Points[i].X += cos(Ani->Time);
+    Unit->Points[i].Y += cos(Ani->Time);
+    Unit->Points[i].Z += cos(Ani->Time) / 100;
+  }
 } /* End of 'RK2_UnitCubeResponse' function */
 
 /* Unit cube render function.
@@ -59,13 +74,47 @@ static VOID UnitCubeResponse( rk2UNIT_CUBE *Unit, rk2ANIM *Ani )
  */
 static VOID UnitCubeRender( rk2UNIT_CUBE *Unit, rk2ANIM *Ani )
 {
-  POINT NPnt;
+  rk2VEC NPnt;
   INT i;
+  DBL j;
+
   for (i = 0; i < 9; i++)
   {
-    NPnt = RK2_RndWorldToScreen(Unit->Points[i], Ani);
-    Ellipse(Ani->hDC, NPnt.x - 5, NPnt.y - 5, NPnt.x + 5, NPnt.y + 5);
+    NPnt = RK2_RndWorldToScreen(Unit->Points[i]);
+    Ellipse(Ani->hDC, NPnt.X - 5 / NPnt.Z, NPnt.Y - 5 / NPnt.Z, NPnt.X + 5 / NPnt.Z, NPnt.Y + 5 / NPnt.Z);
   }
+  
+  /*
+  NPnt = RK2_RndWorldToScreen(RK2_Vec(0, 0, 0));
+  Ellipse(Ani->hDC, NPnt.X - 20 / NPnt.Z, NPnt.Y - 20 / NPnt.Z, NPnt.X + 20 / NPnt.Z, NPnt.Y + 20 / NPnt.Z);
+
+  NPnt = RK2_RndWorldToScreen(RK2_Vec(0, 0, 20));
+  Ellipse(Ani->hDC, NPnt.X - 20 / NPnt.Z, NPnt.Y - 20 / NPnt.Z, NPnt.X + 20 / NPnt.Z, NPnt.Y + 20 / NPnt.Z);
+
+  NPnt = RK2_RndWorldToScreen(RK2_Vec(0, 0, 30));
+  Ellipse(Ani->hDC, NPnt.X - 20 / NPnt.Z, NPnt.Y - 20 / NPnt.Z, NPnt.X + 20 / NPnt.Z, NPnt.Y + 20 / NPnt.Z);
+  */
+
+  /* Axes */
+
+  SelectObject(Ani->hDC, GetStockObject(DC_BRUSH));
+  SelectObject(Ani->hDC, GetStockObject(NULL_PEN));
+
+  for (j = 0; j < 200; j += 0.5)
+  {
+    SetDCBrushColor(Ani->hDC, 0xFF0000);
+    NPnt = RK2_RndWorldToScreen(RK2_Vec(j, 0, 0));
+    Ellipse(Ani->hDC, NPnt.X - 1 / NPnt.Z, NPnt.Y - 2 / NPnt.Z, NPnt.X + 2 / NPnt.Z, NPnt.Y + 2 / NPnt.Z);
+
+    SetDCBrushColor(Ani->hDC, 0x00FF00);
+    NPnt = RK2_RndWorldToScreen(RK2_Vec(0, j, 0));
+    Ellipse(Ani->hDC, NPnt.X - 1 / NPnt.Z, NPnt.Y - 2 / NPnt.Z, NPnt.X + 2 / NPnt.Z, NPnt.Y + 2 / NPnt.Z);
+
+    SetDCBrushColor(Ani->hDC, 0x0000FF);
+    NPnt = RK2_RndWorldToScreen(RK2_Vec(0, 0, j));
+    Ellipse(Ani->hDC, NPnt.X - 1 / NPnt.Z, NPnt.Y - 2 / NPnt.Z, NPnt.X + 2 / NPnt.Z, NPnt.Y + 2 / NPnt.Z);
+  }
+
 } /* End of 'RK2_UnitCubeRender' function */
 
 /* Unit cube create function.
