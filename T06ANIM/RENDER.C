@@ -1,171 +1,154 @@
 /* FILENAME: RENDER.C
  * PROGRAMMER: RK2
- * PURPOSE: Animation render module
+ * PURPOSE: 3D render handle module.
  * LAST UPDATE: 10.06.2014
  */
 
-#include "def.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+#include "render.h"
 #include "mth.h"
 
-/* Camera render struct */
-typedef struct tagrk2CAMERA
-{
-  rk2VEC Loc, Dir, Up, Right, At; /* Camera properties */
-} rk2CAMERA;
+/* Глобальная камера */
+rk2CAMERA RK2_RndCam;
 
-/* Gloabal Matrixes */
-rk2MATR4x4 RK2_RndMatrWorld = 
-{
-  {
-    {1, 0, 0, 0},
-    {0, 1, 0, 0},
-    {0, 0, 1, 0},
-    {0, 0, 0, 1}
-  }
-}, 
-RK2_RndMatrView = 
-{
-  {
-    {1, 0, 0, 0},
-    {0, 1, 0, 0},
-    {0, 0, 1, 0},
-    {0, 0, 0, 1}
-  }
-};
-
+/* Parametres of projection */
 DBL
-RK2_ImageW = 30, RK2_ImageH = 30,   /* Screen sizes */
-RK2_ImageWp = 3, RK2_ImageHp = 4,   /* Screen sizes */
-RK2_ProjDist = 30;                   /* Project distance */
+  RK2_RndWs = 30, RK2_RndHs = 30,   /* Frame sizes */
+  RK2_RndWp = 4, RK2_RndHp = 3,     /* Projection sizes */
+  RK2_RndProjDist = 5;              /* distance to frame */
 
-/* User camera */
+/* Matrix */
+rk2MATR4x4
+  RK2_RndMatrWorld = RK2_UNIT_MATR_DEFAULT,       /* Matrix world convertion */
+  RK2_RndMatrView = RK2_UNIT_MATR_DEFAULT,        /* Matrix view convertion */
+  RK2_RndMatrProjection = RK2_UNIT_MATR_DEFAULT,  /* Projection matrix */
+  RK2_RndMatrRes = RK2_UNIT_MATR_DEFAULT;         /* Summed matrix */
+
+/* Camera */
 rk2CAMERA RK2_Camera;
 
-/* World to screen coords setting function.
+/* Convertion from worl coodinate system to camera screen function.
  * ARGUMENTS:
- *   - vector:
- *       rk2CAMERA *Camera;
+ *   - Exisating point:
+ *       rk2VEC P;
  * RETURNS:
- *   (rk2VEC) Vector back.
+ *   (rk2VEC) Coords in window.
  */
-rk2VEC RK2_RndWorldToScreen( rk2VEC VecSrc )
+rk2VEC RK2_RndWorldToScreen( rk2VEC P )
 {
-  rk2VEC Ps, VecN;
+  rk2VEC
+    Ps, Pp;
 
-  rk2MATR4x4 TmpMatr;
+  /* Covert system coords */
+  Pp = VecMultMatr(P, RK2_RndMatrRes);
+  
+  /* Projection */
+  Pp.X *= RK2_RndProjDist / Pp.Z;
+  Pp.Y *= RK2_RndProjDist / Pp.Z;
 
-  /* getting coords */
-  RK2_MatrMultMatr(&TmpMatr.Arr[0][0], &RK2_RndMatrWorld.Arr[0][0], 4, 4, &RK2_RndMatrView.Arr[0][0], 4, 4);
-  VecN = RK2_VecMultMatr4x4(VecSrc, &TmpMatr);
-
-  VecN.X *= RK2_ProjDist / VecN.Z;
-  VecN.Y *= RK2_ProjDist / VecN.Z;
-
-  /* Proection */
-  Ps.X = (VecN.X + RK2_ImageW / 2) / RK2_ImageWp * (RK2_ImageW - 1);
-  Ps.Y = (-VecN.Y + RK2_ImageH / 2) / RK2_ImageHp * (RK2_ImageH - 1);
-  Ps.Z = VecN.Z;
+  Ps.X = (-Pp.X + RK2_RndWp / 2) / RK2_RndWp * (RK2_RndWs - 1);
+  Ps.Y = ( Pp.Y + RK2_RndHp / 2) / RK2_RndHp * (RK2_RndHs - 1);
+  Ps.Z = Pp.Z;
   return Ps;
 } /* End of 'RK2_RndWorldToScreen' function */
 
-/* Setting RK2_RndMatrView matrix function.
- * ARGUMENTS: None.
- * RETURNS:
- *   (VOID) None.
- */
-VOID RK2_RndBuildMatrView( VOID )
-{
-  /*
-  RK2_RndMatrView.Arr[0][0] = Right.X;
-  RK2_RndMatrView.Arr[0][1] = Right.Y;
-  RK2_RndMatrView.Arr[0][2] = Right.Z;
-  RK2_RndMatrView.Arr[0][3] = -Loc.X * Right.X - Loc.Y * Right.Y - Loc.Z * Right.Z;
-
-  RK2_RndMatrView.Arr[1][0] = Up.X;
-  RK2_RndMatrView.Arr[1][1] = Up.Y;
-  RK2_RndMatrView.Arr[1][2] = Up.Z;
-  RK2_RndMatrView.Arr[1][2] = -Loc.X * Up.X - Loc.Y * Up.Y - Loc.Z * Up.Z;
-
-  RK2_RndMatrView.Arr[2][0] = -Dir.X;
-  RK2_RndMatrView.Arr[2][1] = -Dir.Y;
-  RK2_RndMatrView.Arr[2][2] = -Dir.Z;
-  RK2_RndMatrView.Arr[2][2] = Loc.X * Dir.X + Loc.Y * Dir.Y + Loc.Z * Dir.Z;
-
-  RK2_RndMatrView.Arr[3][0] = 0;
-  RK2_RndMatrView.Arr[3][1] = 0;
-  RK2_RndMatrView.Arr[3][2] = 0;
-  RK2_RndMatrView.Arr[3][2] = 1;
-  */
-
-  RK2_RndMatrView.Arr[0][0] = RK2_Camera.Right.X;
-  RK2_RndMatrView.Arr[0][1] = RK2_Camera.Right.Y;
-  RK2_RndMatrView.Arr[0][2] = RK2_Camera.Right.Z;
-  RK2_RndMatrView.Arr[0][3] = -RK2_Camera.Loc.X * RK2_Camera.Right.X - RK2_Camera.Loc.Y * RK2_Camera.Right.Y - RK2_Camera.Loc.Z * RK2_Camera.Right.Z;
-
-  RK2_RndMatrView.Arr[1][0] = RK2_Camera.Up.X;
-  RK2_RndMatrView.Arr[1][1] = RK2_Camera.Up.Y;
-  RK2_RndMatrView.Arr[1][2] = RK2_Camera.Up.Z;
-  RK2_RndMatrView.Arr[1][2] = -RK2_Camera.Loc.X * RK2_Camera.Up.X - RK2_Camera.Loc.Y * RK2_Camera.Up.Y - RK2_Camera.Loc.Z * RK2_Camera.Up.Z;
-
-  RK2_RndMatrView.Arr[2][0] = -RK2_Camera.Dir.X;
-  RK2_RndMatrView.Arr[2][1] = -RK2_Camera.Dir.Y;
-  RK2_RndMatrView.Arr[2][2] = -RK2_Camera.Dir.Z;
-  RK2_RndMatrView.Arr[2][2] = RK2_Camera.Loc.X * RK2_Camera.Dir.X + RK2_Camera.Loc.Y * RK2_Camera.Dir.Y + RK2_Camera.Loc.Z * RK2_Camera.Dir.Z;
-
-  RK2_RndMatrView.Arr[3][0] = 0;
-  RK2_RndMatrView.Arr[3][1] = 0;
-  RK2_RndMatrView.Arr[3][2] = 0;
-  RK2_RndMatrView.Arr[3][2] = 1;
-
-} /* End of 'RK2_RndBuildMatrView' function */
-
-/* Setting RK2_Camera properties function.
+/* Render setting function.
  * ARGUMENTS:
- *   - Camera properties:
- *       rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At;
- * RETURNS:
- *   (VOID) None.
+ *   - Image properties:
+ *       INT W, H;
+ * RETURNS: None.
  */
-VOID RK2_RndCameraSet( rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At )
+VOID RK2_RndSetRenderProp( INT W, INT H )
 {
+   RK2_RndWs = W;
+   RK2_RndHs = H;
+   RK2_RndWs = W;
+   RK2_RndHs = H;
+} /* End of 'RK2_RndSetRenderProp' function */
+
+/* Setting cameras properties 
+ * ARGUMENTS:
+ *   - Vector camera new properties:
+ *     rk2VEC Loc, At, Up;
+ * RETURNS: None.
+ */
+VOID RK2_RndCameraSet( rk2VEC Loc, rk2VEC At, rk2VEC Up )
+{
+  RK2_Camera.Loc = Loc;
   RK2_Camera.At = At;
   RK2_Camera.Up = Up;
-  RK2_Camera.Right = Right;
-  RK2_Camera.Dir = Dir;
-} /* End of 'RK2_RndCameraSet' function */
+} /* End of 'RK2_RndCameraSet' funciton */
 
-/* Adding RK2_Camera properties function.
+/* Camera move by Dir-axes properties 
  * ARGUMENTS:
- *   - Camera properties:
- *       rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At;
- * RETURNS:
- *   (VOID) None.
+ *   - Vector camera new properties:
+ *     rk2VEC Loc, At, Up;
+ * RETURNS: None.
  */
-VOID RK2_RndCameraUpdate( rk2VEC DtLoc, rk2VEC DtUp, rk2VEC DtRight, rk2VEC DtDir, rk2VEC DtAt )
+VOID RK2_RndCameraMoveDir( DBL Coef )
 {
-  RK2_Camera.At = RK2_VecSumVec(RK2_Camera.At, DtAt);
-  RK2_Camera.Dir = RK2_VecSumVec(RK2_Camera.Dir, DtDir);
-  RK2_Camera.Loc = RK2_VecSumVec(RK2_Camera.Loc, DtLoc);
-  RK2_Camera.Right = RK2_VecSumVec(RK2_Camera.Right, DtRight);
-  RK2_Camera.Up = RK2_VecSumVec(RK2_Camera.Up, DtUp);
-} /* End of 'RK2_RndCameraUpdate' function */
+  RK2_Camera.Dir = VecSubVec(RK2_Camera.At, RK2_Camera.Loc);
+  RK2_Camera.Loc = VecSumVec(RK2_Camera.Loc, VecMultNum(VecNormalize(RK2_Camera.Dir), Coef));
+}  /* End of 'RK2_RndCameraMoveByDir' funciton */
 
-/* Setting Global properties for render function.
+/* Camera move by Right-Axes function.
  * ARGUMENTS:
- *   - Anim properties:
- *       INT ScreenW, INT ScreenH;
- * RETURNS:
- *   (VOID) None.
+ *   - Vector camera new properties:
+ *     rk2VEC Loc, At, Up;
+ * RETURNS: None.
  */
-VOID RK2_RndSetRenderProp( INT ScreenW, INT ScreenH )
+VOID RK2_RndCameraMoveRight( DBL Coef )
 {
-  RK2_ImageW = ScreenW;
-  RK2_ImageH = ScreenH;
-  RK2_ImageWp = ScreenW;
-  RK2_ImageHp = ScreenH;
+  RK2_Camera.Dir = VecSubVec(RK2_Camera.At, RK2_Camera.Loc);
+  RK2_Camera.Right = VecCrossVec(RK2_Camera.Dir, RK2_Camera.Up);
+  RK2_Camera.Loc = VecSumVec(RK2_Camera.Loc, VecMultNum(VecNormalize(RK2_Camera.Right), Coef));
+  RK2_Camera.At = VecSumVec(RK2_Camera.At, VecMultNum(VecNormalize(RK2_Camera.Right), Coef));
+}  /* End of 'RK2_RndCameraMoveByDir' funciton */
 
-  RK2_ProjDist = ScreenW / 30;
-} /* End of 'RK2_RndSetRenderProp' function */
+/* Camera move by Up-Axes function.
+ * ARGUMENTS:
+ *   - Vector camera new properties:
+ *     rk2VEC Loc, At, Up;
+ * RETURNS: None.
+ */
+VOID RK2_RndCameraMoveUp( DBL Coef )
+{
+  RK2_Camera.Loc = VecSumVec(RK2_Camera.Loc, VecMultNum(VecNormalize(RK2_Camera.Up), Coef));
+  RK2_Camera.At = VecSumVec(RK2_Camera.At, VecMultNum(VecNormalize(RK2_Camera.Up), Coef));
+}  /* End of 'RK2_RndCameraMoveByDir' funciton */
+
+/* Camera rotation by axes Y function.
+ * ARGUMENTS:
+ *   - Vector camera new properties:
+ *     rk2VEC Loc, At, Up;
+ * RETURNS: None.
+ */
+VOID RK2_RndCameraRotateUp( DBL Angle )
+{
+  RK2_Camera.Dir = VecSubVec(RK2_Camera.At, RK2_Camera.Loc);
+  RK2_Camera.Dir.X = RK2_Camera.Dir.X * cos(Angle);
+  RK2_Camera.Dir.Y = RK2_Camera.Dir.Y * sin(Angle);
+
+  RK2_Camera.Right = Angle > 0? VecCrossVec(VecNormalize(RK2_Camera.Dir), RK2_Camera.Up);
+
+  RK2_Camera.Dir = VecNeg(VecCrossVec(RK2_Camera.Right, RK2_Camera.Up));
+  RK2_Camera.At = VecSubVec(RK2_Camera.Loc, RK2_Camera.Dir);
+  
+}  /* End of 'RK2_RndCameraMoveByDir' funciton */
+
+/* Render setting function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
+VOID RK2_RndBuildMatrix( VOID )
+{
+  RK2_RndMatrView = MatrViewLookAt(RK2_Camera.Loc, RK2_Camera.At, RK2_Camera.Up);
+  RK2_RndMatrProjection = MatrProjection(-RK2_RndWp / 2, RK2_RndWp / 2, -RK2_RndHp / 2, +RK2_RndHp / 2, RK2_RndProjDist, 1000);
+  RK2_RndMatrRes = MatrMultMatr(MatrMultMatr(RK2_RndMatrWorld, RK2_RndMatrView), RK2_RndMatrProjection);
+  /* RK2_RndMatrRes = MatrMultMatr(RK2_RndMatrWorld, RK2_RndMatrView); */
+} /* End of 'RK2_RndBuildMatrixView' function */
 
 /* END OF 'RENDER.C' FILE */

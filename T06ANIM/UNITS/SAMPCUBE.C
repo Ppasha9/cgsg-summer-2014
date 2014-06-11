@@ -89,22 +89,22 @@ static VOID UnitCubeRender( rk2UNIT_CUBE *Unit, rk2ANIM *Ani )
   SelectObject(Ani->hDC, GetStockObject(DC_BRUSH));
   SelectObject(Ani->hDC, GetStockObject(NULL_PEN));
 
-  for (j = -100; j < 200; j += 0.5)
+  for (j = -50; j <= 50; j += 0.5)
   {
     SetDCBrushColor(Ani->hDC, 0xFF0000);
-    NPnt = RK2_RndWorldToScreen(RK2_Vec(j, 0, 0));
+    NPnt = RK2_RndWorldToScreen(VecSet(j, 0, 0));
     Ellipse(Ani->hDC, NPnt.X - ls, NPnt.Y - ls, NPnt.X + ls, NPnt.Y + ls);
     if (j - (INT)j == 0 && !((INT)j % 5))
       TextOut(Ani->hDC, NPnt.X - 1, NPnt.Y - 1, Str, sprintf(Str, "%d", (INT)j));
 
     SetDCBrushColor(Ani->hDC, 0x00FF00);
-    NPnt = RK2_RndWorldToScreen(RK2_Vec(0, j, 0));
+    NPnt = RK2_RndWorldToScreen(VecSet(0, j, 0));
     Ellipse(Ani->hDC, NPnt.X - ls, NPnt.Y - ls, NPnt.X + ls, NPnt.Y + ls);
     if (j - (INT)j == 0 && !((INT)j % 5))
       TextOut(Ani->hDC, NPnt.X - 1, NPnt.Y - 1, Str, sprintf(Str, "%d", (INT)j));
 
     SetDCBrushColor(Ani->hDC, 0x0000FF);
-    NPnt = RK2_RndWorldToScreen(RK2_Vec(0, 0, j));
+    NPnt = RK2_RndWorldToScreen(VecSet(0, 0, j));
     Ellipse(Ani->hDC, NPnt.X - ls, NPnt.Y - ls, NPnt.X + ls, NPnt.Y + ls);
     if (j - (INT)j == 0 && !((INT)j % 5))
       TextOut(Ani->hDC, NPnt.X - 1, NPnt.Y - 1, Str, sprintf(Str, "%d", (INT)j));

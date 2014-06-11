@@ -27,9 +27,26 @@ static VOID UnitAnimContolResponse(rk2UNIT *Unit, rk2ANIM *Ani)
   if (!Ani->KeysClicked['P'] && Ani->Keys['P'])
     RK2_AnimSetPause();
 
-  /* 3D Render camera controller */
-  /// if (Ani->KeysClicked['W'])
-    /// RK2_RndCameraUpdate(RK2)
+  if (Ani->Keys['O'])
+    RK2_RndCameraMoveDir(0.5);
+  if (Ani->Keys['L'])
+    RK2_RndCameraMoveDir(-0.5);
+
+  if (Ani->Keys['A'])
+    RK2_RndCameraMoveRight(-0.5);
+  if (Ani->Keys['D'])
+    RK2_RndCameraMoveRight(0.5);
+
+  if (Ani->Keys['W'])
+    RK2_RndCameraMoveUp(0.3);
+  if (Ani->Keys['S'])
+    RK2_RndCameraMoveUp(-0.3);
+
+  if (Ani->Keys['Q'])
+    RK2_RndCameraRotateUp(0.1);
+  if (Ani->Keys['E'])
+    RK2_RndCameraRotateUp(-0.1);
+
   if (Ani->Keys[VK_ESCAPE])
     DestroyWindow(Ani->hWnd);
 

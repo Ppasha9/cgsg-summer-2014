@@ -1,29 +1,64 @@
 /* FILENAME: RENDER.H
  * PROGRAMMER: RK2
- * PURPOSE: Animation render module
+ * PURPOSE: 3D render declaration module.
  * LAST UPDATE: 10.06.2014
  */
 
-#include "def.h"
+#ifndef __RENDER_H_
+#define __RENDER_H_
 
+#include "image.h"
 #include "mth.h"
 
-/* World to screen coords setting function. */
-rk2VEC RK2_RndWorldToScreen( rk2VEC VecSrc );
+/* Camera properties */
+typedef struct
+{
+  rk2VEC
+    Loc,             /* Location */
+    Dir, Up, Right,  /* Orient vectors */
+    At;              /* Point to view */
+} rk2CAMERA;
 
-/* Setting RK2_RndMatrView matrix function. */
-VOID RK2_RndBuildMatrView( VOID );
+/* Тип представления объекта - набора вершин и треугольников и ребер */
 
-/* SettingGlobal properties for render function. */
-VOID RK2_RndSetRenderProp( INT ScreenW, INT ScreenH );
+/* Глобальная камера */
+extern rk2CAMERA RK2_RndCam;
 
-/* Setting RK2_Camera properties function. */
-VOID RK2_RndCameraSet(rk2VEC Loc, rk2VEC Up, rk2VEC Right, rk2VEC Dir, rk2VEC At);
+/* Projection parametres */
+extern DBL
+  RK2_RndWs, RK2_RndHs, /* Frame sizes */
+  RK2_RndWp, RK2_RndHp, /* Projection sizes */
+  RK2_RndProjDist;      /* Distance to drawing screen */
 
-/* Adding RK2_Camera properties function. */
-VOID RK2_RndCameraUpdate(rk2VEC DtLoc, rk2VEC DtUp, rk2VEC DtRight, rk2VEC DtDir, rk2VEC DtAt);
+/* Matrixes */
+extern rk2MATR4x4
+  RK2_RndMatrWorld, /* Matrix of convertion World CS */
+  RK2_RndMatrView;  /* Matrix of view World CS */
 
-/// /* RK2_Camera properties mult function function. */
-/// VOID RK2_RndCameraUpdateMult(POINT DtLoc, POINT DtUp, POINT DtRight, POINT DtDir, POINT DtAt);
+/* Convertion from World system to screen function */
+rk2VEC RK2_RndWorldToScreen( rk2VEC P );
+
+/* Render setting function. */
+VOID RK2_RndSetRenderProp( INT W, INT H );
+
+/* Setting cameras properties */
+VOID RK2_RndCameraSet( rk2VEC Loc, rk2VEC At, rk2VEC Up );
+
+/* Setting cameras properties */
+VOID RK2_RndCameraMoveDir( DBL Coef );
+
+/* Camera move by Right-Axes function. */
+VOID RK2_RndCameraMoveRight( DBL Coef );
+
+/* Camera move by Up-Axes function. */
+VOID RK2_RndCameraMoveUp( DBL Coef );
+
+/* Camera rotation by axes Y function. */
+VOID RK2_RndCameraRotateUp( DBL Angle );
+
+/* Render setting function. */
+VOID RK2_RndBuildMatrix( VOID );
+
+#endif /* __RENDER_H_ */
 
 /* END OF 'RENDER.H' FILE */

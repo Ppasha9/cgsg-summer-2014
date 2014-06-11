@@ -7,10 +7,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "render.h"
-
 #include "anim.h"
-
+#include "render.h"
 
 #define RK2_JOYSTICK_AXES_FAULT 10.0
 #define RK2_JOYSTICK_AXES_COUNT(Axes) (INT)(RK2_JOYSTICK_AXES_FAULT * ((2.0 * (ji.dw##Axes##pos - jc.w##Axes##min) / (jc.w##Axes##max - jc.w##Axes##min - 1) - 1))) \
@@ -48,8 +46,8 @@ VOID RK2_AnimInit( HWND hWnd )
   RK2_Anim.hWnd = hWnd;
   RK2_Anim.hDC = CreateCompatibleDC(hDC);
   RK2_Anim.hBmFrame = CreateCompatibleBitmap(hDC, 30, 30);
-  RK2_Anim.W = 1024;
-  RK2_Anim.H = 768;
+  RK2_Anim.W = 1920;
+  RK2_Anim.H = 1080;
   RK2_Anim.NumOfUnits = 0;
   ReleaseDC(hWnd, hDC);
 
@@ -62,14 +60,11 @@ VOID RK2_AnimInit( HWND hWnd )
   RK2_TimePause = 0;
   RK2_FrameCounter = 0;
 
-
   RK2_RndSetRenderProp(RK2_Anim.W, RK2_Anim.H);
-  RK2_RndCameraSet(RK2_Vec(-1, -1, -1), 
-                   RK2_Vec(0, 1, 0), 
-                   RK2_Vec(1, 0, 0), 
-                   RK2_Vec(-1, -1, -1), 
-                   RK2_Vec(0, 0, 0));
-  RK2_RndBuildMatrView();
+  RK2_RndCameraSet(VecSet(1, 1, 1),
+                   VecSet(0, 0, 0),
+                   VecSet(0, 1, 0));
+
 } /* End of 'RK2_AnimInit' function */
 
 /* Animation destructot function.

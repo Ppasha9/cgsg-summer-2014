@@ -55,6 +55,16 @@ static VOID UnitGObjResponse( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
  */
 static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
+  /* R2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
+  RK2_RndMatrWorld = MatrRotateY(Ani->Time * 10);
+
+  /*
+  RK2_RndCameraSet(VecSet(10, 10, 10),
+                   VecSet(0, 0, 0),
+                   VecSet(0, 1, 0));
+  */
+  RK2_RndBuildMatrix();
+
   RK2_GObjDraw(&Unit->GObj, Ani->hDC);
 } /* End of 'RK2_UnitGObjRender' function */
 

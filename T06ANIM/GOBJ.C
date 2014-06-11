@@ -57,7 +57,7 @@ BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName )
     if (Buf[0] == 'v' && Buf[1] == ' ')
     {
       sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
-      GObj->V[nv++] = RK2_Vec(x, y, z);
+      GObj->V[nv++] = VecSet(x, y, z);
     }
     else if (Buf[0] == 'f' && Buf[1] == ' ')
     {
@@ -102,16 +102,21 @@ VOID RK2_GObjDraw( rk2GOBJ *GObj, HDC hDC )
   for (i = 0; i < GObj->NumOfV; i++)
   {
     pt[0] = RK2_RndWorldToScreen(GObj->V[i]);
-    Ellipse(hDC, pt[0].X - s, pt[0].Y - s, pt[0].X + s, pt[0].Y + s);
+    if (pt[0].Z >= 0)
+      Ellipse(hDC, pt[0].X - s, pt[0].Y - s, pt[0].X + s, pt[0].Y + s);
   }
   for (i = 0; i < GObj->NumOfF; i++)
   {
     for (j = 0; j < 3; j++)
       pt[j] = RK2_RndWorldToScreen(GObj->V[GObj->F[i][j]]);
-    MoveToEx(hDC, pt[0].X, pt[0].Y, NULL);
-    LineTo(hDC, pt[1].X, pt[1].Y);
-    LineTo(hDC, pt[2].X, pt[2].Y);
-    LineTo(hDC, pt[0].X, pt[0].Y);
+    if (pt[0].Z >= 0)
+      MoveToEx(hDC, pt[0].X, pt[0].Y, NULL);
+    if (pt[1].Z >= 0)
+      LineTo(hDC, pt[1].X, pt[1].Y);
+    if (pt[2].Z >= 0)
+      LineTo(hDC, pt[2].X, pt[2].Y);
+    if (pt[0].Z >= 0)
+      LineTo(hDC, pt[0].X, pt[0].Y);
   }
 } /* End of 'RK2_GObjDraw' function */
 
