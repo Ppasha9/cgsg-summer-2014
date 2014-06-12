@@ -1,7 +1,7 @@
 /* FILENAME: SAMPANINFO.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #include <stdio.h>
@@ -13,13 +13,13 @@
 #include "../render.h"
 
 /* Unit Animation control response function.
-* ARGUMENTS:
-*   - Self pointer:
-*       rk2UNIT *Unit;
-*   - Animation context pointer:
-*       rk2ANIM *Ani;
-* RETURNS: None.
-*/
+ * ARGUMENTS:
+ *   - Self pointer:
+ *       rk2UNIT *Unit;
+ *   - Animation context pointer:
+ *       rk2ANIM *Ani;
+ * RETURNS: None.
+ */
 static VOID UnitAnimContolResponse(rk2UNIT *Unit, rk2ANIM *Ani)
 {
   if (!Ani->KeysClicked['F'] && Ani->Keys['F'])
@@ -28,9 +28,9 @@ static VOID UnitAnimContolResponse(rk2UNIT *Unit, rk2ANIM *Ani)
     RK2_AnimSetPause();
 
   if (Ani->Keys['O'])
-    RK2_RndCameraMoveDir(0.5);
+    RK2_RndCameraMoveDir(1.5);
   if (Ani->Keys['L'])
-    RK2_RndCameraMoveDir(-0.5);
+    RK2_RndCameraMoveDir(-1.5);
 
   if (Ani->Keys['A'])
     RK2_RndCameraMoveRight(-0.5);
@@ -43,9 +43,17 @@ static VOID UnitAnimContolResponse(rk2UNIT *Unit, rk2ANIM *Ani)
     RK2_RndCameraMoveUp(-0.3);
 
   if (Ani->Keys['Q'])
-    RK2_RndCameraRotateUp(0.1);
+    RK2_RndCameraRotateUp(1);
   if (Ani->Keys['E'])
-    RK2_RndCameraRotateUp(-0.1);
+    RK2_RndCameraRotateUp(-1);
+
+  RK2_RndCameraRotateRight((DBL)Ani->MouseWheel);
+
+  if (Ani->Keys['I'])
+    RK2_RndCameraRotateRight(1);
+  if (Ani->Keys['K'])
+    RK2_RndCameraRotateRight(-1);
+
 
   if (Ani->Keys[VK_ESCAPE])
     DestroyWindow(Ani->hWnd);

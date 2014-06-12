@@ -19,6 +19,8 @@ typedef struct tagrk2UNIT_OBJ
 {
   RK2_UNIT_BASE_FIELDS;           /* Base fields */
   rk2GOBJ GObj;                   /* Geometry Object */
+  CHAR FileName[MAX_PATH];        /* File to object */
+  rk2VEC VecPos;                  /* Postion of object on world map */
 } rk2UNIT_GOBJ;
 
 /* Unit GObject init function.
@@ -31,7 +33,21 @@ typedef struct tagrk2UNIT_OBJ
  */
 static VOID UnitGObjInit( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
+  RK2_GObjLoad(&Unit->GObj, Unit->FileName,Unit->VecPos);
 } /* End of 'RK2_UnitGObjInit' function */
+
+/* Unit GObject destructor function.
+* ARGUMENTS:
+*   - Self pointer:
+*       rk2UNIT_GOBJ *Unit;
+*   - Animation context pointer:
+*       rk2ANIM *Ani;
+* RETURNS: None.
+*/
+static VOID UnitGObjClose(rk2UNIT_GOBJ *Unit, rk2ANIM *Ani)
+{
+  RK2_GObjFree(&Unit->GObj);
+} /* End of 'RK2_UnitGObjClose' function */
 
 /* Unit GObject response function.
  * ARGUMENTS:
@@ -56,7 +72,7 @@ static VOID UnitGObjResponse( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
   /* R2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
-  RK2_RndMatrWorld = MatrRotateY(Ani->Time * 10);
+  RK2_RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10);
 
   /*
   RK2_RndCameraSet(VecSet(10, 10, 10),
@@ -72,10 +88,12 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
  * ARGUMENTS:
  *   - Load file name:
  *       CHAR *FileName;
+ *   - Postion on world map:
+ *       INT PosXPosY;
  * RETURNS:
  *   (rk2UNIT_GOBJ *) - pointer for new animation unit.
  */
-rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName )
+rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ )
 {
   rk2UNIT_GOBJ *Unit;
 
@@ -85,9 +103,11 @@ rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName )
   /* Base fields filling */
   Unit->Render = (VOID *)UnitGObjRender;
   Unit->Init = (VOID *)UnitGObjInit;
+  Unit->Close = (VOID *)UnitGObjClose;
   Unit->Response = (VOID *)UnitGObjResponse;
-
-  RK2_GObjLoad(&Unit->GObj, FileName);
+  
+  strcpy(Unit->FileName, FileName);
+  Unit->VecPos = VecSet(PosX, PosY, PosZ);
 
   return (rk2UNIT *)Unit;
 } /* End of 'RK2_UnitGObjCreate' function */

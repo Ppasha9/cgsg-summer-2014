@@ -1,7 +1,7 @@
 /* FILENAME: UNITS.H
  * PROGRAMMER: RK2
  * PURPOSE: Globe project declaration module.
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #ifndef __UNITS_H_
@@ -31,8 +31,7 @@ rk2UNIT *RK2_UnitLogoCreate( INT PosX, INT PosY );
 rk2UNIT *RK2_UnitCubeCreate( VOID );
 
 /* Unit GObject create function. */
-rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName );
-
+rk2UNIT *RK2_UnitGObjCreate(CHAR *FileName, INT PosX, INT PosY, INT PosZ);
 
 #endif /* __UNITS_H_ */
 

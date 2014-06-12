@@ -1,7 +1,7 @@
 /* FILENAME: MTH.H
  * PROGRAMMER: RK2
  * PURPOSE: 3D math declaration module.
- * LAST UPDATE: 10.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #ifndef __MTH_H_
@@ -138,7 +138,7 @@ __inline rk2VEC VecMultMatr( rk2VEC V, rk2MATR4x4 M )
   }               \
 }
 
-__inline rk2MATR4x4 MatrIdentity( VOID )
+__inline rk2MATR4x4 MatrDefault( VOID )
 {
   static rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
 
@@ -165,10 +165,9 @@ __inline rk2MATR4x4 MatrScale( DBL Sx, DBL Sy, DBL Sz )
   return m;
 } /* End of 'MatrScale' function */
 
-__inline rk2MATR4x4 MatrRotateX( DBL AngleInDegree )
+__inline rk2MATR4x4 MatrRotateX( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
 {
   DBL sine, cosine;
-  rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
 
   __asm {
     /* FST(0) Angle (from degree to radian) */
@@ -181,17 +180,16 @@ __inline rk2MATR4x4 MatrRotateX( DBL AngleInDegree )
     fstp cosine /* cos -> cosine */
     fstp sine   /* sin -> sine */
   }
-  m.A[1][1] = cosine;
-  m.A[2][2] = cosine;
-  m.A[1][2] = sine;
-  m.A[2][1] = -sine;
-  return m;
+  SrcMatr.A[1][1] = cosine;
+  SrcMatr.A[2][2] = cosine;
+  SrcMatr.A[1][2] = sine;
+  SrcMatr.A[2][1] = -sine;
+  return SrcMatr;
 } /* End of 'MatrRotateX' function */
 
-__inline rk2MATR4x4 MatrRotateY( DBL AngleInDegree )
+__inline rk2MATR4x4 MatrRotateY( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
 {
   DBL sine, cosine;
-  rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
 
   __asm {
     /* FST(0) Angle (from degree to radian) */
@@ -204,17 +202,16 @@ __inline rk2MATR4x4 MatrRotateY( DBL AngleInDegree )
     fstp cosine /* cos -> cosine */
     fstp sine   /* sin -> sine */
   }
-  m.A[0][0] = cosine;
-  m.A[2][2] = cosine;
-  m.A[2][0] = sine;
-  m.A[0][2] = -sine;
-  return m;
+  SrcMatr.A[0][0] = cosine;
+  SrcMatr.A[2][2] = cosine;
+  SrcMatr.A[2][0] = sine;
+  SrcMatr.A[0][2] = -sine;
+  return SrcMatr;
 } /* End of 'MatrRotateY' function */
 
-__inline rk2MATR4x4 MatrRotateZ( DBL AngleInDegree )
+__inline rk2MATR4x4 MatrRotateZ( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
 {
   DBL sine, cosine;
-  rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
 
   __asm {
     /* FST(0) Angle (from degree to radian) */
@@ -227,19 +224,18 @@ __inline rk2MATR4x4 MatrRotateZ( DBL AngleInDegree )
     fstp cosine /* cos -> cosine */
     fstp sine   /* sin -> sine */
   }
-  m.A[0][0] = cosine;
-  m.A[1][1] = cosine;
-  m.A[0][1] = sine;
-  m.A[1][0] = -sine;
-  return m;
+  SrcMatr.A[0][0] = cosine;
+  SrcMatr.A[1][1] = cosine;
+  SrcMatr.A[0][1] = sine;
+  SrcMatr.A[1][0] = -sine;
+  return SrcMatr;
 } /* End of 'MatrRotateZ' function */
 
-__inline rk2MATR4x4 MatrRotate( DBL AngleInDegree,
-                          DBL X, DBL Y, DBL Z )
+__inline rk2MATR4x4 MatrRotate( rk2MATR4x4 SrcMatr, DBL AngleInDegree,
+                                DBL X, DBL Y, DBL Z )
 {
   DBL sine, cosine, len;
-  rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
-
+  
   AngleInDegree /= 2;
   __asm {
     /* FST(0) Angle (from degree to radian) */
@@ -266,23 +262,23 @@ __inline rk2MATR4x4 MatrRotate( DBL AngleInDegree,
   X *= sine;
   Y *= sine;
   Z *= sine;
-  m.A[0][0] = 1 - 2 * (Y * Y + Z * Z);
-  m.A[0][1] = 2 * X * Y - 2 * cosine * Z;
-  m.A[0][2] = 2 * cosine * Y + 2 * X * Z;
-  m.A[0][3] = 0;
-  m.A[1][0] = 2 * X * Y + 2 * cosine * Z;
-  m.A[1][1] = 1 - 2 * (X * X + Z * Z);
-  m.A[1][2] = 2 * Y * Z - 2 * cosine * X;
-  m.A[1][3] = 0;
-  m.A[2][0] = 2 * X * Z - 2 * cosine * Y;
-  m.A[2][1] = 2 * cosine * X + 2 * Y * Z;
-  m.A[2][2] = 1 - 2 * (X * X + Y * Y);
-  m.A[2][3] = 0;
-  m.A[3][0] = 0;
-  m.A[3][1] = 0;
-  m.A[3][2] = 0;
-  m.A[3][3] = 1;
-  return m;
+  SrcMatr.A[0][0] = 1 - 2 * (Y * Y + Z * Z);
+  SrcMatr.A[0][1] = 2 * X * Y - 2 * cosine * Z;
+  SrcMatr.A[0][2] = 2 * cosine * Y + 2 * X * Z;
+  SrcMatr.A[0][3] = 0;
+  SrcMatr.A[1][0] = 2 * X * Y + 2 * cosine * Z;
+  SrcMatr.A[1][1] = 1 - 2 * (X * X + Z * Z);
+  SrcMatr.A[1][2] = 2 * Y * Z - 2 * cosine * X;
+  SrcMatr.A[1][3] = 0;
+  SrcMatr.A[2][0] = 2 * X * Z - 2 * cosine * Y;
+  SrcMatr.A[2][1] = 2 * cosine * X + 2 * Y * Z;
+  SrcMatr.A[2][2] = 1 - 2 * (X * X + Y * Y);
+  SrcMatr.A[2][3] = 0;
+  SrcMatr.A[3][0] = 0;
+  SrcMatr.A[3][1] = 0;
+  SrcMatr.A[3][2] = 0;
+  SrcMatr.A[3][3] = 1;
+  return SrcMatr;
 } /* End of 'MatrRotate' function */
  
 __inline rk2MATR4x4 MatrMultMatr( rk2MATR4x4 M1, rk2MATR4x4 M2 )

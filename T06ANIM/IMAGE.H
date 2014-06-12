@@ -1,7 +1,7 @@
 /* FILENAME: IMAGE.H
  * PROGRAMMER: RK2
  * PURPOSE: Image handle declaration module.
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #ifndef __IMAGE_H_
@@ -45,7 +45,7 @@ VOID ImageDraw( HDC hDC, rk2IMAGE *Img, DWORD Rop, INT X0, INT Y0, INT X1, INT Y
 ***/
 
 /* Geometry object function Load. */
-BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName );
+BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName, rk2VEC VecPos );
 
 /* Free Geometric object unit function. */
 VOID RK2_GObjFree( rk2GOBJ *GObj );

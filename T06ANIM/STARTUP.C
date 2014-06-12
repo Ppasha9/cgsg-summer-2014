@@ -1,7 +1,7 @@
 /* FILENAME: STARTUP.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation startup module
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #include <stdio.h>
@@ -107,7 +107,9 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   RK2_AnimAddUnit(RK2_UnitAnimContolCreate()); /* Main anim response unit */
   
-  RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\cow.object"));
+  RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\cow.object",0, 0, 0));
+  /// RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seaknight.object", 10, 10, 10));
+
   RK2_AnimAddUnit(RK2_UnitCubeCreate());
   
   /// RK2_AnimAddUnit(RK2_UnitClockCreate());

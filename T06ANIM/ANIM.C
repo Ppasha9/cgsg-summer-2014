@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.C
  * PROGRAMMER: RK2
  * PURPOSE: Base animation module
- * LAST UPDATE: 08.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #include <stdlib.h>
@@ -61,7 +61,7 @@ VOID RK2_AnimInit( HWND hWnd )
   RK2_FrameCounter = 0;
 
   RK2_RndSetRenderProp(RK2_Anim.W, RK2_Anim.H);
-  RK2_RndCameraSet(VecSet(1, 1, 1),
+  RK2_RndCameraSet(VecSet(60, 60, 60),
                    VecSet(0, 0, 0),
                    VecSet(0, 1, 0));
 

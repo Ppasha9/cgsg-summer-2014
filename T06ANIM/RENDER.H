@@ -1,7 +1,7 @@
 /* FILENAME: RENDER.H
  * PROGRAMMER: RK2
  * PURPOSE: 3D render declaration module.
- * LAST UPDATE: 10.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #ifndef __RENDER_H_
@@ -22,7 +22,7 @@ typedef struct
 /* Тип представления объекта - набора вершин и треугольников и ребер */
 
 /* Глобальная камера */
-extern rk2CAMERA RK2_RndCam;
+extern rk2CAMERA RK2_RndCamera;
 
 /* Projection parametres */
 extern DBL
@@ -55,6 +55,13 @@ VOID RK2_RndCameraMoveUp( DBL Coef );
 
 /* Camera rotation by axes Y function. */
 VOID RK2_RndCameraRotateUp( DBL Angle );
+
+/* Camera rotation by camera-axes-right function. */
+VOID RK2_RndCameraRotateRight(DBL Angle);
+
+/* Camera rotation by camera-axes-dir function. */
+VOID RK2_RndCameraRotateDir(DBL Angle);
+
 
 /* Render setting function. */
 VOID RK2_RndBuildMatrix( VOID );

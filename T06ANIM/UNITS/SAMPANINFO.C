@@ -1,7 +1,7 @@
 /* FILENAME: SAMPANINFO.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #include <stdio.h>
@@ -10,6 +10,7 @@
 #include <math.h>
 
 #include "../anim.h"
+#include "../render.h"
 
 /* Animation info unit render function.
  * ARGUMENTS:
@@ -32,6 +33,9 @@ static VOID InfoUnitRender( rk2UNIT *Unit, rk2ANIM *Ani )
     sprintf(Buf, "%s%c", Buf, Ani->JoyButs[i] & 1 ? '#' : '_');
   TextOut(Ani->hDC, 10, 50, Buf, strlen(Buf));
   TextOut(Ani->hDC, 10, 90, Buf, sprintf(Buf, "%.3f:%.3f:%.3f", Ani->JoyX, Ani->JoyY, Ani->JoyR));
+
+  TextOut(Ani->hDC, 10, 110, Buf, sprintf(Buf, "Camera pos: %.3f %.3f %.3f", RK2_RndCamera.Loc.X, RK2_RndCamera.Loc.Y, RK2_RndCamera.Loc.Z));
+  TextOut(Ani->hDC, 10, 130, Buf, sprintf(Buf, "Camera at: %.3f %.3f %.3f", RK2_RndCamera.At.X, RK2_RndCamera.At.Y, RK2_RndCamera.At.Z));
 } /* End of 'RK2_AnimUnitRender' function */
 
 /* Animation info unit create function.

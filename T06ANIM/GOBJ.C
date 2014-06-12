@@ -1,11 +1,13 @@
 /* FILENAME: GOBG.C
  * PROGRAMMER: RK2
  * PURPOSE: Geometry *.object* files module
- * LAST UPDATE: 10.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "mth.h"
 
 #include "image.h"
 #include "render.h"
@@ -16,10 +18,12 @@
  *       rk2GOBJ *GObj;
  *   - File Name:
  *       CHAR *FileName;
+ *   - Object position:
+ *       rk2VEC VecPos;
  * RETURNS:
  *   (BOOL) TRUE if succcesful.
  */
-BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName )
+BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName, rk2VEC VecPos )
 {
   INT nv = 0, nf = 0;
   FILE *F;
@@ -57,7 +61,7 @@ BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName )
     if (Buf[0] == 'v' && Buf[1] == ' ')
     {
       sscanf(Buf + 2, "%lf%lf%lf", &x, &y, &z);
-      GObj->V[nv++] = VecSet(x, y, z);
+      GObj->V[nv++] = VecSumVec(VecSet(x, y, z), VecPos);
     }
     else if (Buf[0] == 'f' && Buf[1] == ' ')
     {
@@ -101,7 +105,7 @@ VOID RK2_GObjDraw( rk2GOBJ *GObj, HDC hDC )
 
   for (i = 0; i < GObj->NumOfV; i++)
   {
-    pt[0] = RK2_RndWorldToScreen(GObj->V[i]);
+    pt[0] = VecSumVec(RK2_RndWorldToScreen(GObj->V[i]), VecSet(0, 0, 0));
     if (pt[0].Z >= 0)
       Ellipse(hDC, pt[0].X - s, pt[0].Y - s, pt[0].X + s, pt[0].Y + s);
   }

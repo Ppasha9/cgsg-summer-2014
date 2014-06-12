@@ -1,7 +1,7 @@
 /* FILENAME: rk2VEC.C
  * PROGRAMMER: RK2
  * PURPOSE: 3D math handle module.
- * LAST UPDATE: 10.06.2014
+ * LAST UPDATE: 12.06.2014
  */
 
 #include "mth.h"
