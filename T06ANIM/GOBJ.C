@@ -64,13 +64,17 @@ BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName, rk2VEC VecPos )
       GObj->V[nv++] = VecSumVec(VecSet(x, y, z), VecPos);
     }
     else if (Buf[0] == 'f' && Buf[1] == ' ')
-    {
-      sscanf(Buf + 2, "%i%i%i", &a, &b, &c);
-      GObj->F[nf][0] = a - 1;
-      GObj->F[nf][1] = b - 1;
-      GObj->F[nf][2] = c - 1;
-      nf++;
-    }
+      if (sscanf(Buf + 2, "%i/%*i/%*i %i/%*i/%*i %i/%*i/%*i", &a, &b, &c) == 3 ||
+          sscanf(Buf + 2, "%i//%*i %i//%*i %i//%*i", &a, &b, &c) == 3 ||
+          sscanf(Buf + 2, "%i/%*i %i/%*i %i/%*i", &a, &b, &c) == 3 ||
+          sscanf(Buf + 2, "%i %i %i", &a, &b, &c))
+      {
+        /// sscanf(Buf + 2, "%i%i%i", &a, &b, &c);
+        GObj->F[nf][0] = a - 1;
+        GObj->F[nf][1] = b - 1;
+        GObj->F[nf][2] = c - 1;
+        nf++;
+      }
   }
   fclose(F);
   return TRUE;

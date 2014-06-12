@@ -31,7 +31,7 @@ rk2UNIT *RK2_UnitLogoCreate( INT PosX, INT PosY );
 rk2UNIT *RK2_UnitCubeCreate( VOID );
 
 /* Unit GObject create function. */
-rk2UNIT *RK2_UnitGObjCreate(CHAR *FileName, INT PosX, INT PosY, INT PosZ);
+rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ, DBL RotAngleX, DBL RotAngleY, DBL RotAngleZ );
 
 #endif /* __UNITS_H_ */
 

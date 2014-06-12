@@ -5,6 +5,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <time.h>
 
@@ -42,28 +43,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   HWND hWnd;
   MSG msg;
-  /* INT i; */
-
-  /*
-  rk2MATR4x4 Matr1 =
-  {
-    {
-      {1, 2, 3, 4},
-      {5, 6, 7, 8},
-      {3, 4, 5, 7},
-      {3, 2, 5, 1}
-    }
-  };
-  rk2VEC Vec1;
-
-  Vec1.X = 1;
-  Vec1.Y = 2;
-  Vec1.Z = 3;
-  Vec1.At = 4;
-  
-  RK2_VecMultMatr4x4(&Vec1, &Matr1);
-  */
-
+  INT i;
 
   /* Main window class registration */
   wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -104,11 +84,17 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     RK2_AnimAddUnit(RK2_CowUnitCreate());
   */
   
-
   RK2_AnimAddUnit(RK2_UnitAnimContolCreate()); /* Main anim response unit */
   
-  RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\cow.object",0, 0, 0));
-  /// RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seaknight.object", 10, 10, 10));
+  RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\cow.object",0, 0, 0, 0, 0, 0));
+
+  /* RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seaknight.object", 10, 10, 10)); */
+  /* RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seagul.object", 20, 20, 20, 0, 0, 0)); */
+
+  srand(30);
+
+  for (i = 0; i < 5; i++)
+    RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seagul.object", rand() % 20 - 10, rand() % 20 + 10, rand() % 20 - 10, 0, 90, 0));
 
   RK2_AnimAddUnit(RK2_UnitCubeCreate());
   

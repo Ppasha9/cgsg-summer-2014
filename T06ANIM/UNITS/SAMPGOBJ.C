@@ -21,6 +21,10 @@ typedef struct tagrk2UNIT_OBJ
   rk2GOBJ GObj;                   /* Geometry Object */
   CHAR FileName[MAX_PATH];        /* File to object */
   rk2VEC VecPos;                  /* Postion of object on world map */
+  DBL
+    RotAngleX,                   /* Angles of rotation unit */
+    RotAngleY,
+    RotAngleZ;
 } rk2UNIT_GOBJ;
 
 /* Unit GObject init function.
@@ -72,7 +76,14 @@ static VOID UnitGObjResponse( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
   /* R2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
-  RK2_RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10);
+  /* RK2_RndMatrWorld = MatrRotate(MatrDefault(), Unit->RotAngleX, Unit->RotAngleX, Unit->RotAngleY, Unit->RotAngleZ); */
+  
+  RK2_RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10 + Unit->RotAngleY);
+  
+  /*
+  RK2_RndMatrWorld = MatrMultMatr(RK2_RndMatrWorld, MatrRotateX(MatrDefault(), Unit->RotAngleX));
+  RK2_RndMatrWorld = MatrMultMatr(RK2_RndMatrWorld, MatrRotateZ(MatrDefault(), Unit->RotAngleZ));
+  */
 
   /*
   RK2_RndCameraSet(VecSet(10, 10, 10),
@@ -90,10 +101,12 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
  *       CHAR *FileName;
  *   - Postion on world map:
  *       INT PosXPosY;
+ *   - Angles of rotation:
+ *       DBL RotAngleX, RotAngleY, RotAngleZ;
  * RETURNS:
  *   (rk2UNIT_GOBJ *) - pointer for new animation unit.
  */
-rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ )
+rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ, DBL RotAngleX, DBL RotAngleY, DBL RotAngleZ )
 {
   rk2UNIT_GOBJ *Unit;
 
@@ -105,9 +118,14 @@ rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ )
   Unit->Init = (VOID *)UnitGObjInit;
   Unit->Close = (VOID *)UnitGObjClose;
   Unit->Response = (VOID *)UnitGObjResponse;
-  
+
   strcpy(Unit->FileName, FileName);
   Unit->VecPos = VecSet(PosX, PosY, PosZ);
+
+  Unit->RotAngleX = RotAngleX;
+  Unit->RotAngleY = RotAngleY;
+  Unit->RotAngleZ = RotAngleZ;
+
 
   return (rk2UNIT *)Unit;
 } /* End of 'RK2_UnitGObjCreate' function */
