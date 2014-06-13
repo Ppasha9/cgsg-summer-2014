@@ -112,7 +112,7 @@ static VOID UnitCubeRender( rk2UNIT_CUBE *Unit, rk2ANIM *Ani )
   DBL j;
   CHAR Str[MAX_PATH];
 
-  RK2_RndCameraSet(Unit->Points[0], VecSet(0, 0, 0), VecSet(0, 1, 0));
+  /* RK2_RndCameraSet(Unit->Points[0], VecSet(0, 0, 0), VecSet(0, 1, 0)); */
   /* UnitCubeGetCoordByTime(Unit, Ani, Unit->Points[0], Ani->Time + 0.2); */
 
   /* Axes */

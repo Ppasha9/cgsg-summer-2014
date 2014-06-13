@@ -230,7 +230,7 @@ VOID RK2_RndCameraRotateDir(DBL Angle)
 VOID RK2_RndBuildMatrix( VOID )
 {
   RK2_RndMatrView = MatrViewLookAt(RK2_RndCamera.Loc, RK2_RndCamera.At, RK2_RndCamera.Up);
-  RK2_RndMatrProjection = MatrProjection(-RK2_RndWp / 2, RK2_RndWp / 2, -RK2_RndHp / 2, +RK2_RndHp / 2, RK2_RndProjDist, 1000);
+  RK2_RndMatrProjection = MatrProjection(-RK2_RndWp / 2, RK2_RndWp / 2, -RK2_RndHp / 2, RK2_RndHp / 2, RK2_RndProjDist, 1000);
   RK2_RndMatrRes = MatrMultMatr(MatrMultMatr(RK2_RndMatrWorld, RK2_RndMatrView), RK2_RndMatrProjection);
   /* RK2_RndMatrRes = MatrMultMatr(RK2_RndMatrWorld, RK2_RndMatrView); */
 } /* End of 'RK2_RndBuildMatrixView' function */
