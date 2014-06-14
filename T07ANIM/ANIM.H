@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.H
  * PROGRAMMER: RK2
  * PURPOSE: Globe project declaration module.
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 14.06.2014
  */
 
 #ifndef __ANIM_H_
@@ -72,6 +72,8 @@ typedef struct tagrk2ANIM
     RndMatrProjection,  /* Projection matrix */
     RndMatrRes;         /* Result matrix */
   rk2CAMERA RndCamera;  /* Render camera */
+
+  /* Shaders */
 } rk2ANIM;
 
 /* Base fields for animation unit struct:

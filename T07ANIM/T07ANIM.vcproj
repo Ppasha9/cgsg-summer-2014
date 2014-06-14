@@ -232,6 +232,14 @@
 						RelativePath=".\IMAGE.H"
 						>
 					</File>
+					<File
+						RelativePath=".\SHADER.C"
+						>
+					</File>
+					<File
+						RelativePath=".\SHADER.H"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Math"

@@ -10,6 +10,8 @@
 #include <math.h>
 #include <windows.h>
 
+#pragma warning(disable: 4244 4305)
+
 /* Common float point types */
 typedef float FLT;
 typedef double DBL;
@@ -26,20 +28,20 @@ extern long double RK2_MultiplierDegree2Radian;
 /* Vector type*/
 typedef struct tagrk2rk2VEC
 {
-  DBL X, Y, Z; /* Vector components */
+  FLT X, Y, Z; /* Vector components */
 } rk2VEC;
 
 /* Matrix 4x4 */
 typedef struct tagrk2MATR4x4
 {
-  DBL A[4][4]; /* Matrix elements */
+  FLT A[4][4]; /* Matrix elements */
 } rk2MATR4x4;
 
 /***
  * Vector working functions
  ***/
 
-__inline rk2VEC VecSet( DBL X, DBL Y, DBL Z )
+__inline rk2VEC VecSet( FLT X, FLT Y, FLT Z )
 {
   rk2VEC v;
 
@@ -59,12 +61,12 @@ __inline rk2VEC VecSubVec( rk2VEC V1, rk2VEC V2 )
   return VecSet(V1.X - V2.X, V1.Y - V2.Y, V1.Z - V2.Z);
 } /* End of 'VecSubVec' function */
 
-__inline rk2VEC VecMultNum( rk2VEC V1, DBL N )
+__inline rk2VEC VecMultNum( rk2VEC V1, FLT N )
 {
   return VecSet(V1.X * N, V1.Y * N, V1.Z * N);
 } /* End of 'VecMulNum' function */
 
-__inline rk2VEC VecDivNum( rk2VEC V1, DBL N )
+__inline rk2VEC VecDivNum( rk2VEC V1, FLT N )
 {
   return VecSet(V1.X / N, V1.Y / N, V1.Z / N);
 } /* End of 'VecDivNum' function */
@@ -75,7 +77,7 @@ __inline rk2VEC VecNeg( rk2VEC V )
 } /* End of 'VecNeg' function */
 
 /* скалярное произведение векторов */
-__inline DBL VecDotVec( rk2VEC V1, rk2VEC V2 )
+__inline FLT VecDotVec( rk2VEC V1, rk2VEC V2 )
 {
   return V1.X * V2.X + V1.Y * V2.Y + V1.Z * V2.Z;
 } /* End of 'VecDotVec' function */
@@ -89,15 +91,15 @@ __inline rk2VEC VecCrossVec( rk2VEC V1, rk2VEC V2 )
 } /* End of 'VecCrossVec' function */
 
 /* Len Vector * Len vector */
-__inline DBL VecLen2( rk2VEC V )
+__inline FLT VecLen2( rk2VEC V )
 {
   return V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 } /* End of 'VecLen2' function */
 
 /* Vector Len */
-__inline DBL VecLen( rk2VEC V )
+__inline FLT VecLen( rk2VEC V )
 {
-  DBL len = V.X * V.X + V.Y * V.Y + V.Z * V.Z;
+  FLT len = V.X * V.X + V.Y * V.Y + V.Z * V.Z;
 
   if (len != 0 && len != 1)
     return sqrt(len);
@@ -107,7 +109,7 @@ __inline DBL VecLen( rk2VEC V )
 /* Vector normalize */
 __inline rk2VEC VecNormalize( rk2VEC V )
 {
-  DBL len = V.X * V.X + V.Y * V.Y + V.Z * V.Z;
+  FLT len = V.X * V.X + V.Y * V.Y + V.Z * V.Z;
   if (len != 0 && len != 1)
   {
     len = sqrt(len);
@@ -119,7 +121,7 @@ __inline rk2VEC VecNormalize( rk2VEC V )
 /* Vec Mult Matrix */
 __inline rk2VEC VecMultMatr( rk2VEC V, rk2MATR4x4 M )
 {
-  DBL w = V.X * M.A[0][3] + V.Y * M.A[1][3] + V.Z * M.A[2][3] + M.A[3][3];
+  FLT w = V.X * M.A[0][3] + V.Y * M.A[1][3] + V.Z * M.A[2][3] + M.A[3][3];
 
   return VecSet((V.X * M.A[0][0] + V.Y * M.A[1][0] + V.Z * M.A[2][0] + M.A[3][0]) / w,
                 (V.X * M.A[0][1] + V.Y * M.A[1][1] + V.Z * M.A[2][1] + M.A[3][1]) / w,
@@ -148,7 +150,7 @@ __inline rk2MATR4x4 MatrDefault( VOID )
   return m;
 } /* End of 'MatrIdentity' function */
 
-__inline rk2MATR4x4 MatrTranslate( DBL Dx, DBL Dy, DBL Dz )
+__inline rk2MATR4x4 MatrTranslate( FLT Dx, FLT Dy, FLT Dz )
 {
   rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
 
@@ -158,7 +160,7 @@ __inline rk2MATR4x4 MatrTranslate( DBL Dx, DBL Dy, DBL Dz )
   return m;
 } /* End of 'MatrTranslate' function */
 
-__inline rk2MATR4x4 MatrScale( DBL Sx, DBL Sy, DBL Sz )
+__inline rk2MATR4x4 MatrScale( FLT Sx, FLT Sy, FLT Sz )
 {
   rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
 
@@ -168,9 +170,9 @@ __inline rk2MATR4x4 MatrScale( DBL Sx, DBL Sy, DBL Sz )
   return m;
 } /* End of 'MatrScale' function */
 
-__inline rk2MATR4x4 MatrRotateX( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
+__inline rk2MATR4x4 MatrRotateX( rk2MATR4x4 SrcMatr, FLT AngleInDegree )
 {
-  DBL sine, cosine;
+  FLT sine, cosine;
 
   __asm {
     /* FST(0) Angle (from degree to radian) */
@@ -190,9 +192,9 @@ __inline rk2MATR4x4 MatrRotateX( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
   return SrcMatr;
 } /* End of 'MatrRotateX' function */
 
-__inline rk2MATR4x4 MatrRotateY( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
+__inline rk2MATR4x4 MatrRotateY( rk2MATR4x4 SrcMatr, FLT AngleInDegree )
 {
-  DBL sine, cosine;
+  FLT sine, cosine;
 
   __asm {
     /* FST(0) Angle (from degree to radian) */
@@ -212,9 +214,9 @@ __inline rk2MATR4x4 MatrRotateY( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
   return SrcMatr;
 } /* End of 'MatrRotateY' function */
 
-__inline rk2MATR4x4 MatrRotateZ( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
+__inline rk2MATR4x4 MatrRotateZ( rk2MATR4x4 SrcMatr, FLT AngleInDegree )
 {
-  DBL sine, cosine;
+  FLT sine, cosine;
 
   __asm {
     /* FST(0) Angle (from degree to radian) */
@@ -234,10 +236,10 @@ __inline rk2MATR4x4 MatrRotateZ( rk2MATR4x4 SrcMatr, DBL AngleInDegree )
   return SrcMatr;
 } /* End of 'MatrRotateZ' function */
 
-__inline rk2MATR4x4 MatrRotate( rk2MATR4x4 SrcMatr, DBL AngleInDegree,
-                                DBL X, DBL Y, DBL Z )
+__inline rk2MATR4x4 MatrRotate( rk2MATR4x4 SrcMatr, FLT AngleInDegree,
+                                FLT X, FLT Y, FLT Z )
 {
-  DBL sine, cosine, len;
+  FLT sine, cosine, len;
   
   AngleInDegree /= 2;
   __asm {
@@ -307,9 +309,9 @@ __inline rk2MATR4x4 MatrTranspose( rk2MATR4x4 M )
   return r;
 } /* End of 'MatrTranspose' function */
 
-__inline DBL MatrDeterm3x3( DBL A11, DBL A12, DBL A13,
-                            DBL A21, DBL A22, DBL A23,
-                            DBL A31, DBL A32, DBL A33 )
+__inline FLT MatrDeterm3x3( FLT A11, FLT A12, FLT A13,
+                            FLT A21, FLT A22, FLT A23,
+                            FLT A31, FLT A32, FLT A33 )
 {
   return A11 * A22 * A33 -
          A11 * A23 * A32 -
@@ -319,7 +321,7 @@ __inline DBL MatrDeterm3x3( DBL A11, DBL A12, DBL A13,
          A13 * A22 * A31;
 } /* End of 'MatrDeterm3x3' function */
 
-__inline DBL MatrDeterm( rk2MATR4x4 M )
+__inline FLT MatrDeterm( rk2MATR4x4 M )
 {
   return
     M.A[0][0] * MatrDeterm3x3(M.A[1][1], M.A[1][2], M.A[1][3],
@@ -339,7 +341,7 @@ __inline DBL MatrDeterm( rk2MATR4x4 M )
 __inline rk2MATR4x4 MatrInverse( rk2MATR4x4 M )
 {
   rk2MATR4x4 r;
-  DBL det = MatrDeterm(M);
+  FLT det = MatrDeterm(M);
 
   if (det == 0)
   {
@@ -470,9 +472,9 @@ __inline rk2MATR4x4 MatrViewLookAt( rk2VEC Loc, rk2VEC At, rk2VEC Up )
   return m;
 } /* End of 'MatrViewLookAt' function */
 
-__inline rk2MATR4x4 MatrProjection( DBL Left, DBL Right,
-                              DBL Bottom, DBL Top,
-                              DBL Near, DBL Far )
+__inline rk2MATR4x4 MatrProjection( FLT Left, FLT Right,
+                              FLT Bottom, FLT Top,
+                              FLT Near, FLT Far )
 {
   rk2MATR4x4 m =
   {

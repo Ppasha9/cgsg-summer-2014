@@ -16,7 +16,10 @@ rk2UNIT *RK2_UnitAnimContolCreate( VOID );
 rk2UNIT *RK2_UnitAnimInfoCreate( VOID );
 
 /* Unit GObject create function. */
-rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ, DBL RotAngleX, DBL RotAngleY, DBL RotAngleZ );
+rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, 
+                             INT PosX, INT PosY, INT PosZ, 
+                             DBL RotAngleX, DBL RotAngleY, DBL RotAngleZ,
+                             CHAR *ShaderVFileName, CHAR *ShaderFFileName );
 
 /* Unit Coord system create function. */
 rk2UNIT *RK2_UnitCorSysCreate( VOID );

@@ -9,7 +9,6 @@
 
 #pragma warning(disable: 4244 4305)
 
-
 #include <windows.h>
 #include <glew.h>
 #include <gl/gl.h>

@@ -83,12 +83,19 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   RK2_AnimAddUnit(RK2_UnitCamFlyCreate());
   RK2_AnimAddUnit(RK2_UnitCorSysCreate());
 
-  RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\cow.object", 0, 0, 0, 0, 0, 0));
-  RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\house1.object", 0, 0, 40, 0, 0, 0));
+  RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\cow.object",                    /* Obj */
+                                     0, 0, 0,                                       /* Pos */
+                                     0, 0, 0,                                       /* Rotation */
+                                     "shaders\\test.vert", "shaders\\test.fraq"));  /* Shaders */
+
+  RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\house1.object", 0, 0, 40, 0, 0, 0, NULL, NULL));
   /// RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\porsche.object", 40, 0, 0, 0, 0, 0));
 
   for (i = 0; i < 10; i++)
-    RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seagul.object", rand() % 20 - 10, rand() % 20 + 10, rand() % 20 - 10, rand() % 360, rand() % 360, rand() % 360));
+    RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\seagul.object", 
+                                       rand() % 20 - 10, rand() % 20 + 10, rand() % 20 - 10, 
+                                       rand() % 360, rand() % 360, rand() % 360, 
+                                       NULL, NULL));
     /* RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seagul.object", rand() % 20 - 10, rand() % 20 + 10, rand() % 20 - 10, 0, 0, 0)); */
   
   /* Main message loop running */

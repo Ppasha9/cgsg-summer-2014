@@ -105,7 +105,7 @@ VOID RK2_GObjDraw( rk2GOBJ *GObj, rk2MATR4x4 Matr )
   INT i, j, s = 1;
   rk2VEC pt[3];
   
-  glLoadMatrixd(&Matr.A[0][0]);
+  glLoadMatrixf(&Matr.A[0][0]);
 
   glBegin(GL_POINTS);
   for (i = 0; i < GObj->NumOfV; i++)

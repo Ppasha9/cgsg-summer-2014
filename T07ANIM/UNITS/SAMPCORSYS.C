@@ -30,7 +30,7 @@ static VOID UnitCorSysRender( rk2UNIT_CORSYS *Unit, rk2ANIM *Ani )
 {
   Ani->RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10);
   RK2_RndBuildMatrix();
-  glLoadMatrixd(&Ani->RndMatrRes.A[0][0]);
+  glLoadMatrixf(&Ani->RndMatrRes.A[0][0]);
 
   glBegin(GL_LINES);
     glColor3d(1, 0, 0);
