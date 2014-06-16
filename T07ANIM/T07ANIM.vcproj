@@ -221,10 +221,6 @@
 					Name="Resources"
 					>
 					<File
-						RelativePath=".\GOBJ.C"
-						>
-					</File>
-					<File
 						RelativePath=".\IMAGE.C"
 						>
 					</File>
@@ -232,14 +228,38 @@
 						RelativePath=".\IMAGE.H"
 						>
 					</File>
-					<File
-						RelativePath=".\SHADER.C"
+					<Filter
+						Name="Geom. objects"
 						>
-					</File>
-					<File
-						RelativePath=".\SHADER.H"
+						<File
+							RelativePath=".\GOBJECTS\GOBGHAND.C"
+							>
+						</File>
+						<File
+							RelativePath=".\GOBJECTS\GOBGLOAD.C"
+							>
+						</File>
+						<File
+							RelativePath=".\GOBJECTS\GOBJ.H"
+							>
+						</File>
+						<File
+							RelativePath=".\GOBJECTS\GOBJPRIM.C"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Shaders"
 						>
-					</File>
+						<File
+							RelativePath=".\SHADER.C"
+							>
+						</File>
+						<File
+							RelativePath=".\SHADER.H"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Math"

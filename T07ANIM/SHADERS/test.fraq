@@ -11,15 +11,51 @@ out vec4 OutColor;
 uniform float Time;
 
 uniform vec4 UseColor;
+
+/*
 in vec4 DrawColor;
 in vec4 DrawPos;
+*/
+
+/* ¬ходные данные */
+in vec4 DrawColor;
+in vec3 DrawPos;
+in vec2 DrawTexCoord;
+in vec3 DrawNormal;
+in vec4 CameraPos;
+
+uniform vec3 ViewDir;
+
+uniform vec4 UseColor;
+uniform mat4 MatrWVP;
+uniform mat4 MatrWorldInverseTranspose;
+uniform mat4 MatrWorld;
+
+uniform sampler2D DrawTexture;
 
 /* Main function */
 void main( void )
 {
-  //if (DrawPos.x > 3.75 + 5.1 * sin(Time * 3.0))
-    //discard;
-  OutColor = DrawColor + vec4(1, 1, 1, 1) * sin(Time);
+  vec4 texc = texture2D(DrawTexture, DrawTexCoord.xy);
+  vec3 Dir = mat3(MatrWorld) * ViewDir; 
+
+
+  float start = 150, end = 190;
+  float dist = CameraPos.z;
+  
+  if (dist < -1)
+    discard;
+  
+  float t = 0.5;
+  if (dist < start)
+    t = 1;
+  else
+    if (dist > end)
+      t = 0;
+    else
+      t = 1 - (dist - start) / (end - start);
+
+  OutColor = DrawColor + vec4(1, 1, 1, 1) * t;
 } /* End of 'main' function */
 
 /* End of 'a.frag' file */

@@ -18,15 +18,6 @@ typedef struct tagrk2IMAGE
   DWORD *Bits; /* Image row */
 } rk2IMAGE;
 
-/* Type geometric object */
-typedef struct tagrk2GOBJ
-{
-  rk2VEC *V;      /* Array of points */
-  INT NumOfV;     /* Count of points */
-  INT (*F)[3];    /* Array of facets */
-  INT NumOfF;     /* Amount of facets */
-} rk2GOBJ;
-
 /* Loading picture from file function. */
 BOOL ImageLoad( rk2IMAGE *Img, CHAR *FileName );
 
@@ -38,19 +29,6 @@ DWORD ImageGetP( rk2IMAGE *Img, INT X, INT Y );
 
 /* Image Blit to hDC function. */
 VOID ImageDraw( HDC hDC, rk2IMAGE *Img, DWORD Rop, INT X0, INT Y0, INT X1, INT Y1 );
-
-/***
- *  Geometry object function
-***/
-
-/* Geometry object function Load. */
-BOOL RK2_GObjLoad( rk2GOBJ *GObj, CHAR *FileName, rk2VEC VecPos );
-
-/* Free Geometric object unit function. */
-VOID RK2_GObjFree( rk2GOBJ *GObj );
-
-/* Geometric object drawing function. */
-VOID RK2_GObjDraw( rk2GOBJ *GObj, rk2MATR4x4 Matr );
 
 #endif /* __IMAGE_H_ */
 

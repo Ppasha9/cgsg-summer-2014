@@ -10,6 +10,7 @@
 #include "mth.h"
 #include "anim.h"
 #include "render.h"
+#include "shader.h"
 
 #define RK2_JOYSTICK_AXES_FAULT 10.0
 #define RK2_JOYSTICK_AXES_COUNT(Axes) (INT)(RK2_JOYSTICK_AXES_FAULT * ((2.0 * (ji.dw##Axes##pos - jc.w##Axes##min) / (jc.w##Axes##max - jc.w##Axes##min - 1) - 1))) \
@@ -100,6 +101,9 @@ BOOL RK2_AnimInit( HWND hWnd )
   RK2_Anim.RndMatrProjection = MatrDefault();  /* Projection matrix */
   RK2_Anim.RndMatrRes = MatrDefault();         /* Summed matrix */
 
+  /// RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\default.vert", "shaders\\default.fraq");
+  /// RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\test.vert", "shaders\\test.fraq");
+  RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\a.vert", "shaders\\a.frag");
   RK2_RndCameraSet(&RK2_Anim.RndCamera, VecSet(60, 60, 60),
                    VecSet(0, 0, 0),
                    VecSet(0, 1, 0));
@@ -114,13 +118,15 @@ VOID RK2_AnimClose( VOID )
 {
   INT i;
 
+  RK2_ShadProgClose(RK2_Anim.ShaderDef);
+
   /* Units destructor caller */
   for (i = 0; i < RK2_Anim.NumOfUnits; i++)
   {
     RK2_Anim.Units[i]->Close(RK2_Anim.Units[i], &RK2_Anim);
     free(RK2_Anim.Units[i]);
   }
-  
+
   /* Glut destructor */
   wglMakeCurrent(NULL, NULL);
 
@@ -322,8 +328,15 @@ VOID RK2_AnimRender( VOID )
   /* Joystick response */
   RK2_AnimResponseJoystick();
 
+  glDepthMask(TRUE);
+  glClearDepth(1);
+  glDepthRange(-100, 1000);
+  glEnable(GL_DEPTH_TEST);
+  glClear(GL_DEPTH_BUFFER_BIT);
+
   /* Clearing background */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearColor(0.3, 0.5, 0.7, 1);
 
   /* Response caller for units */
   for (i = 0; i < RK2_Anim.NumOfUnits; i++)

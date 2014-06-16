@@ -31,11 +31,32 @@ typedef struct tagrk2rk2VEC
   FLT X, Y, Z; /* Vector components */
 } rk2VEC;
 
+/* Color struct */
+typedef struct tagrk2COLOR
+{
+  FLT R, G, B, A; /* Color components */
+} rk2COLOR;
+
 /* Matrix 4x4 */
 typedef struct tagrk2MATR4x4
 {
   FLT A[4][4]; /* Matrix elements */
 } rk2MATR4x4;
+
+
+/***
+ * Color working functions
+ ***/
+
+__inline rk2COLOR ColorSet( FLT R, FLT G, FLT B )
+{
+  rk2COLOR res;
+
+  res.R = R;
+  res.G = G;
+  res.B = B;
+  return res;
+} /* End of 'ColorSet' function */
 
 /***
  * Vector working functions
@@ -296,7 +317,7 @@ __inline rk2MATR4x4 MatrMultMatr( rk2MATR4x4 M1, rk2MATR4x4 M2 )
       for (r.A[i][j] = 0, k = 0; k < 4; k++)
         r.A[i][j] += M1.A[i][k] * M2.A[k][j];
   return r;
-} /* End of 'MatrMulMatr' function */
+} /* End of 'MatrMultMatr' function */
  
 __inline rk2MATR4x4 MatrTranspose( rk2MATR4x4 M )
 {

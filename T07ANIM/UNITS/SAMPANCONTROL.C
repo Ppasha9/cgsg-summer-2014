@@ -11,6 +11,7 @@
 
 #include "../anim.h"
 #include "../render.h"
+#include "../shader.h"
 
 /* Unit Animation control response function.
  * ARGUMENTS:
@@ -63,6 +64,11 @@ static VOID UnitAnimContolResponse(rk2UNIT *Unit, rk2ANIM *Ani)
   if (Ani->Keys['K'])
     RK2_RndCameraRotateRight(&Ani->RndCamera, -1);
 
+  if (Ani->Keys['R'])
+  {
+    RK2_ShadProgClose(RK2_Anim.ShaderDef);
+    RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\default.vert", "shaders\\default.fraq");
+  }
   if (Ani->JoyZ)
     RK2_RndCameraRotateRight(&Ani->RndCamera, -Ani->JoyZ);
 

@@ -9,4 +9,4 @@
 /* Component to convert degrees to radians */
 long double RK2_MultiplierDegree2Radian = RK2_DEGREE2RADIANL;
 
-/* END OF 'VEC.C' FILE */
+/* END OF 'rk2VEC.C' FILE */

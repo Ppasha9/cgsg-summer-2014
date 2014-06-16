@@ -1,5 +1,5 @@
 /* FILENAME: SHADER.H
- * PROGRAMMER: VG4
+ * PROGRAMMER: RK2
  * PURPOSE: Shader handle declaration module.
  * LAST UPDATE: 13.06.2014
  */

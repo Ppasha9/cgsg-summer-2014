@@ -14,6 +14,7 @@
 #include "../anim.h"
 #include "../render.h"
 #include "../shader.h"
+#include "../gobjects/gobj.h"
 
 /* Unit GObject struct definition */
 typedef struct tagrk2UNIT_OBJ
@@ -42,8 +43,11 @@ typedef struct tagrk2UNIT_OBJ
  */
 static VOID UnitGObjInit( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
-  RK2_GObjLoad(&Unit->GObj, Unit->FileName, Unit->VecPos);
-  Unit->ShaderProg = RK2_ShadProgInit(Unit->ShaderVFileName, Unit->ShaderFFileName);
+  if ((Unit->ShaderProg = RK2_ShadProgInit(Unit->ShaderVFileName, Unit->ShaderFFileName)) == 0)
+    Unit->ShaderProg = Ani->ShaderDef;
+
+  RK2_GObjLoad(&Unit->GObj, Unit->FileName);
+  /* , Unit->VecPos); */
 } /* End of 'RK2_UnitGObjInit' function */
 
 /* Unit GObject destructor function.
@@ -57,7 +61,8 @@ static VOID UnitGObjInit( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 static VOID UnitGObjClose(rk2UNIT_GOBJ *Unit, rk2ANIM *Ani)
 {
   RK2_GObjFree(&Unit->GObj);
-  RK2_ShadProgClose(Unit->ShaderProg);
+  if (Unit->ShaderProg != Ani->ShaderDef)
+    RK2_ShadProgClose(Unit->ShaderProg);
 } /* End of 'RK2_UnitGObjClose' function */
 
 /* Unit GObject response function.
@@ -82,7 +87,7 @@ static VOID UnitGObjResponse( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
  */
 static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
-  /* R2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
+  /* RK2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
   /* RK2_RndMatrWorld = MatrRotate(MatrDefault(), Unit->RotAngleX, Unit->RotAngleX, Unit->RotAngleY, Unit->RotAngleZ); */
   UINT loc;
   Ani->RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10 + Unit->RotAngleY);
@@ -110,8 +115,9 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
   /* Ani->RndCamera.Loc = VecSumVec(Ani->RndCamera.Loc, Unit->VecPos); */
   /* Ani->RndCamera.Loc = VecSubVec(Ani->RndCamera.Loc, Unit->VecPos); */
 
-  glColor3d(0.3, 0.4, 0.5);
-  RK2_GObjDraw(&Unit->GObj, Ani->RndMatrRes);
+  /// glColor3d(0.3, 0.5, 0.7);
+  RK2_GObjDraw(&Unit->GObj);
+    /* , Ani->RndMatrRes); */
 
   glUseProgram(0);
 } /* End of 'RK2_UnitGObjRender' function */

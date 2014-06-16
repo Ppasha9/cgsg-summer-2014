@@ -74,7 +74,11 @@ typedef struct tagrk2ANIM
   rk2CAMERA RndCamera;  /* Render camera */
 
   /* Shaders */
+  UINT ShaderDef;       /* Default shader */
 } rk2ANIM;
+
+/* System animation context */
+extern rk2ANIM RK2_Anim;
 
 /* Base fields for animation unit struct:
  * - Size of struct:
