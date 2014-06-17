@@ -1,7 +1,7 @@
 /* FILENAME: PRIM.C
  * PROGRAMMER: RK2
  * PURPOSE: Primtive handle functions.
- * LAST UPDATE: 16.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #include <stdlib.h>
@@ -87,7 +87,7 @@ BOOL RK2_GPrimCreate( rk2GPRIM *P, rk2GPRIM_TYPE Type,
   return TRUE;
 } /* End of 'RK2_GPrimCreate' function */
 
-/* Функция создания сферы.
+/* Sphere creation function.
  * АРГУМЕНТЫ:
  *   - создаваемый примитив:
  *       rk2GPRIM *P;
@@ -122,6 +122,98 @@ BOOL RK2_GPrimCreateSphere( rk2GPRIM *P, rk2VEC C, FLT R, INT M, INT N )
                     power(cos(theta), t1),
                     power(sin(theta), t1) * power(cos(phi), t));
       V->P = VecSumVec(VecMultNum(V->N, R), C);
+    }
+  return TRUE;
+} /* End of 'RK2_GPrimCreateSphere' function */
+
+/* Texture Desk creation function.
+ * ARGUMENTS:
+ *   - Created primitive:
+ *       rk2GPRIM *P;
+ *   - Coords points of desk:
+ *       rk2VEC V0, V1, V2, V3;
+ *   - Texture image):
+ *       rk2IMAGE *Texture;
+ * RETURNS:
+ *   (BOOL) TRUE if success.
+ */
+BOOL RK2_GPrimCreateDesk( rk2GPRIM *P, rk2VEC V0, rk2VEC V1, rk2VEC V2, rk2VEC V3, rk2IMAGE *Texture )
+{
+  rk2GVERTEX *V = NULL;
+
+  if (!RK2_GPrimCreate(P, RK2_PRIM_GRID, 2, 2))
+    return FALSE;
+  P->Type = RK2_PRIM_GRID;
+  
+  V = P->V;
+  V->P = V0;
+  V->T = RK2_UVSet(0, 0);
+
+  V = P->V + 1;
+  V->P = V1;
+  V->T = RK2_UVSet(1, 0);
+
+  V = P->V + 2;
+  V->P = V2;
+  V->T = RK2_UVSet(1, 1);
+
+  V = P->V + 3;
+  V->P = V3;
+  V->T = RK2_UVSet(0, 1);
+  return TRUE;
+} /* End of 'RK2_GPrimCreateDesk' function */
+
+/* Map heights create function.
+ * ARGUMENTS:
+ *   - Primitive:
+ *       rk2GPRIM *P;
+ *   - Raster picture with heights:
+ *       CHAR *FileName;
+ *   - Max hieght and scale:
+ *       FLT Height, Scale;
+ * RETURNS:
+ *   (BOOL) TRUE if success.
+ */
+BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Scale )
+{
+  INT i, j;
+  rk2IMAGE Img;
+
+  memset(P, 0, sizeof(rk2GPRIM));
+  if (!ImageLoad(&Img, FileName))
+    return FALSE;
+
+  if (!RK2_GPrimCreate(P, RK2_PRIM_GRID, Img.W, Img.H))
+    return FALSE;
+  /* задаем координаты точек */
+  for (i = 0; i < Img.H; i++)
+    for (j = 0; j < Img.W; j++)
+    {
+      rk2GVERTEX *V = P->V + i * Img.W + j;
+      BYTE rgb[4], h;
+      DWORD *col = (DWORD *)rgb;
+
+      *col = ImageGetP(&Img, j, i);
+      h = (rgb[2] * 30 + rgb[1] * 59 + rgb[0] * 11) / 100;
+      V->P = VecSet((j - Img.W / 2) / Scale, h * Height / 255, (i - Img.H / 2) / Scale);
+    }
+  /* задаем нормали точек */
+  for (i = 1; i < Img.H - 1; i++)
+    for (j = 1; j < Img.W - 1; j++)
+    {
+      rk2VEC
+        p00 = P->V[i * Img.W + j].P,
+        p0_1 = P->V[i * Img.W + (j - 1)].P,
+        p01 = P->V[i * Img.W + (j + 1)].P,
+        p_10 = P->V[(i - 1) * Img.W + j].P,
+        p10 = P->V[(i + 1) * Img.W + j].P,
+        du0 = VecNormalize(VecSet((p0_1.Y - p00.Y), (p00.X - p0_1.X), 0)),
+        du1 = VecNormalize(VecSet((p00.Y - p01.Y), (p01.X - p00.X), 0)),
+        dv0 = VecNormalize(VecSet(0, (p00.Z - p_10.Z), (p_10.Y - p00.Y))),
+        dv1 = VecNormalize(VecSet(0, (p10.Z - p00.Z), (p00.Y - p10.Y)));
+
+      P->V[i * Img.W + j].N = VecNormalize(VecSumVec(VecSumVec(du0, du1), VecSumVec(dv0, dv1)));
+      /// P->V[i * Img.W + j].N = VecNormalize(VecAddVec(du0, du1));
     }
   return TRUE;
 } /* End of 'RK2_GPrimCreateSphere' function */
@@ -207,8 +299,13 @@ VOID RK2_GPrimDraw( rk2GPRIM *P )
         glVertex3fv(&P->V[start + P->I[j]].P.X);
       glEnd();
       */
+      glDrawElementsBaseVertex(GL_TRIANGLE_STRIP,
+        P->NumOfI, GL_UNSIGNED_INT, (VOID *)0,
+        i * P->GW);
+      /*
       glDrawElements(GL_TRIANGLE_STRIP, P->NumOfI, GL_UNSIGNED_INT,
         (VOID *)(i * P->GW * 2 * sizeof(INT)));
+      */
     }
   }
   glUseProgram(0);

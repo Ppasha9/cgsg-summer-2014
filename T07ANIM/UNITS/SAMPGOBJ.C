@@ -1,7 +1,7 @@
 /* FILENAME: SAMPCUBE.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #include <stdio.h>
@@ -90,9 +90,11 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
   /* RK2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
   /* RK2_RndMatrWorld = MatrRotate(MatrDefault(), Unit->RotAngleX, Unit->RotAngleX, Unit->RotAngleY, Unit->RotAngleZ); */
   UINT loc;
-  Ani->RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10 + Unit->RotAngleY);
+  Ani->RndMatrWorld = MatrTranslate(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
+  Ani->RndMatrWorld = MatrRotateY(Ani->RndMatrWorld, Unit->RotAngleY);
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateX(MatrDefault(), Unit->RotAngleX));
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateZ(MatrDefault(), Unit->RotAngleZ));
+
   RK2_RndBuildMatrix();
 
   if (Unit->ShaderProg)
@@ -112,13 +114,7 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 
   }
 
-  /* Ani->RndCamera.Loc = VecSumVec(Ani->RndCamera.Loc, Unit->VecPos); */
-  /* Ani->RndCamera.Loc = VecSubVec(Ani->RndCamera.Loc, Unit->VecPos); */
-
-  /// glColor3d(0.3, 0.5, 0.7);
   RK2_GObjDraw(&Unit->GObj);
-    /* , Ani->RndMatrRes); */
-
   glUseProgram(0);
 } /* End of 'RK2_UnitGObjRender' function */
 

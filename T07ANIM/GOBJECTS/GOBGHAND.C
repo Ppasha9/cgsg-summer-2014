@@ -1,7 +1,7 @@
 /* FILENAME: GEOMHAND.C
  * PROGRAMMER: RK2
  * PURPOSE: Geometry object handle functions.
- * LAST UPDATE: 16.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #include <stdlib.h>
@@ -145,7 +145,7 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
       {
         INT j;
         rk2IMAGE Img;
-                       
+
         ImageLoad(&Img, G->Mtls[mtl].MapD);
 
         /* получаем свободный номер текстуры */
@@ -153,10 +153,15 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
         /* делаем ее активной */
         glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
         for (j = 0; j < Img.W * Img.H; j++)
-          Img.Bits[j] |= 0xFF000000;
+        {
+          Img.Bits[j] |= 0x00000000;
+        }
         /* отправляем картинку в видеопамять */
-        gluBuild2DMipmaps(GL_TEXTURE_2D, 4, Img.W, Img.H,
+        /* gluBuild2DMipmaps(GL_TEXTURE_2D, 4, Img.W, Img.H,
           GL_BGRA_EXT, GL_UNSIGNED_BYTE, Img.Bits);
+        */
+        gluBuild2DMipmaps(GL_TEXTURE_2D, 4, Img.W, Img.H,
+          GL_BGRA, GL_UNSIGNED_BYTE, Img.Bits);
 
         /* Параметры вывода */
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -170,7 +175,7 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
         loc = glGetUniformLocation(RK2_Anim.ShaderDef, "DrawTexture");
         if (loc != -1)
           glUniform1i(loc, 0);
-        /*glEnable(GL_TEXTURE_2D);*/
+        glEnable(GL_TEXTURE_2D);
         /*glActiveTexture(GL_TEXTURE0);*/
         glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
         /*glActiveTexture(GL_TEXTURE1);*/
@@ -190,7 +195,13 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
         glUniform1f(loc, G->Mtls[mtl].Phong);
       loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Trans");
       if (loc != -1)
+      {
         glUniform1f(loc, G->Mtls[mtl].Trans);
+        
+        if (strcmp(G->Mtls[mtl].Name, "..\\Textures\\lava.bmp") == 0)
+          glUniform1f(loc, sin(RK2_Anim.Time));
+        
+      }
     }
     RK2_GPrimDraw(G->Prims + i);
     glDisable(GL_TEXTURE_2D);

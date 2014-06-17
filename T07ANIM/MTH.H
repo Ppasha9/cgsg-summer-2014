@@ -1,7 +1,7 @@
 /* FILENAME: MTH.H
  * PROGRAMMER: RK2
  * PURPOSE: 3D math declaration module.
- * LAST UPDATE: 12.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #ifndef __MTH_H_

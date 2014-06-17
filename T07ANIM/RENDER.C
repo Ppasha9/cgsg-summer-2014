@@ -112,10 +112,10 @@ VOID RK2_RndCameraRotateUp( rk2CAMERA *Cam, DBL Angle )
   RotMat = RK2_RndCameraGetMatrix(Cam);
   RotMat = MatrMultMatr(MatrRotateY(MatrDefault(), Angle), RotMat);
 
-  RK2_RndCameraSet(Cam, Cam->Loc,                                                              /* Location */
+  RK2_RndCameraSet(Cam, Cam->Loc,                                                                  /* Location */
                    VecSumVec(Cam->Loc, 
                              VecSet(RotMat.A[0][0], RotMat.A[0][1], RotMat.A[0][2])),              /* At */
-                   Cam->Up);                                                              /* Up */
+                   Cam->Up);                                                                       /* Up */
 }  /* End of 'RK2_RndCameraRotateUp' funciton */
 
 /* Camera rotation by camera-axes-right function.

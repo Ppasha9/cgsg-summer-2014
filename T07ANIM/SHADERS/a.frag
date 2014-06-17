@@ -79,7 +79,8 @@ void main( void )
       t = 1 - (dist - start) / (end - start);
   */
   // OutColor = vec4(0.3, 0.5, 0.7, 1) * (1 - t) + vec4(Illum(DrawNormal).xyz, Trans) * t;
-  OutColor = vec4(Illum(DrawNormal).xyz, Trans);
+  // OutColor = vec4(Illum(DrawNormal).xyz, Trans);
+  OutColor = vec4(Illum(DrawNormal).xyz, 0.3);
 } /* End of 'main' function */
 
 /* End of 'a.frag' file */

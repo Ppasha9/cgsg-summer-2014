@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.C
  * PROGRAMMER: RK2
  * PURPOSE: Base animation module
- * LAST UPDATE: 12.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #include <stdlib.h>
@@ -101,9 +101,7 @@ BOOL RK2_AnimInit( HWND hWnd )
   RK2_Anim.RndMatrProjection = MatrDefault();  /* Projection matrix */
   RK2_Anim.RndMatrRes = MatrDefault();         /* Summed matrix */
 
-  /// RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\default.vert", "shaders\\default.fraq");
-  /// RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\test.vert", "shaders\\test.fraq");
-  RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\a.vert", "shaders\\a.frag");
+  RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\default.vert", "shaders\\default.fraq");
   RK2_RndCameraSet(&RK2_Anim.RndCamera, VecSet(60, 60, 60),
                    VecSet(0, 0, 0),
                    VecSet(0, 1, 0));
@@ -351,24 +349,18 @@ VOID RK2_AnimRender( VOID )
 
   glLoadMatrixd(&RK2_Anim.RndMatrRes.A[0][0]);
 
-  glBegin(GL_LINES);
-    glColor3d(1, 0, 0);
-    glVertex3d(0, 0, 0);
-    glVertex4d(1, 0, 0, 0);
-
-    glColor3d(0, 1, 0);
-    glVertex3d(0, 0, 0);
-    glVertex4d(0, 1, 0, 0);
-
-    glColor3d(0, 0, 1);
-    glVertex3d(0, 0, 0);
-    glVertex4d(0, 0, 1, 0);
-  glEnd();
-
   glColor3d(1, 1, 0);
   glRectd(0, 0, 0.4, 0.4);
   */
   /* Drawing objects */
+
+  glEnable(GL_ALPHA_TEST);
+  glAlphaFunc(GL_SRC_ALPHA, GL_ONE);
+  
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  
+  /// glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   for (i = 0; i < RK2_Anim.NumOfUnits; i++)
     RK2_Anim.Units[i]->Render(RK2_Anim.Units[i], &RK2_Anim);
 
@@ -473,7 +465,6 @@ VOID RK2_RndBuildMatrix( VOID )
 {
   RK2_Anim.RndMatrView = MatrViewLookAt(RK2_Anim.RndCamera.Loc, RK2_Anim.RndCamera.At, RK2_Anim.RndCamera.Up);
   RK2_Anim.RndMatrRes = MatrMultMatr(MatrMultMatr(RK2_Anim.RndMatrWorld, RK2_Anim.RndMatrView), RK2_Anim.RndMatrProjection);
-  /* RK2_Anim.RndMatrRes = MatrTranspose(RK2_Anim.RndMatrRes); */
 } /* End of 'RK2_RndBuildMatrixView' function */
 
 /* END OF 'ANIM.C' FILE */

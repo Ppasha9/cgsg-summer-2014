@@ -18,6 +18,7 @@ uniform mat4 MatrWorld;
 uniform mat4 MatrView;
 
 uniform float Time;
+uniform float Trans;
 
 out vec4 DrawColor;
 out vec3 DrawPos;
@@ -31,9 +32,9 @@ void main( void )
   CameraPos = (MatrWorld * MatrView) * vec4(InPosition.xyz, 1);
   gl_Position = MatrWVP * vec4(InPosition.xyz, 1);
   DrawNormal = mat3(MatrWorldInverseTranspose) * InNormal;
-  DrawColor = InColor;
+  DrawColor = vec4(InColor.xyz, 0.0);
   DrawPos = mat4x3(MatrWorld) * vec4(InPosition, 1);
   DrawTexCoord = InTexCoord.st;
 } /* End of 'main' function */
 
-/* End of 'a.vert' file */
+/* End of 'default.vert' file */

@@ -1,7 +1,7 @@
 /* FILENAME: UNITS.H
  * PROGRAMMER: RK2
  * PURPOSE: Globe project declaration module.
- * LAST UPDATE: 13.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #ifndef __UNITS_H_
@@ -26,6 +26,13 @@ rk2UNIT *RK2_UnitCorSysCreate( VOID );
 
 /* Unit flying camera create function. */
 rk2UNIT *RK2_UnitCamFlyCreate( VOID );
+
+/* Unit heightmap create function. */
+rk2UNIT *RK2_UnitHeightMapCreate( VOID );
+
+/* Unit heightmap create function. */
+rk2UNIT *RK2_UnitAreaCreate( CHAR *FileTextureName, rk2VEC Pos0, rk2VEC Pos1, rk2VEC Pos2, rk2VEC Pos3 );
+
 
 #endif /* __UNITS_H_ */
 

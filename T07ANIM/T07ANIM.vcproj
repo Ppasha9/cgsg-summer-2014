@@ -286,6 +286,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UNITS\SAMPAREA.C"
+					>
+				</File>
+				<File
 					RelativePath=".\UNITS\SAMPCAMFLY.C"
 					>
 				</File>
@@ -295,6 +299,10 @@
 				</File>
 				<File
 					RelativePath=".\UNITS\SAMPGOBJ.C"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS\SAMPHEIGHTMAP.C"
 					>
 				</File>
 				<File

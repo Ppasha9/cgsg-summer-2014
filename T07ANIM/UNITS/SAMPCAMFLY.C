@@ -73,8 +73,10 @@ static rk2VEC UnitCamFlyGetCoordByTime(rk2UNIT_CAMFLY *Unit, rk2ANIM *Ani, rk2VE
  */
 static VOID UnitCamFlyResponse( rk2UNIT_CAMFLY *Unit, rk2ANIM *Ani )
 {
+  /*
   if (!Ani->IsPause)
     Unit->CamPos = UnitCamFlyGetCoordByTime(Unit, Ani, Unit->CamPos, Ani->Time);
+  */
 } /* End of 'RK2_UnitCamFlyResponse' function */
 
 /* Unit flying camera render function.
@@ -87,13 +89,15 @@ static VOID UnitCamFlyResponse( rk2UNIT_CAMFLY *Unit, rk2ANIM *Ani )
  */
 static VOID UnitCamFlyRender( rk2UNIT_CAMFLY *Unit, rk2ANIM *Ani )
 {
+  /*
   if (Ani->IsPause)
     return;
   RK2_RndCameraSet(&Ani->RndCamera, Unit->CamPos, VecSet(0, 0, 0), VecSet(0, 1, 0));
+  */
   /* UnitCamFlyGetCoordByTime(Unit, Ani, Unit->CamPos, Ani->Time + 0.2); */
 
-  Ani->RndMatrWorld = MatrDefault();
-  RK2_RndBuildMatrix();
+  /// Ani->RndMatrWorld = MatrDefault();
+  /// RK2_RndBuildMatrix();
 } /* End of 'RK2_UnitCamFlyRender' function */
 
 /* Unit flying camera create function.

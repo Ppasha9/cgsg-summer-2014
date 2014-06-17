@@ -1,7 +1,7 @@
 /* FILENAME: MAIN.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation startup module
- * LAST UPDATE: 13.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 
@@ -82,7 +82,16 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   RK2_AnimAddUnit(RK2_UnitAnimInfoCreate());
   RK2_AnimAddUnit(RK2_UnitCamFlyCreate());
   RK2_AnimAddUnit(RK2_UnitCorSysCreate());
-
+  //RK2_AnimAddUnit(RK2_UnitGrassCreate());
+  /* RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\water.bmp", 
+                                     VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0)));
+  */
+  RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\lava.bmp", 
+                                     VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0)));
+  RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\lava.bmp", 
+                                     VecSet(0, 80, 0), VecSet(90, 80, 0), VecSet(90, 90, 0), VecSet(80, 90, 0)));
+  
+  RK2_AnimAddUnit(RK2_UnitHeightMapCreate());
 
   /*
   RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\cow.object",                    /* Obj */
@@ -91,10 +100,10 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
       //                               NULL, NULL));  /* Shaders */
 
 
-  RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\houses\\house1.object",                    /* Obj */
-                                     0, 0, 0,                                       /* Pos */
-                                     0, 0, 0,                                       /* Rotation */
-                                     NULL, NULL));  /* Shaders */
+  //RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\houses\\house1.object",                    /* Obj */
+    //                                 10, 100, 0,                                       /* Pos */
+      //                               0, 0, 0,                                       /* Rotation */
+        //                             NULL, NULL));  /* Shaders */
 
   /// RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\house1.object", 0, 0, 40, 0, 0, 0, NULL, NULL));
   /// RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\porsche.object", 40, 0, 0, 0, 0, 0));

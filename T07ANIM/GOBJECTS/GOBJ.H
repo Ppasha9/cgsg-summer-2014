@@ -1,14 +1,14 @@
 /* FILENAME: GOBJ.H
  * PROGRAMMER: RK2
  * PURPOSE: Geometry object load functions.
- * LAST UPDATE: 16.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #ifndef __GOBJ_H_
 #define __GOBJ_H_
 
 /***
- * Работа с геометрическими объектами
+ * Geometry objects working
  ***/
 
 /* Тип представления текстурных координат */
@@ -47,13 +47,13 @@ typedef struct tagrk2GPRIM
 {
   rk2GPRIM_TYPE Type; /* тип примитива */
   INT
-    NumOfV,     /* количество вершин */
-    NumOfI,     /* количество индексов */
-    GW, GH,     /* размер сетки */
-    Mtl,        /* номер материала */
-    Size;       /* размер выделенной памяти в байтах */
+    NumOfV,      /* количество вершин */
+    NumOfI,      /* количество индексов */
+    GW, GH,      /* размер сетки */
+    Mtl,         /* номер материала */
+    Size;        /* размер выделенной памяти в байтах */
   rk2GVERTEX *V; /* массив вершин */
-  INT *I;       /* массив индексов */
+  INT *I;        /* массив индексов */
 
   /* Данные для вывода в OpenGL */
   INT
@@ -71,6 +71,12 @@ BOOL RK2_GPrimCreate( rk2GPRIM *P, rk2GPRIM_TYPE Type,
 /* Функция создания сферы */
 BOOL RK2_GPrimCreateSphere( rk2GPRIM *P,
        rk2VEC C, FLT R, INT M, INT N );
+
+/* Texture Desk creation function */
+BOOL RK2_GPrimCreateDesk( rk2GPRIM *P, rk2VEC V0, rk2VEC V1, rk2VEC V2, rk2VEC V3, rk2IMAGE *Texture );
+
+/* Map heights create function. */
+BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Scale );
 
 /* Функция удаления примитива */
 VOID RK2_GPrimFree( rk2GPRIM *P );
