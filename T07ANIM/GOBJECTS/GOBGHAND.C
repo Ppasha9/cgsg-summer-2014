@@ -195,13 +195,7 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
         glUniform1f(loc, G->Mtls[mtl].Phong);
       loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Trans");
       if (loc != -1)
-      {
         glUniform1f(loc, G->Mtls[mtl].Trans);
-        
-        if (strcmp(G->Mtls[mtl].Name, "..\\Textures\\lava.bmp") == 0)
-          glUniform1f(loc, sin(RK2_Anim.Time));
-        
-      }
     }
     RK2_GPrimDraw(G->Prims + i);
     glDisable(GL_TEXTURE_2D);

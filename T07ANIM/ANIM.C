@@ -340,26 +340,14 @@ VOID RK2_AnimRender( VOID )
   for (i = 0; i < RK2_Anim.NumOfUnits; i++)
     RK2_Anim.Units[i]->Response(RK2_Anim.Units[i], &RK2_Anim);
 
-  /*
-  RK2_Anim.RndMatrWorld = MatrRotateY(MatrDefault(), RK2_Anim.Time * 5);
-  RK2_RndCameraSet(&RK2_Anim.RndCamera, VecSet(30, 30, 30), VecSet(0, 0, 0), VecSet(0, 1, 0));
-  */
-  /*
-  RK2_RndBuildMatrix();
-
-  glLoadMatrixd(&RK2_Anim.RndMatrRes.A[0][0]);
-
-  glColor3d(1, 1, 0);
-  glRectd(0, 0, 0.4, 0.4);
-  */
   /* Drawing objects */
-
-  glEnable(GL_ALPHA_TEST);
-  glAlphaFunc(GL_SRC_ALPHA, GL_ONE);
+  glDisable(GL_CULL_FACE);
+  glEnable(GL_ALPHA);
+  /// AlphaFunc(GL_SRC_ALPHA, GL_ONE);
   
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  
+  /// glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
   /// glBlendFunc(GL_SRC_ALPHA, GL_ONE);
   for (i = 0; i < RK2_Anim.NumOfUnits; i++)
     RK2_Anim.Units[i]->Render(RK2_Anim.Units[i], &RK2_Anim);

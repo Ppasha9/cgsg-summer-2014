@@ -86,12 +86,11 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   /* RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\water.bmp", 
                                      VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0)));
   */
-  RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\lava.bmp", 
-                                     VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0)));
-  RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\lava.bmp", 
-                                     VecSet(0, 80, 0), VecSet(90, 80, 0), VecSet(90, 90, 0), VecSet(80, 90, 0)));
-  
+
   RK2_AnimAddUnit(RK2_UnitHeightMapCreate());
+
+  RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\water.bmp", 
+                                     VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0)));
 
   /*
   RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\cow.object",                    /* Obj */

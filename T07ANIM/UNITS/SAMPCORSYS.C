@@ -28,7 +28,7 @@ typedef struct tagrk2UNIT_CORSYS
  */
 static VOID UnitCorSysRender( rk2UNIT_CORSYS *Unit, rk2ANIM *Ani )
 {
-  Ani->RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10);
+  Ani->RndMatrWorld = MatrDefault(); /* MatrRotateY(MatrDefault(), Ani->Time * 10); */
   RK2_RndBuildMatrix();
   glLoadMatrixf(&Ani->RndMatrRes.A[0][0]);
 

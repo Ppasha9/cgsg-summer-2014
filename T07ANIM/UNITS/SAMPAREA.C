@@ -46,7 +46,7 @@ static VOID UnitAreaInit( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
   GMtl.Kd = VecSet(0.3, 0.3, 0.3);
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
   GMtl.Phong = 30;
-  GMtl.Trans = 0.1;
+  GMtl.Trans = 0.5;
   /// GMtl.Trans = sin(Ani->Time);
   RK2_GPrimCreateDesk(&GPrim, VecSet(0, 0, 0), VecSet(30, 0, 0), VecSet(0, 0, 30), VecSet(30, 0, 30), NULL);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
@@ -90,7 +90,7 @@ static VOID UnitAreaRender( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
 {
   UINT loc;
   INT x, z;
-  /// Ani->RndMatrWorld = MatrTranslate(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
+  Ani->RndMatrWorld = MatrDefault();
   RK2_RndBuildMatrix();
 
   for (x = -10; x < 10; x++)
