@@ -90,7 +90,7 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
   /* RK2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
   /* RK2_RndMatrWorld = MatrRotate(MatrDefault(), Unit->RotAngleX, Unit->RotAngleX, Unit->RotAngleY, Unit->RotAngleZ); */
   UINT loc;
-  Ani->RndMatrWorld = MatrTranslate(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
+  Ani->RndMatrWorld = MatrTranslate(MatrDefault(), Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
   Ani->RndMatrWorld = MatrRotateY(Ani->RndMatrWorld, Unit->RotAngleY);
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateX(MatrDefault(), Unit->RotAngleX));
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateZ(MatrDefault(), Unit->RotAngleZ));
@@ -112,6 +112,9 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
     if (loc != -1)
       glUniformMatrix4fv(loc, 1, FALSE, &Unit->VecPos.X);
 
+    loc = glGetUniformLocation(Unit->ShaderProg, "Trans");
+    if (loc != -1)
+      glUniform1f(loc, 1.0);
   }
 
   RK2_GObjDraw(&Unit->GObj);

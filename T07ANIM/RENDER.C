@@ -47,7 +47,7 @@ static rk2MATR4x4 RK2_RndCameraGetMatrix( rk2CAMERA *Cam )
 * ARGUMENTS: None.
 * RETURNS: None.
 */
-static VOID RK2_RndCameraNormalize( rk2CAMERA *Cam )
+VOID RK2_RndCameraNormalize( rk2CAMERA *Cam )
 {
   Cam->At = VecNormalize(Cam->At);
   Cam->Dir = VecNormalize(Cam->Dir);
@@ -166,7 +166,20 @@ VOID RK2_RndCameraRotateDir( rk2CAMERA *Cam, DBL Angle )
     VecSumVec(Cam->Loc,
     VecSet(RotMat.A[0][0], RotMat.A[0][1], RotMat.A[0][2])),                    /* At */
     Cam->Up);                                                                   /* Up */
-}  /* End of 'RK2_RndCameraRotateDir' funciton */
+} /* End of 'RK2_RndCameraRotateDir' funciton */
 
 
+/* Camera update information function.
+* ARGUMENTS:
+*   - Angle:
+*       DBL Angle;
+* RETURNS: None.
+*/
+VOID RK2_RndCameraUpdateInfo( rk2CAMERA *Cam )
+{
+  /// RK2_RndCameraNormalize(Cam);
+  Cam->Dir = VecNormalize(VecSubVec(Cam->At, Cam->Loc));
+  Cam->Right = VecNormalize(VecCrossVec(Cam->Dir, Cam->Up));
+  RK2_RndCameraNormalize(Cam);
+} /* End of 'RK2_RndCameraUpdateInfo' funciton */
 /* END OF 'RENDER.C' FILE */

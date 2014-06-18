@@ -21,7 +21,9 @@ typedef struct tagrk2UNIT_HEIGHTMAP
 {
   RK2_UNIT_BASE_FIELDS;                /* Base fields */
   rk2GOBJ GObj;                        /* Geometry Object */
-  CHAR FileTextureName[MAX_PATH];      /* Texture file name */
+  CHAR 
+    FileTextureName[MAX_PATH],      /* Texture file name */
+    FileMapName[MAX_PATH];          /* Map File name */
   rk2GMATERIAL Mtl;
 } rk2UNIT_HEIGHTMAP;
 
@@ -37,15 +39,15 @@ static VOID UnitHeightMapInit( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 {
   rk2GPRIM GPrim;
   rk2GMATERIAL GMtl;
-  strcpy(GMtl.Name, "Height map");
-  strcpy(GMtl.MapD, "../Textures/heightmap0.bmp");
+  strcpy(GMtl.Name, Unit->FileTextureName);
+  strcpy(GMtl.MapD, Unit->FileTextureName);
   GMtl.TexNo = 0;
   GMtl.Ka = VecSet(0.3, 0.3, 0.3);
   GMtl.Kd = VecSet(0.3, 0.3, 0.3);
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
   GMtl.Phong = 30;
   GMtl.Trans = 1;
-  RK2_GPrimCreateHeightField(&GPrim, "../Textures/heightmap0.bmp", 40, 1);
+  RK2_GPrimCreateHeightField(&GPrim, Unit->FileMapName, 40, 1, Unit->FileTextureName);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
   RK2_GObjAddPrim(&Unit->GObj, &GPrim);
 } /* End of 'UnitHeightMapInit' function */
@@ -86,7 +88,6 @@ static VOID UnitHeightMapResponse( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 static VOID UnitHeightMapRender( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 {
   UINT loc;
-  INT x, z;
   /// Ani->RndMatrWorld = MatrTranslate(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
   RK2_RndBuildMatrix();
   if (Ani->ShaderDef)
@@ -110,11 +111,13 @@ static VOID UnitHeightMapRender( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 } /* End of 'UnitHeightMapRender' function */
 
 /* Unit heightmap create function.
- * ARGUMENTS: None.
+ * ARGUMENTS:
+ *   - File names:
+ *     CHAR *FileMapName, *FileTextName
  * RETURNS:
  *   (rk2UNIT_HEIGHTMAP *) - pointer for new animation unit.
  */
-rk2UNIT *RK2_UnitHeightMapCreate( VOID )
+rk2UNIT *RK2_UnitHeightMapCreate( CHAR *FileMapName, CHAR *FileTextName )
 {
   rk2UNIT_HEIGHTMAP *Unit;
 
@@ -126,6 +129,12 @@ rk2UNIT *RK2_UnitHeightMapCreate( VOID )
   Unit->Init = (VOID *)UnitHeightMapInit;
   Unit->Close = (VOID *)UnitHeightMapClose;
   Unit->Response = (VOID *)UnitHeightMapResponse;
+
+  strcpy(Unit->FileMapName,FileMapName);
+  if (FileTextName != NULL)
+    strcpy(Unit->FileTextureName, FileTextName);
+  else
+    strcpy(Unit->FileTextureName, Unit->FileMapName);
 
   return (rk2UNIT *)Unit;
 } /* End of 'RK2_UnitGrassCreate' function */

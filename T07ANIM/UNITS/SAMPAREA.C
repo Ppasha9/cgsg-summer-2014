@@ -27,6 +27,8 @@ typedef struct tagrk2UNIT_AREA
     VecPos2, VecPos3;
 } rk2UNIT_AREA;
 
+INT RK2_WaterLevel; /* Water level */
+
 /* Unit grass init function.
  * ARGUMENTS:
  *   - Self pointer:
@@ -47,6 +49,7 @@ static VOID UnitAreaInit( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
   GMtl.Phong = 30;
   GMtl.Trans = 0.5;
+  RK2_WaterLevel = 10;
   /// GMtl.Trans = sin(Ani->Time);
   RK2_GPrimCreateDesk(&GPrim, VecSet(0, 0, 0), VecSet(30, 0, 0), VecSet(0, 0, 30), VecSet(30, 0, 30), NULL);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
@@ -96,7 +99,7 @@ static VOID UnitAreaRender( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
   for (x = -10; x < 10; x++)
     for (z = -10; z < 10; z++)
     {
-      Ani->RndMatrWorld = MatrTranslate(x * 30, 10, z * 30);
+      Ani->RndMatrWorld = MatrTranslate(MatrDefault(), x * 30, RK2_WaterLevel, z * 30);
       RK2_RndBuildMatrix();
       if (Ani->ShaderDef)
       {
@@ -108,7 +111,6 @@ static VOID UnitAreaRender( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
         loc = glGetUniformLocation(Ani->ShaderDef, "Time");
         if (loc != -1)
           glUniform1f(loc, Ani->Time);
-
         /*
         loc = glGetUniformLocation(Ani->ShaderDef, "Trans");
         if (loc != -1)

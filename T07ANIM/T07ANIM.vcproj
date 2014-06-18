@@ -290,6 +290,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UNITS\SAMPBOAT.C"
+					>
+				</File>
+				<File
 					RelativePath=".\UNITS\SAMPCAMFLY.C"
 					>
 				</File>

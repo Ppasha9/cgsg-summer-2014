@@ -73,10 +73,10 @@ static rk2VEC UnitCamFlyGetCoordByTime(rk2UNIT_CAMFLY *Unit, rk2ANIM *Ani, rk2VE
  */
 static VOID UnitCamFlyResponse( rk2UNIT_CAMFLY *Unit, rk2ANIM *Ani )
 {
-  /*
+  
   if (!Ani->IsPause)
     Unit->CamPos = UnitCamFlyGetCoordByTime(Unit, Ani, Unit->CamPos, Ani->Time);
-  */
+  
 } /* End of 'RK2_UnitCamFlyResponse' function */
 
 /* Unit flying camera render function.

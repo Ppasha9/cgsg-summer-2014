@@ -9,6 +9,8 @@
 
 #include "anim.h"
 
+extern INT RK2_WaterLevel; /* Water level */
+
 /* Unit Animation control create function. */
 rk2UNIT *RK2_UnitAnimContolCreate( VOID );
 
@@ -28,11 +30,14 @@ rk2UNIT *RK2_UnitCorSysCreate( VOID );
 rk2UNIT *RK2_UnitCamFlyCreate( VOID );
 
 /* Unit heightmap create function. */
-rk2UNIT *RK2_UnitHeightMapCreate( VOID );
+rk2UNIT *RK2_UnitHeightMapCreate( CHAR *FileMapName, CHAR *FileTextName );
 
 /* Unit heightmap create function. */
 rk2UNIT *RK2_UnitAreaCreate( CHAR *FileTextureName, rk2VEC Pos0, rk2VEC Pos1, rk2VEC Pos2, rk2VEC Pos3 );
 
+/* Unit boat create function. */
+rk2UNIT *RK2_UnitBoatCreate( INT PosX, INT PosY, INT PosZ, 
+                             DBL RotAngleX, DBL RotAngleY, DBL RotAngleZ );
 
 #endif /* __UNITS_H_ */
 

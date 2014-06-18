@@ -1,4 +1,4 @@
-/* FILE NAME   : a.frag
+/* FILE NAME   : default.frag
  * PURPOSE     : Simple fragment shader.
  * PROGRAMMER  : RK2.
  * LAST UPDATE : 16.06.2014
@@ -39,7 +39,7 @@ in vec4 CameraPos;
 
 vec3 Illum( vec3 N )
 {
-  vec4 texc = texture2D(DrawTexture, DrawTexCoord.xy);
+  vec4 texc = texture2D(DrawTexture, DrawTexCoord.xy); //+ vec2(Time, 0));
   vec3 color = Ka;
   vec3 Dir = mat3(MatrWorld) * ViewDir; 
 

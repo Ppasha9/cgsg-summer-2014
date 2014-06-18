@@ -76,8 +76,7 @@ BOOL RK2_GPrimCreateSphere( rk2GPRIM *P,
 BOOL RK2_GPrimCreateDesk( rk2GPRIM *P, rk2VEC V0, rk2VEC V1, rk2VEC V2, rk2VEC V3, rk2IMAGE *Texture );
 
 /* Map heights create function. */
-BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Scale );
-
+BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Scale, CHAR *FileTextureName );
 /* Функция удаления примитива */
 VOID RK2_GPrimFree( rk2GPRIM *P );
 

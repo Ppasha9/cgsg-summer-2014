@@ -171,14 +171,14 @@ __inline rk2MATR4x4 MatrDefault( VOID )
   return m;
 } /* End of 'MatrIdentity' function */
 
-__inline rk2MATR4x4 MatrTranslate( FLT Dx, FLT Dy, FLT Dz )
+__inline rk2MATR4x4 MatrTranslate( rk2MATR4x4 Matr, FLT Dx, FLT Dy, FLT Dz )
 {
-  rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
+  /// rk2MATR4x4 m = RK2_UNIT_MATR_DEFAULT;
 
-  m.A[3][0] = Dx;
-  m.A[3][1] = Dy;
-  m.A[3][2] = Dz;
-  return m;
+  Matr.A[3][0] = Dx;
+  Matr.A[3][1] = Dy;
+  Matr.A[3][2] = Dz;
+  return Matr;
 } /* End of 'MatrTranslate' function */
 
 __inline rk2MATR4x4 MatrScale( FLT Sx, FLT Sy, FLT Sz )

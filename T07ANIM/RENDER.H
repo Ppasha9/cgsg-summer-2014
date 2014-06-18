@@ -51,6 +51,12 @@ VOID RK2_RndCameraRotateRight( rk2CAMERA *Cam, DBL Angle );
 /* Camera rotation by camera-axes-dir function. */
 VOID RK2_RndCameraRotateDir( rk2CAMERA *Cam, DBL Angle );
 
+/* Cameras normalizing vectors function */
+VOID RK2_RndCameraNormalize( rk2CAMERA *Cam );
+
+/* Camera update information function. */
+VOID RK2_RndCameraUpdateInfo( rk2CAMERA *Cam );
+
 /* Render setting function. */
 VOID RK2_RndBuildMatrix( VOID );
 

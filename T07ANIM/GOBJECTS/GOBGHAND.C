@@ -154,7 +154,7 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
         glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
         for (j = 0; j < Img.W * Img.H; j++)
         {
-          Img.Bits[j] |= 0x00000000;
+          Img.Bits[j] |= 0xFF000000;
         }
         /* отправляем картинку в видеопамять */
         /* gluBuild2DMipmaps(GL_TEXTURE_2D, 4, Img.W, Img.H,

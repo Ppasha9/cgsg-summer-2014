@@ -174,13 +174,15 @@ BOOL RK2_GPrimCreateDesk( rk2GPRIM *P, rk2VEC V0, rk2VEC V1, rk2VEC V2, rk2VEC V
  * RETURNS:
  *   (BOOL) TRUE if success.
  */
-BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Scale )
+BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Scale, CHAR *FileTextureName )
 {
   INT i, j;
-  rk2IMAGE Img;
+  rk2IMAGE Img, ImgTxt;
 
   memset(P, 0, sizeof(rk2GPRIM));
   if (!ImageLoad(&Img, FileName))
+    return FALSE;
+  if (!ImageLoad(&ImgTxt, FileTextureName))
     return FALSE;
 
   if (!RK2_GPrimCreate(P, RK2_PRIM_GRID, Img.W, Img.H))
@@ -192,11 +194,11 @@ BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Sc
       rk2GVERTEX *V = P->V + i * Img.W + j;
       BYTE rgb[4], h;
       DWORD *col = (DWORD *)rgb;
-
       *col = ImageGetP(&Img, j, i);
       h = (rgb[2] * 30 + rgb[1] * 59 + rgb[0] * 11) / 100;
       V->P = VecSet((j - Img.W / 2) / Scale, h * Height / 255, (i - Img.H / 2) / Scale);
     }
+
   /* задаем нормали точек */
   for (i = 1; i < Img.H - 1; i++)
     for (j = 1; j < Img.W - 1; j++)
@@ -213,8 +215,12 @@ BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Sc
         dv1 = VecNormalize(VecSet(0, (p10.Z - p00.Z), (p00.Y - p10.Y)));
 
       P->V[i * Img.W + j].N = VecNormalize(VecSumVec(VecSumVec(du0, du1), VecSumVec(dv0, dv1)));
+      P->V[i * Img.W + j].T = RK2_UVSet((FLT)j * 1000 / ImgTxt.W, (FLT)i * 1000 / ImgTxt.H);
       /// P->V[i * Img.W + j].N = VecNormalize(VecAddVec(du0, du1));
     }
+  ImageFree(&Img);
+  ImageFree(&ImgTxt);
+
   return TRUE;
 } /* End of 'RK2_GPrimCreateSphere' function */
 
