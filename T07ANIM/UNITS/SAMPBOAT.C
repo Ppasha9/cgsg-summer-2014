@@ -1,7 +1,7 @@
 /* FILENAME: SAMPBOAT.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 17.06.2014
+ * LAST UPDATE: 14.08.2014
  */
 
 #include <stdio.h>
@@ -30,20 +30,16 @@ typedef struct tagrk2UNIT_BOAT
   RK2_UNIT_BASE_FIELDS;           /* Base fields */
   rk2GOBJ GObj;                   /* Geometry Object */
 
-  rk2VEC VecPos;                  /* Postion of object on world map */
-  DBL
-    RotAngleX,                    /* Angles of rotation unit */
-    RotAngleY,
-    RotAngleZ;
-  DBL
-    LevelDif;                     /* Add to water level constant */
-  rk2VEC CamDist;                 /* Distance from camera to boat */
+  rk2VEC CamShift;                 /* Camera position */
+
   UINT ShaderProg;                /* Shader */
   CHAR 
     ShaderVFileName[MAX_PATH],    /* Shaders file names */
     ShaderFFileName[MAX_PATH];
-  rk2CAMERA 
-    Camera;                       /* Camera */
+  rk2CAMERA
+    ObjCam;                       /* Object camera */
+
+  rk2MATR4x4 MatrVLA;             /* View Look at matrix */
   rk2UNIT_BOAT_PHYS Phys;         /* Object physics */
 } rk2UNIT_BOAT;
 
@@ -60,11 +56,10 @@ static VOID UnitBoatInit( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
   if ((Unit->ShaderProg = RK2_ShadProgInit(Unit->ShaderVFileName, Unit->ShaderFFileName)) == 0)
     Unit->ShaderProg = Ani->ShaderDef;
 
-  Unit->Camera.Loc = Unit->VecPos;
-  Unit->Camera.Up = VecSet(0, 1, 0);
-  Unit->Camera.At = VecSet(0, 0, 0);
-  Unit->CamDist = VecSet(0, 30, -50);
-  Unit->LevelDif = 0.5;
+  RK2_RndCameraSet(&Unit->ObjCam, Unit->ObjCam.Loc, VecSumVec(Unit->ObjCam.Loc, VecSet(1, 0, 0)), VecSet(0, 1, 0));
+  RK2_RndCameraUpdateInfo(&Unit->ObjCam);
+  Unit->CamShift = VecSet(0, 2, -30);
+  // Unit->CamShift = VecSet(0, -30, 0);
   RK2_GObjLoad(&Unit->GObj, "..\\gobjects\\seagul.object");
   /* , Unit->VecPos); */
 } /* End of 'RK2_UnitBoatInit' function */
@@ -94,23 +89,24 @@ static VOID UnitBoatClose( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
  */
 static VOID UnitBoatCameraSet( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 {
-  rk2CAMERA DefCam;
-  rk2MATR4x4 DefMatr;
-
+  // Unit->Matr
+  rk2MATR4x4 MatrVLACam;
   if (!Ani->IsPause)
   {
-    DefMatr = MatrRotateY(MatrDefault(), Unit->RotAngleY);
-    DefMatr = MatrMultMatr(DefMatr, MatrRotateX(MatrDefault(), Unit->RotAngleX));
-    DefMatr = MatrMultMatr(DefMatr, MatrRotateZ(MatrDefault(), Unit->RotAngleZ + Unit->Phys.RotSpeed.Z));
+    // rk2VEC ShiftVecRes = VecSet(-Unit->CamShift.X, Unit->CamShift.Y, -Unit->CamShift.Z);
+    RK2_RndCameraUpdateInfo(&Unit->ObjCam);
+    Unit->MatrVLA = MatrTranspose(MatrViewLookAt(VecSet(0, 0, 0), VecNeg(Unit->ObjCam.Dir), Unit->ObjCam.Up));
 
-    RK2_RndCameraSet(&DefCam, VecSumVec(Unit->VecPos, VecMultMatr(Unit->CamDist, DefMatr)),
-                     Unit->VecPos, VecMultMatr(VecSet(0, 1, 0), DefMatr));
-    /// RK2_RndCameraUpdateInfo(&DefCam);
-    /// RK2_RndCameraNormalize(&DefCam);
-    Unit->Camera = DefCam;
+    // rk2VEC Res = VecMultMatr(Unit->CamShift, Unit->MatrVLA);
+    // RK2_RndCameraSet(&Ani->RndCamera, VecSumVec(Unit->ObjCam.Loc, VecMultMatr(Unit->CamShift, Unit->MatrVLA)),
+      // Unit->ObjCam.Loc, Unit->ObjCam.Up);
+
+    MatrVLACam = MatrTranspose(MatrViewLookAt(VecSet(0, 0, 0), VecNeg(Unit->ObjCam.Dir), VecSet(0, 1, 0)));
+    RK2_RndCameraSet(&Ani->RndCamera, VecSumVec(Unit->ObjCam.Loc, VecMultMatr(Unit->CamShift, MatrVLACam)),
+      Unit->ObjCam.Loc, VecSet(0, 1, 0));
+
+    RK2_RndCameraUpdateInfo(&Ani->RndCamera);
   }
-  else 
-    Unit->Camera = Ani->RndCamera;
 } /* End of 'UnitBoatCameraSet' function */
 
 /* Unit boat response function.
@@ -123,59 +119,47 @@ static VOID UnitBoatCameraSet( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
  */
 static VOID UnitBoatResponse( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 {
-  rk2MATR4x4 DefMatr;
-
-  Unit->Phys.RotSpeed.Z = 0;
-  Unit->Phys.Speed.X = 0;
-  Unit->Phys.Speed.Y = 0;
   Unit->Phys.Acc = VecSet(0, 0, 0);
+  RK2_RndCameraUpdateInfo(&Unit->ObjCam);
+
   if (!Ani->IsPause)
   {
+    if (Ani->Keys['I'])
+      Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, VecSet(0, 0, 0.01));
+    if (Ani->Keys['K'])
+      Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, VecSet(0, 0, -0.01));
+    if (Ani->JoyY)
+      Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, VecSet(0, 0, -Ani->JoyY * 0.01));
+
+    if (Ani->Keys['Q'])
+      RK2_RndCameraRotateDir(&Unit->ObjCam, -1);
+    if (Ani->Keys['E'])
+      RK2_RndCameraRotateDir(&Unit->ObjCam, 1);
+
     if (Ani->Keys['A'])
-      Unit->RotAngleY += 0.3;
+      RK2_RndCameraRotateUp(&Unit->ObjCam, 1);
     if (Ani->Keys['D'])
-      Unit->RotAngleY -= 0.3;
+      RK2_RndCameraRotateUp(&Unit->ObjCam, -1);
+
     if (Ani->JoyR)
     {
-      Unit->RotAngleY -= Ani->JoyR;
+      RK2_RndCameraRotateUp(&Unit->ObjCam, -Ani->JoyR);
       Unit->Phys.RotSpeed.Z = Ani->JoyR * 10;
     }
 
     if (Ani->Keys['W'])
-      Unit->Phys.Acc = VecSumVec(Unit->Phys.Acc, VecSet(0, 0, 0.01));
+      RK2_RndCameraRotateRight(&Unit->ObjCam, -0.5);
     if (Ani->Keys['S'])
-      Unit->Phys.Acc = VecSumVec(Unit->Phys.Acc, VecSet(0, 0, -0.01));
-    if (Ani->JoyY)
-      Unit->Phys.Acc = VecSumVec(Unit->Phys.Acc, VecSet(0, 0, -Ani->JoyY * 0.01));
-
-    if (Ani->Keys['I'])
-      Unit->RotAngleX += 0.3;
-    if (Ani->Keys['K'])
-      Unit->RotAngleX -= 0.3;
+      RK2_RndCameraRotateRight(&Unit->ObjCam, 0.5);
     if (Ani->JoyZ)
-    {
-      Unit->RotAngleX -= Ani->JoyZ;
-      /// Unit->Phys.RotSpeed.Z = Ani->JoyR * 10;
-    }
+      RK2_RndCameraRotateRight(&Unit->ObjCam, -Ani->JoyZ);
   }
-  /*
-  Unit->Phys.Speed.X *= Unit->Phys.Speed.Z;
-  Unit->Phys.Speed.Y *= Unit->Phys.Speed.Z;
-  */
-  Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, Unit->Phys.Acc);
-
-  DefMatr = MatrRotateY(MatrDefault(), Unit->RotAngleY);
-  DefMatr = MatrMultMatr(DefMatr, MatrRotateX(MatrDefault(), Unit->RotAngleX));
-  DefMatr = MatrMultMatr(DefMatr, MatrRotateZ(MatrDefault(), Unit->RotAngleZ));
-  /*
-  DefMatr = MatrRotateY(MatrDefault(), Unit->RotAngleY);
-  DefMatr = MatrRotateX(DefMatr, Unit->RotAngleX);
-  DefMatr = MatrRotateZ(DefMatr, Unit->RotAngleZ + Unit->Phys.RotSpeed.Z);
-  */
-  Unit->VecPos = VecSumVec(Unit->VecPos, VecMultMatr(Unit->Phys.Speed, DefMatr));
 
   UnitBoatCameraSet(Unit, Ani);
-  Ani->RndCamera = Unit->Camera;
+
+  Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, Unit->Phys.Acc);
+  Unit->ObjCam.Loc = VecSumVec(Unit->ObjCam.Loc, VecMultMatr(Unit->Phys.Speed, Unit->MatrVLA));
+  Unit->ObjCam.At = VecSumVec(Unit->ObjCam.Loc, Unit->ObjCam.Dir);
 } /* End of 'RK2_UnitBoatResponse' function */
 
 /* Unit boat render function.
@@ -189,15 +173,16 @@ static VOID UnitBoatResponse( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 static VOID UnitBoatRender( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 {
   UINT loc;
-  Ani->RndCamera = Unit->Camera;
-  Ani->RndMatrWorld = MatrScale(0.7, 0.7, 0.7);
-  
-  Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateY(MatrDefault(), Unit->RotAngleY));
-  Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateX(MatrDefault(), Unit->RotAngleX));
-  Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateZ(MatrDefault(), Unit->RotAngleZ + Unit->Phys.RotSpeed.Z));
-  Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrTranslate(MatrDefault(), Unit->VecPos.X, Unit->VecPos.Y + Unit->LevelDif, Unit->VecPos.Z));
 
-  RK2_RndCameraUpdateInfo(&Unit->Camera);
+  Ani->RndMatrWorld = MatrMultMatr(MatrMultMatr(Ani->RndMatrWorld, Unit->MatrVLA),
+                                   MatrScale(0.5, 0.5, 0.5));
+
+  Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld,
+                                   MatrTranslate(MatrDefault(),
+                                   Unit->ObjCam.Loc.X, Unit->ObjCam.Loc.Y, Unit->ObjCam.Loc.Z));
+
+  RK2_RndCameraUpdateInfo(&Ani->RndCamera);
+
   RK2_RndBuildMatrix();
 
   if (Unit->ShaderProg)
@@ -213,7 +198,7 @@ static VOID UnitBoatRender( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 
     loc = glGetUniformLocation(Unit->ShaderProg, "UnitPos");
     if (loc != -1)
-      glUniformMatrix4fv(loc, 1, FALSE, &Unit->VecPos.X);
+      glUniformMatrix4fv(loc, 1, FALSE, &Unit->ObjCam.Loc.X);
 
     loc = glGetUniformLocation(Unit->ShaderProg, "Trans");
     if (loc != -1)
@@ -222,26 +207,26 @@ static VOID UnitBoatRender( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 
   RK2_GObjDraw(&Unit->GObj);
 
-  RK2_RndCameraNormalize(&Unit->Camera);
   glBegin(GL_LINES);
     glColor3d(1, 0, 0);
-    glVertex3d(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
-    glVertex3d(Unit->VecPos.X + Unit->Camera.Up.X, 
-               Unit->VecPos.Y + Unit->Camera.Up.Y, 
-               Unit->VecPos.Z + Unit->Camera.Up.Z);
+    glVertex3d(Unit->ObjCam.Loc.X, Unit->ObjCam.Loc.Y, Unit->ObjCam.Loc.Z);
+    glVertex3d(Unit->ObjCam.Loc.X + Unit->ObjCam.Up.X,
+               Unit->ObjCam.Loc.Y + Unit->ObjCam.Up.Y,
+               Unit->ObjCam.Loc.Z + Unit->ObjCam.Up.Z);
 
     glColor3d(0, 1, 0);
-    glVertex3d(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
-    glVertex3d(Unit->VecPos.X + Unit->Camera.Right.X, 
-               Unit->VecPos.Y + Unit->Camera.Right.Y, 
-               Unit->VecPos.Z + Unit->Camera.Right.Z);
+    glVertex3d(Unit->ObjCam.Loc.X, Unit->ObjCam.Loc.Y, Unit->ObjCam.Loc.Z);
+    glVertex3d(Unit->ObjCam.Loc.X + Unit->ObjCam.Right.X, 
+               Unit->ObjCam.Loc.Y + Unit->ObjCam.Right.Y, 
+               Unit->ObjCam.Loc.Z + Unit->ObjCam.Right.Z);
 
     glColor3d(0, 0, 1);
-    glVertex3d(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
-    glVertex3d(Unit->VecPos.X + Unit->Camera.Dir.X, 
-               Unit->VecPos.Y + Unit->Camera.Dir.Y, 
-               Unit->VecPos.Z + Unit->Camera.Dir.Z);
+    glVertex3d(Unit->ObjCam.Loc.X, Unit->ObjCam.Loc.Y, Unit->ObjCam.Loc.Z);
+    glVertex3d(Unit->ObjCam.Loc.X + Unit->ObjCam.Dir.X,
+               Unit->ObjCam.Loc.Y + Unit->ObjCam.Dir.Y,
+               Unit->ObjCam.Loc.Z + Unit->ObjCam.Dir.Z);
   glEnd();
+
   glUseProgram(0);
   Ani->RndMatrWorld = MatrDefault();
 } /* End of 'RK2_UnitBoatRender' function */
@@ -269,12 +254,9 @@ rk2UNIT *RK2_UnitBoatCreate( INT PosX, INT PosY, INT PosZ,
   Unit->Close = (VOID *)UnitBoatClose;
   Unit->Response = (VOID *)UnitBoatResponse;
 
-  Unit->VecPos = VecSet(PosX, PosY, PosZ);
-
-  Unit->RotAngleX = RotAngleX;
-  Unit->RotAngleY = RotAngleY;
-  Unit->RotAngleZ = RotAngleZ;
-
+  // Unit->VecPos = VecSet(PosX, PosY, PosZ);
+  Unit->ObjCam.Loc = VecSet(PosX, PosY, PosZ); // Unit->VecPos;
+  // Unit->ObjCam.At = 
   return (rk2UNIT *)Unit;
 } /* End of 'RK2_UnitBoatCreate' function */
 

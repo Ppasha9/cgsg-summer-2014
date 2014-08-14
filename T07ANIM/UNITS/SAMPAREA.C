@@ -1,7 +1,7 @@
 /* FILENAME: SAMPAREA.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 17.06.2014
+ * LAST UPDATE: 14.08.2014
  */
 
 #include <stdio.h>
@@ -47,8 +47,8 @@ static VOID UnitAreaInit( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
   GMtl.Ka = VecSet(0.3, 0.3, 0.3);
   GMtl.Kd = VecSet(0.3, 0.3, 0.3);
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
-  GMtl.Phong = 30;
-  GMtl.Trans = 0.5;
+  GMtl.Phong = 50;
+  GMtl.Trans = 0.3;
   RK2_WaterLevel = 10;
   /// GMtl.Trans = sin(Ani->Time);
   RK2_GPrimCreateDesk(&GPrim, VecSet(0, 0, 0), VecSet(30, 0, 0), VecSet(0, 0, 30), VecSet(30, 0, 30), NULL);

@@ -1,7 +1,7 @@
 /* FILENAME: RENDER.C
  * PROGRAMMER: RK2
  * PURPOSE: 3D render handle module.
- * LAST UPDATE: 12.06.2014
+ * LAST UPDATE: 13.08.2014
  */
 
 #include <stdio.h>
@@ -49,7 +49,6 @@ static rk2MATR4x4 RK2_RndCameraGetMatrix( rk2CAMERA *Cam )
 */
 VOID RK2_RndCameraNormalize( rk2CAMERA *Cam )
 {
-  Cam->At = VecNormalize(Cam->At);
   Cam->Dir = VecNormalize(Cam->Dir);
   Cam->Up = VecNormalize(Cam->Up);
   Cam->Right = VecNormalize(Cam->Right);
@@ -116,6 +115,7 @@ VOID RK2_RndCameraRotateUp( rk2CAMERA *Cam, DBL Angle )
                    VecSumVec(Cam->Loc, 
                              VecSet(RotMat.A[0][0], RotMat.A[0][1], RotMat.A[0][2])),              /* At */
                    Cam->Up);                                                                       /* Up */
+  // RK2_RndCameraUpdateInfo(Cam);
 }  /* End of 'RK2_RndCameraRotateUp' funciton */
 
 /* Camera rotation by camera-axes-right function.
@@ -127,10 +127,7 @@ VOID RK2_RndCameraRotateUp( rk2CAMERA *Cam, DBL Angle )
 VOID RK2_RndCameraRotateRight( rk2CAMERA *Cam, DBL Angle )
 {
   rk2MATR4x4 RotMat;
-  /*
-  if (Angle == 0)
-    return;
-  */
+
   Cam->Dir = VecSubVec(Cam->At, Cam->Loc);
   Cam->Right = VecCrossVec(VecNormalize(Cam->Dir), Cam->Up);
 
@@ -140,9 +137,10 @@ VOID RK2_RndCameraRotateRight( rk2CAMERA *Cam, DBL Angle )
   RotMat = MatrMultMatr(MatrRotateZ(MatrDefault(), Angle), RotMat);
 
   RK2_RndCameraSet(Cam, Cam->Loc,                                               /* Location */
-    VecSumVec(Cam->Loc,
-    VecSet(RotMat.A[0][0], RotMat.A[0][1], RotMat.A[0][2])),                        /* At */
-    Cam->Up);                                                              /* Up */
+    VecSumVec(Cam->Loc, 
+    VecSet(RotMat.A[0][0], RotMat.A[0][1], RotMat.A[0][2])),                    /* At */
+    VecSet(RotMat.A[1][0], RotMat.A[1][1], RotMat.A[1][2]));                    /* Up */
+  // RK2_RndCameraUpdateInfo(Cam);
 }  /* End of 'RK2_RndCameraRotateRight' funciton */
 
 /* Camera rotation by camera-axes-dir function.
@@ -163,11 +161,10 @@ VOID RK2_RndCameraRotateDir( rk2CAMERA *Cam, DBL Angle )
   RotMat = MatrMultMatr(MatrRotateX(MatrDefault(), Angle), RotMat);
 
   RK2_RndCameraSet(Cam, Cam->Loc,                                               /* Location */
-    VecSumVec(Cam->Loc,
-    VecSet(RotMat.A[0][0], RotMat.A[0][1], RotMat.A[0][2])),                    /* At */
-    Cam->Up);                                                                   /* Up */
+    Cam->At,                                                                    /* At */
+    VecSet(RotMat.A[1][0], RotMat.A[1][1], RotMat.A[1][2]));                    /* Up */
+  // RK2_RndCameraUpdateInfo(Cam);
 } /* End of 'RK2_RndCameraRotateDir' funciton */
-
 
 /* Camera update information function.
 * ARGUMENTS:
@@ -177,9 +174,9 @@ VOID RK2_RndCameraRotateDir( rk2CAMERA *Cam, DBL Angle )
 */
 VOID RK2_RndCameraUpdateInfo( rk2CAMERA *Cam )
 {
-  /// RK2_RndCameraNormalize(Cam);
+  RK2_RndCameraNormalize(Cam);
   Cam->Dir = VecNormalize(VecSubVec(Cam->At, Cam->Loc));
-  Cam->Right = VecNormalize(VecCrossVec(Cam->Dir, Cam->Up));
+  Cam->Right = VecCrossVec(Cam->Dir, Cam->Up);
   RK2_RndCameraNormalize(Cam);
 } /* End of 'RK2_RndCameraUpdateInfo' funciton */
 /* END OF 'RENDER.C' FILE */

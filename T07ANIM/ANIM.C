@@ -1,7 +1,7 @@
 /* FILENAME: ANIM.C
  * PROGRAMMER: RK2
  * PURPOSE: Base animation module
- * LAST UPDATE: 17.06.2014
+ * LAST UPDATE: 13.08.2014
  */
 
 #include <stdlib.h>
@@ -162,7 +162,7 @@ VOID RK2_AnimResize( INT W, INT H )
                                               -RK2_Anim.RndHp / 2,
                                               RK2_Anim.RndHp / 2,
                                               RK2_Anim.RndProjDist,
-                                              1000);
+                                              3000);
 } /* End of 'RK2_AnimResize' function */
 
 /* Mouse main loop messages function.

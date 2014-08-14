@@ -1,7 +1,7 @@
 /* FILENAME: MAIN.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation startup module
- * LAST UPDATE: 17.06.2014
+ * LAST UPDATE: 14.08.2014
  */
 
 
@@ -42,7 +42,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   HWND hWnd;
   MSG msg;
-  INT i;
+  // INT i;
 
   /* Main window class registration */
   wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -91,7 +91,8 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   RK2_AnimAddUnit(RK2_UnitHeightMapCreate("../Textures/heightmap0.bmp", "../Textures/grass.bmp"));
   /// RK2_AnimAddUnit(RK2_UnitHeightMapCreate("../Textures/heightmap0.bmp", "../Textures/heightmap0.bmp"));
 
-  RK2_AnimAddUnit(RK2_UnitBoatCreate(40, 10, 20, 0, 0, 0));
+  RK2_AnimAddUnit(RK2_UnitBoatCreate(40, 60, 20, 0, 0, 0));
+  // RK2_AnimAddUnit(RK2_UnitBoatCreate(0, 0, 0, 0, 0, 0));
 
   // RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\boat0\\obj\\boat.object",        /* Obj */
      //                                0, 40, 0,                                       /* Pos */

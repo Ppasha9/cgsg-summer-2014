@@ -1,7 +1,7 @@
 /* FILENAME: SAMPGRASS.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 17.06.2014
+ * LAST UPDATE: 14.08.2014
  */
 
 #include <stdio.h>
@@ -45,9 +45,9 @@ static VOID UnitHeightMapInit( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
   GMtl.Ka = VecSet(0.3, 0.3, 0.3);
   GMtl.Kd = VecSet(0.3, 0.3, 0.3);
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
-  GMtl.Phong = 30;
+  GMtl.Phong = 10;
   GMtl.Trans = 1;
-  RK2_GPrimCreateHeightField(&GPrim, Unit->FileMapName, 40, 1, Unit->FileTextureName);
+  RK2_GPrimCreateHeightField(&GPrim, Unit->FileMapName, 40, 1.5, Unit->FileTextureName);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
   RK2_GObjAddPrim(&Unit->GObj, &GPrim);
 } /* End of 'UnitHeightMapInit' function */
@@ -88,7 +88,6 @@ static VOID UnitHeightMapResponse( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 static VOID UnitHeightMapRender( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 {
   UINT loc;
-  /// Ani->RndMatrWorld = MatrTranslate(Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
   RK2_RndBuildMatrix();
   if (Ani->ShaderDef)
   {
