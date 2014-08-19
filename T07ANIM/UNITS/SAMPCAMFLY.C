@@ -9,8 +9,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../anim.h"
-#include "../render.h"
+#include "../anim/anim.h"
 
 /* Unit flying camera struct definition */
 typedef struct tagrk2UNIT_CAMFLY

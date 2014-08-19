@@ -9,9 +9,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../anim.h"
-#include "../render.h"
-#include "../shader.h"
+#include "../anim/anim.h"
 
 /* Unit Animation control response function.
  * ARGUMENTS:
@@ -69,8 +67,8 @@ static VOID UnitAnimContolResponse(rk2UNIT *Unit, rk2ANIM *Ani)
   }
   if (Ani->Keys['R'])
   {
-    RK2_ShadProgClose(RK2_Anim.ShaderDef);
-    RK2_Anim.ShaderDef = RK2_ShadProgInit("shaders\\default.vert", "shaders\\default.fraq");
+    RK2_ShadProgClose(Ani->ShaderDef);
+    Ani->ShaderDef = RK2_ShadProgInit("shaders\\default.vert", "shaders\\default.frag");
   }
 
   if (Ani->Keys[VK_ESCAPE])

@@ -1,7 +1,7 @@
 /* FILENAME: MAIN.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation startup module
- * LAST UPDATE: 14.08.2014
+ * LAST UPDATE: 16.08.2014
  */
 
 
@@ -12,9 +12,9 @@
 
 #include "def.h"
 
-#include "mth.h"
-#include "anim.h"
-#include "units.h"
+#include "mth/mth.h"
+#include "anim/anim.h"
+#include "units/units.h"
 
 #define WND_CLASS_NAME "My Window Class Name"
 
@@ -77,50 +77,14 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   /*** Adding units ***/
-
+  
   RK2_AnimAddUnit(RK2_UnitAnimContolCreate());
   RK2_AnimAddUnit(RK2_UnitAnimInfoCreate());
   RK2_AnimAddUnit(RK2_UnitCamFlyCreate());
   RK2_AnimAddUnit(RK2_UnitCorSysCreate());
-  //RK2_AnimAddUnit(RK2_UnitGrassCreate());
-  /* RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\water.bmp", 
-                                     VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0), VecSet(0, 0, 0)));
-  */
 
-  /// RK2_AnimAddUnit(RK2_UnitHeightMapCreate("../Textures/heightmap0.bmp", "../Textures/grass.bmp"));
   RK2_AnimAddUnit(RK2_UnitHeightMapCreate("../Textures/heightmap0.bmp", "../Textures/grass.bmp"));
-  /// RK2_AnimAddUnit(RK2_UnitHeightMapCreate("../Textures/heightmap0.bmp", "../Textures/heightmap0.bmp"));
-
   RK2_AnimAddUnit(RK2_UnitBoatCreate(40, 60, 20, 0, 0, 0));
-  // RK2_AnimAddUnit(RK2_UnitBoatCreate(0, 0, 0, 0, 0, 0));
-
-  // RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\boat0\\obj\\boat.object",        /* Obj */
-     //                                0, 40, 0,                                       /* Pos */
-       //                              0, 0, 0,                                       /* Rotation */
-         //                            NULL, NULL));                                  /* Shaders */
-
-  
-  // RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\seagul.object",                    /* Obj */
-  //                                   0, 100, 0,                                       /* Pos */
-    //                                 0, 0, 0,                                       /* Rotation */
-      //                               NULL, NULL));  /* Shaders */
-  
-  // RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\houses\\house1.object",                    /* Obj */
-    //                                 10, 100, 0,                                       /* Pos */
-      //                               0, 0, 0,                                       /* Rotation */
-        //                             NULL, NULL));  /* Shaders */
-
-  /// RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\house1.object", 0, 0, 40, 0, 0, 0, NULL, NULL));
-  /// RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\porsche.object", 40, 0, 0, 0, 0, 0));
-
-  /*
-  for (i = 0; i < 10; i++)
-    RK2_AnimAddUnit(RK2_UnitGObjCreate("..\\gobjects\\seagul.object", 
-                                       rand() % 20 - 10, rand() % 20 + 10, rand() % 20 - 10, 
-                                       rand() % 360, rand() % 360, rand() % 360, 
-                                       NULL, NULL));
-  */
-  //RK2_AnimAddUnit(RK2_UnitGObjCreate("gobjects\\seagul.object", rand() % 20 - 10, rand() % 20 + 10, rand() % 20 - 10, 0, 0, 0, NULL, NULL));
 
   /* Last */
   RK2_AnimAddUnit(RK2_UnitAreaCreate("..\\Textures\\water.bmp", 

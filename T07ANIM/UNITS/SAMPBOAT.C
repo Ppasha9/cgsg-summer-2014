@@ -9,11 +9,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../image.h"
-
-#include "../anim.h"
-#include "../render.h"
-#include "../shader.h"
+#include "../anim/anim.h"
 #include "../gobjects/gobj.h"
 
 /* Boat physics */
@@ -58,9 +54,11 @@ static VOID UnitBoatInit( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 
   RK2_RndCameraSet(&Unit->ObjCam, Unit->ObjCam.Loc, VecSumVec(Unit->ObjCam.Loc, VecSet(1, 0, 0)), VecSet(0, 1, 0));
   RK2_RndCameraUpdateInfo(&Unit->ObjCam);
-  Unit->CamShift = VecSet(0, 2, -30);
+  Unit->CamShift = VecSet(0, 2.0, -18);
+
+  // Unit->GObj.Mtls[0].Ka = rk2VEC(1.0, 1.0, 1.0);
   // Unit->CamShift = VecSet(0, -30, 0);
-  RK2_GObjLoad(&Unit->GObj, "..\\gobjects\\seagul.object");
+  RK2_GObjLoad(&Unit->GObj, "..\\gobjects\\seagul\\seagul.object");
   /* , Unit->VecPos); */
 } /* End of 'RK2_UnitBoatInit' function */
 
@@ -132,9 +130,9 @@ static VOID UnitBoatResponse( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
       Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, VecSet(0, 0, -Ani->JoyY * 0.01));
 
     if (Ani->Keys['Q'])
-      RK2_RndCameraRotateDir(&Unit->ObjCam, -1);
+      RK2_RndCameraRotateDir(&Unit->ObjCam, -5);
     if (Ani->Keys['E'])
-      RK2_RndCameraRotateDir(&Unit->ObjCam, 1);
+      RK2_RndCameraRotateDir(&Unit->ObjCam, 5);
 
     if (Ani->Keys['A'])
       RK2_RndCameraRotateUp(&Unit->ObjCam, 1);
@@ -153,13 +151,13 @@ static VOID UnitBoatResponse( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
       RK2_RndCameraRotateRight(&Unit->ObjCam, 0.5);
     if (Ani->JoyZ)
       RK2_RndCameraRotateRight(&Unit->ObjCam, -Ani->JoyZ);
+
+    UnitBoatCameraSet(Unit, Ani);
+
+    Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, Unit->Phys.Acc);
+    Unit->ObjCam.Loc = VecSumVec(Unit->ObjCam.Loc, VecMultMatr(Unit->Phys.Speed, Unit->MatrVLA));
+    Unit->ObjCam.At = VecSumVec(Unit->ObjCam.Loc, Unit->ObjCam.Dir);
   }
-
-  UnitBoatCameraSet(Unit, Ani);
-
-  Unit->Phys.Speed = VecSumVec(Unit->Phys.Speed, Unit->Phys.Acc);
-  Unit->ObjCam.Loc = VecSumVec(Unit->ObjCam.Loc, VecMultMatr(Unit->Phys.Speed, Unit->MatrVLA));
-  Unit->ObjCam.At = VecSumVec(Unit->ObjCam.Loc, Unit->ObjCam.Dir);
 } /* End of 'RK2_UnitBoatResponse' function */
 
 /* Unit boat render function.
@@ -172,10 +170,10 @@ static VOID UnitBoatResponse( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
  */
 static VOID UnitBoatRender( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 {
-  UINT loc;
+  // UINT loc;
 
   Ani->RndMatrWorld = MatrMultMatr(MatrMultMatr(Ani->RndMatrWorld, Unit->MatrVLA),
-                                   MatrScale(0.5, 0.5, 0.5));
+                                   MatrScale(0.1, 0.1, 0.1));
 
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld,
                                    MatrTranslate(MatrDefault(),
@@ -185,27 +183,9 @@ static VOID UnitBoatRender( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 
   RK2_RndBuildMatrix();
 
-  if (Unit->ShaderProg)
-  {
-    glUseProgram(Unit->ShaderProg);
-    loc = glGetUniformLocation(Unit->ShaderProg, "Matr");
-    if (loc != -1)
-      glUniformMatrix4fv(loc, 1, FALSE, &Ani->RndMatrRes.A[0][0]);
-
-    loc = glGetUniformLocation(Unit->ShaderProg, "Time");
-    if (loc != -1)
-      glUniform1f(loc, Ani->Time);
-
-    loc = glGetUniformLocation(Unit->ShaderProg, "UnitPos");
-    if (loc != -1)
-      glUniformMatrix4fv(loc, 1, FALSE, &Unit->ObjCam.Loc.X);
-
-    loc = glGetUniformLocation(Unit->ShaderProg, "Trans");
-    if (loc != -1)
-      glUniform1f(loc, 1.0);
-  }
-
-  RK2_GObjDraw(&Unit->GObj);
+  glUseProgram(Unit->ShaderProg);
+  RK2_RndSendGlobInfo(Unit->ShaderProg, Ani);
+  RK2_GObjDraw(Unit->ShaderProg, Ani, &Unit->GObj);
 
   glBegin(GL_LINES);
     glColor3d(1, 0, 0);
@@ -225,9 +205,13 @@ static VOID UnitBoatRender( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
     glVertex3d(Unit->ObjCam.Loc.X + Unit->ObjCam.Dir.X,
                Unit->ObjCam.Loc.Y + Unit->ObjCam.Dir.Y,
                Unit->ObjCam.Loc.Z + Unit->ObjCam.Dir.Z);
+
+    glColor3d(1, 1, 1);
+    glVertex3d(Unit->ObjCam.Loc.X, Unit->ObjCam.Loc.Y, Unit->ObjCam.Loc.Z);
+    glVertex3d(Unit->ObjCam.Loc.X * 0.995, Unit->ObjCam.Loc.Y * 0.995, Unit->ObjCam.Loc.Z * 0.995);
   glEnd();
 
-  glUseProgram(0);
+  glUseProgram(Ani->ShaderDef);
   Ani->RndMatrWorld = MatrDefault();
 } /* End of 'RK2_UnitBoatRender' function */
 

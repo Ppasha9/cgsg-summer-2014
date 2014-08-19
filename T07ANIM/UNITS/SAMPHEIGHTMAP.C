@@ -9,11 +9,9 @@
 #include <string.h>
 #include <math.h>
 
-#include "../image.h"
+#include "../image/image.h"
 
-#include "../anim.h"
-#include "../render.h"
-#include "../shader.h"
+#include "../anim/anim.h"
 #include "../gobjects/gobj.h"
 
 /* Unit heightmap struct definition */
@@ -24,7 +22,13 @@ typedef struct tagrk2UNIT_HEIGHTMAP
   CHAR 
     FileTextureName[MAX_PATH],      /* Texture file name */
     FileMapName[MAX_PATH];          /* Map File name */
-  rk2GMATERIAL Mtl;
+
+  INT TreesCnt;
+  rk2VEC TreesPos[RK2_MAX_UNITS];  /* Trees positions */
+  INT TreesObjCnt;                 /* Count of models trees */
+  rk2GOBJ TrObjs[RK2_MAX_UNITS];   /* Tree models */
+
+  UINT ShaderProg;                 /* Program shader */
 } rk2UNIT_HEIGHTMAP;
 
 /* Unit heightmap init function.
@@ -47,9 +51,12 @@ static VOID UnitHeightMapInit( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
   GMtl.Phong = 10;
   GMtl.Trans = 1;
-  RK2_GPrimCreateHeightField(&GPrim, Unit->FileMapName, 40, 1.5, Unit->FileTextureName);
+  RK2_GPrimCreateHeightField(&GPrim, Unit->FileMapName, 80, 2, Unit->FileTextureName);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
   RK2_GObjAddPrim(&Unit->GObj, &GPrim);
+  if ((Unit->ShaderProg = RK2_ShadProgInit("shaders\\default.vert", "shaders\\grass.frag")) == 0)
+    Unit->ShaderProg = Ani->ShaderDef;
+
 } /* End of 'UnitHeightMapInit' function */
 
 /* Unit heightmap destructor function.
@@ -63,6 +70,8 @@ static VOID UnitHeightMapInit( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 static VOID UnitHeightMapClose(rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani)
 {
   RK2_GObjFree(&Unit->GObj);
+  if (Unit->ShaderProg != Ani->ShaderDef)
+    RK2_ShadProgClose(Unit->ShaderProg);
 } /* End of 'UnitHeightMapClose' function */
 
 /* Unit heightmap response function.
@@ -75,6 +84,12 @@ static VOID UnitHeightMapClose(rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani)
  */
 static VOID UnitHeightMapResponse( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 {
+  if (Ani->Keys['M'] && !Ani->KeysClicked['M'])
+  {
+    RK2_ShadProgClose(Unit->ShaderProg);
+    if ((Unit->ShaderProg = RK2_ShadProgInit("__shaders\\default.vert", "shaders\\grass.frag")) == 0)
+      Unit->ShaderProg = Ani->ShaderDef;
+  }
 } /* End of 'UnitHeightMapResponse' function */
 
 /* Unit heightmap render function.
@@ -89,24 +104,12 @@ static VOID UnitHeightMapRender( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
 {
   UINT loc;
   RK2_RndBuildMatrix();
-  if (Ani->ShaderDef)
-  {
-    glUseProgram(Ani->ShaderDef);
-    loc = glGetUniformLocation(Ani->ShaderDef, "Matr");
-    if (loc != -1)
-      glUniformMatrix4fv(loc, 1, FALSE, &Ani->RndMatrRes.A[0][0]);
 
-    loc = glGetUniformLocation(Ani->ShaderDef, "Time");
-    if (loc != -1)
-      glUniform1f(loc, Ani->Time);
+  glUseProgram(Unit->ShaderProg);
+  RK2_RndSendGlobInfo(Unit->ShaderProg, Ani);
 
-    loc = glGetUniformLocation(Ani->ShaderDef, "Trans");
-    if (loc != -1)
-      glUniform1f(loc, 1.0);
-  }
-
-  RK2_GObjDraw(&Unit->GObj);
-  glUseProgram(0);
+  RK2_GObjDraw(Unit->ShaderProg, Ani, &Unit->GObj);
+  glUseProgram(Ani->ShaderDef);
 } /* End of 'UnitHeightMapRender' function */
 
 /* Unit heightmap create function.

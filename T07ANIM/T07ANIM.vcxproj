@@ -95,27 +95,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ANIM\ANIM.H" />
+    <ClInclude Include="ANIM\RENDER.H" />
+    <ClInclude Include="ANIM\SHADER.H" />
     <ClInclude Include="DEF.H" />
-    <ClInclude Include="ANIM.H" />
-    <ClInclude Include="RENDER.H" />
-    <ClInclude Include="IMAGE.H" />
+    <ClInclude Include="IMAGE\IMAGE.H" />
+    <ClInclude Include="MTH\MTH.H" />
     <ClInclude Include="GOBJECTS\GOBJ.H" />
-    <ClInclude Include="SHADER.H" />
-    <ClInclude Include="MTH.H" />
-    <ClInclude Include="UNITS.H" />
+    <ClInclude Include="UNITS\UNITS.H" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ANIM\ANIM.C" />
+    <ClCompile Include="ANIM\RENDER.C" />
+    <ClCompile Include="ANIM\SHADER.C" />
+    <ClCompile Include="IMAGE\IMAGE.C" />
     <ClCompile Include="MAIN.C" />
-    <ClCompile Include="ANIM.C" />
-    <ClCompile Include="RENDER.C" />
-    <ClCompile Include="IMAGE.C" />
+    <ClCompile Include="MTH\MATR.C" />
+    <ClCompile Include="MTH\VEC.C" />
     <ClCompile Include="GOBJECTS\GOBGHAND.C" />
     <ClCompile Include="GOBJECTS\GOBGLOAD.C" />
     <ClCompile Include="GOBJECTS\GOBJPRIM.C" />
-    <ClCompile Include="SHADER.C" />
     <ClCompile Include="UNITS\SAMPBOAT.C" />
-    <ClCompile Include="UNITS\SAMPTREES.C" />
-    <ClCompile Include="VEC.C" />
     <ClCompile Include="UNITS\SAMPANCONTROL.C" />
     <ClCompile Include="UNITS\SAMPANINFO.C" />
     <ClCompile Include="UNITS\SAMPAREA.C" />
@@ -123,7 +123,7 @@
     <ClCompile Include="UNITS\SAMPCORSYS.C" />
     <ClCompile Include="UNITS\SAMPGOBJ.C" />
     <ClCompile Include="UNITS\SAMPHEIGHTMAP.C" />
-    <ClCompile Include="UNIT.C" />
+    <ClCompile Include="UNITS\UNIT.C" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,7 +15,7 @@
 #include <gl/glu.h>
 #include <mmsystem.h>
 
-#include "mth.h"
+#include "mth/mth.h"
 
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")

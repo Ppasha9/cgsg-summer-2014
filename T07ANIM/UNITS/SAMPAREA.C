@@ -9,11 +9,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../image.h"
-
-#include "../anim.h"
-#include "../render.h"
-#include "../shader.h"
+#include "../anim/anim.h"
 #include "../gobjects/gobj.h"
 
 /* Unit heightmap struct definition */
@@ -26,8 +22,6 @@ typedef struct tagrk2UNIT_AREA
     VecPos0, VecPos1,                  /* Coords of area */
     VecPos2, VecPos3;
 } rk2UNIT_AREA;
-
-INT RK2_WaterLevel; /* Water level */
 
 /* Unit grass init function.
  * ARGUMENTS:
@@ -48,8 +42,8 @@ static VOID UnitAreaInit( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
   GMtl.Kd = VecSet(0.3, 0.3, 0.3);
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
   GMtl.Phong = 50;
-  GMtl.Trans = 0.3;
-  RK2_WaterLevel = 10;
+  GMtl.Trans = 0.5;
+  Ani->WaterLevel = 10;
   /// GMtl.Trans = sin(Ani->Time);
   RK2_GPrimCreateDesk(&GPrim, VecSet(0, 0, 0), VecSet(30, 0, 0), VecSet(0, 0, 30), VecSet(30, 0, 30), NULL);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
@@ -96,31 +90,16 @@ static VOID UnitAreaRender( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
   Ani->RndMatrWorld = MatrDefault();
   RK2_RndBuildMatrix();
 
-  for (x = -10; x < 10; x++)
-    for (z = -10; z < 10; z++)
+  glUseProgram(Ani->ShaderDef);
+  for (x = -20; x < 20; x++)
+    for (z = -20; z < 20; z++)
     {
-      Ani->RndMatrWorld = MatrTranslate(MatrDefault(), x * 30, RK2_WaterLevel, z * 30);
+      Ani->RndMatrWorld = MatrTranslate(MatrDefault(), x * 30, Ani->WaterLevel, z * 30);
       RK2_RndBuildMatrix();
-      if (Ani->ShaderDef)
-      {
-        glUseProgram(Ani->ShaderDef);
-        loc = glGetUniformLocation(Ani->ShaderDef, "Matr");
-        if (loc != -1)
-          glUniformMatrix4fv(loc, 1, FALSE, &Ani->RndMatrRes.A[0][0]);
 
-        loc = glGetUniformLocation(Ani->ShaderDef, "Time");
-        if (loc != -1)
-          glUniform1f(loc, Ani->Time);
-        /*
-        loc = glGetUniformLocation(Ani->ShaderDef, "Trans");
-        if (loc != -1)
-          glUniform1f(loc, );
-        */
-      }
-      RK2_GObjDraw(&Unit->GObj);
+      RK2_RndSendGlobInfo(Ani->ShaderDef, Ani);
+      RK2_GObjDraw(Ani->ShaderDef, Ani, &Unit->GObj);
     }
-  glUseProgram(0);
-  Ani->RndMatrWorld = MatrDefault();
 } /* End of 'UnitAreaRender' function */
 
 /* Unit heightmap create function.

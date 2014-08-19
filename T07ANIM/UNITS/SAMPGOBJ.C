@@ -9,11 +9,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../image.h"
-
-#include "../anim.h"
-#include "../render.h"
-#include "../shader.h"
+#include "../anim/anim.h"
 #include "../gobjects/gobj.h"
 
 /* Unit GObject struct definition */
@@ -90,34 +86,18 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
   /* RK2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
   /* RK2_RndMatrWorld = MatrRotate(MatrDefault(), Unit->RotAngleX, Unit->RotAngleX, Unit->RotAngleY, Unit->RotAngleZ); */
   UINT loc;
-  Ani->RndMatrWorld = MatrTranslate(MatrDefault(), Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
   Ani->RndMatrWorld = MatrRotateY(Ani->RndMatrWorld, Unit->RotAngleY);
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateX(MatrDefault(), Unit->RotAngleX));
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateZ(MatrDefault(), Unit->RotAngleZ));
+  Ani->RndMatrWorld = MatrTranslate(MatrDefault(), Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
 
   RK2_RndBuildMatrix();
 
-  if (Unit->ShaderProg)
-  {
-    glUseProgram(Unit->ShaderProg);
-    loc = glGetUniformLocation(Unit->ShaderProg, "Matr");
-    if (loc != -1)
-      glUniformMatrix4fv(loc, 1, FALSE, &Ani->RndMatrRes.A[0][0]);
+  glUseProgram(Unit->ShaderProg);
+  RK2_RndSendGlobInfo(Unit->ShaderProg, Ani);
 
-    loc = glGetUniformLocation(Unit->ShaderProg, "Time");
-    if (loc != -1)
-      glUniform1f(loc, Ani->Time);
+  RK2_GObjDraw(Unit->ShaderProg, Ani, &Unit->GObj);
 
-    loc = glGetUniformLocation(Unit->ShaderProg, "UnitPos");
-    if (loc != -1)
-      glUniformMatrix4fv(loc, 1, FALSE, &Unit->VecPos.X);
-
-    loc = glGetUniformLocation(Unit->ShaderProg, "Trans");
-    if (loc != -1)
-      glUniform1f(loc, 1.0);
-  }
-
-  RK2_GObjDraw(&Unit->GObj);
   glUseProgram(0);
 } /* End of 'RK2_UnitGObjRender' function */
 

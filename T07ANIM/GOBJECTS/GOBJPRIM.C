@@ -1,14 +1,13 @@
-/* FILENAME: PRIM.C
+/* FILENAME: GOBJPRIM.C
  * PROGRAMMER: RK2
  * PURPOSE: Primtive handle functions.
- * LAST UPDATE: 17.06.2014
+ * LAST UPDATE: 15.08.2014
  */
 
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
 
-#include "../anim.h"
 #include "gobj.h"
 
 /* Степень */
@@ -196,7 +195,7 @@ BOOL RK2_GPrimCreateHeightField( rk2GPRIM *P, CHAR *FileName, FLT Height, FLT Sc
       DWORD *col = (DWORD *)rgb;
       *col = ImageGetP(&Img, j, i);
       h = (rgb[2] * 30 + rgb[1] * 59 + rgb[0] * 11) / 100;
-      V->P = VecSet((j - Img.W / 2) / Scale, h * Height / 255, (i - Img.H / 2) / Scale);
+      V->P = VecSet((j - Img.W / 2) * Scale, h * Height / 255, (i - Img.H / 2) * Scale);
     }
 
   /* задаем нормали точек */

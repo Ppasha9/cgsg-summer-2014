@@ -9,7 +9,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "../anim.h"
+#include "../def.h"
 #include "gobj.h"
 
 /***

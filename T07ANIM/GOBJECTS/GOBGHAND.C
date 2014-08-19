@@ -1,12 +1,11 @@
 /* FILENAME: GEOMHAND.C
  * PROGRAMMER: RK2
  * PURPOSE: Geometry object handle functions.
- * LAST UPDATE: 17.06.2014
+ * LAST UPDATE: 18.08.2014
  */
 
 #include <stdlib.h>
 
-#include "../anim.h"
 #include "gobj.h"
 
 /* Функция добавления материала к объекту.
@@ -91,52 +90,18 @@ VOID RK2_GObjFree( rk2GOBJ *G )
 } /* End of 'RK2_GObjFree' function */
 
 /* Функция рисования */
-VOID RK2_GObjDraw( rk2GOBJ *G )
+VOID RK2_GObjDraw( UINT ShadProg, rk2ANIM *Ani, rk2GOBJ *G )
 {
   INT i, loc;
-  rk2MATR4x4 WVP, MatrWorldInvTrans;
-  rk2VEC V;
 
-  /* вычислили матрицы преобразования */
-  WVP = MatrMultMatr(RK2_Anim.RndMatrWorld,
-    MatrMultMatr(RK2_Anim.RndMatrView, RK2_Anim.RndMatrProjection));
-  MatrWorldInvTrans = MatrTranspose(MatrInverse(RK2_Anim.RndMatrWorld));
-
-  /* выбор программы шейдеров вывода примитивов */
-  glUseProgram(RK2_Anim.ShaderDef);
-  loc = glGetUniformLocation(RK2_Anim.ShaderDef, "MatrWVP");
-  if (loc != -1)
-    glUniformMatrix4fv(loc, 1, FALSE, WVP.A[0]);
-
-  loc = glGetUniformLocation(RK2_Anim.ShaderDef, "MatrWorldInverseTranspose");
-  if (loc != -1)
-    glUniformMatrix4fv(loc, 1, FALSE, MatrWorldInvTrans.A[0]);
-
-  loc = glGetUniformLocation(RK2_Anim.ShaderDef, "MatrWorld");
-  if (loc != -1)
-    glUniformMatrix4fv(loc, 1, FALSE, RK2_Anim.RndMatrWorld.A[0]);
-
-  loc = glGetUniformLocation(RK2_Anim.ShaderDef, "MatrView");
-  if (loc != -1)
-    glUniformMatrix4fv(loc, 1, FALSE, RK2_Anim.RndMatrView.A[0]);
-
-  loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Time");
-  if (loc != -1)
-    glUniform1f(loc, RK2_Anim.Time);
-
-  V = VecSet(-RK2_Anim.RndMatrView.A[0][2],
-             -RK2_Anim.RndMatrView.A[1][2],
-             -RK2_Anim.RndMatrView.A[2][2]);
-  loc = glGetUniformLocation(RK2_Anim.ShaderDef, "ViewDir");
-  if (loc != -1)
-    glUniform3fv(loc, 1, &V.X);
-
+  /* Shader setting parametres */
+  RK2_RndSendGlobInfo(ShadProg, Ani);
 
   for (i = 0; i < G->NumOfPrims; i++)
   {
     INT mtl = G->Prims[i].Mtl;
 
-    /* подготавливаем материал */
+    /* Prepairing material */
     if (G->Mtls != NULL)
     {
       INT loc;
@@ -172,7 +137,7 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
       /* передаем параметры */
       if (G->Mtls[mtl].TexNo != 0)
       {
-        loc = glGetUniformLocation(RK2_Anim.ShaderDef, "DrawTexture");
+        loc = glGetUniformLocation(Ani->ShaderDef, "DrawTexture");
         if (loc != -1)
           glUniform1i(loc, 0);
         glEnable(GL_TEXTURE_2D);
@@ -181,19 +146,19 @@ VOID RK2_GObjDraw( rk2GOBJ *G )
         /*glActiveTexture(GL_TEXTURE1);*/
         glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
       }
-      loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Ka");
+      loc = glGetUniformLocation(ShadProg, "Ka");
       if (loc != -1)
         glUniform3fv(loc, 1, &G->Mtls[mtl].Ka.X);
-      loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Kd");
+      loc = glGetUniformLocation(ShadProg, "Kd");
       if (loc != -1)
         glUniform3fv(loc, 1, &G->Mtls[mtl].Kd.X);
-      loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Ks");
+      loc = glGetUniformLocation(ShadProg, "Ks");
       if (loc != -1)
         glUniform3fv(loc, 1, &G->Mtls[mtl].Ks.X);
-      loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Phong");
+      loc = glGetUniformLocation(ShadProg, "Phong");
       if (loc != -1)
         glUniform1f(loc, G->Mtls[mtl].Phong);
-      loc = glGetUniformLocation(RK2_Anim.ShaderDef, "Trans");
+      loc = glGetUniformLocation(ShadProg, "Trans");
       if (loc != -1)
         glUniform1f(loc, G->Mtls[mtl].Trans);
     }

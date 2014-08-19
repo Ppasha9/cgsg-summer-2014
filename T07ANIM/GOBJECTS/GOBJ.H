@@ -7,6 +7,11 @@
 #ifndef __GOBJ_H_
 #define __GOBJ_H_
 
+#include "../anim/anim.h"
+
+#include "../mth/mth.h"
+#include "../image/image.h"
+
 /***
  * Geometry objects working
  ***/
@@ -117,7 +122,7 @@ INT RK2_GObjAddPrim( rk2GOBJ *G, rk2GPRIM *Prim );
 VOID RK2_GObjFree( rk2GOBJ *G );
 
 /* Функция рисования */
-VOID RK2_GObjDraw( rk2GOBJ *G );
+VOID RK2_GObjDraw( UINT ShadProg, rk2ANIM *Ani, rk2GOBJ *G );
 
 /* Функция загрузки геометрического объекта */
 BOOL RK2_GObjLoad( rk2GOBJ *G, CHAR *FileName );
