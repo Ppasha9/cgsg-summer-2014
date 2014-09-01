@@ -346,6 +346,8 @@ VOID RK2_AnimRender( VOID )
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   /// glBlendFunc(GL_SRC_ALPHA_SATURATE, GL_ONE);
   /// glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+  glUseProgram(RK2_Anim.ShaderDef);
+
   for (i = 0; i < RK2_Anim.NumOfUnits; i++)
     RK2_Anim.Units[i]->Render(RK2_Anim.Units[i], &RK2_Anim);
 
@@ -460,7 +462,7 @@ VOID RK2_RndBuildMatrix( VOID )
 *       rk2ANIM *Ani;
 * RETURNS: None.
 */
-VOID RK2_RndSendGlobInfo(UINT ShaderDest, rk2ANIM *Ani)
+VOID RK2_RndShadSendGlobInfo( UINT ShaderDest, rk2ANIM *Ani )
 {
   UINT loc;
   if (ShaderDest)
@@ -502,11 +504,58 @@ VOID RK2_RndSendGlobInfo(UINT ShaderDest, rk2ANIM *Ani)
     V = VecSet(-RK2_Anim.RndMatrView.A[0][2],
       -Ani->RndMatrView.A[1][2],
       -Ani->RndMatrView.A[2][2]);
-    loc = glGetUniformLocation(Ani->ShaderDef, "ViewDir");
+    loc = glGetUniformLocation(ShaderDest, "ViewDir");
     if (loc != -1)
       glUniform3fv(loc, 1, &V.X);
-  }
 
-}
+    RK2_RndShadSendMtlInfo(ShaderDest, 0,
+                           VecSet(0.5, 0.5, 0.5), VecSet(0.5, 0.5, 0.5), VecSet(0.5, 0.5, 0.5),
+                           10, 0);
+  }
+} /* End of 'RK2_RndShadSendGlobInfo' function */
+
+/* Sending standart info to shader function.
+ * ARGUMENTS:
+ *   - shader ID:
+ *       UINT ShaderDest;
+ *   - animation material data:
+ *       UINT TextNumber, 
+ *       rk2VEC Kamb, rk2VEC Kdiff, rk2VEC Ksp, DBL Phong, DBL Trans.
+ * RETURNS: None.
+ */
+VOID RK2_RndShadSendMtlInfo( UINT ShaderDest, UINT TextNumber, rk2VEC Kamb, rk2VEC Kdiff, rk2VEC Ksp, DBL Phong, DBL Trans )
+{
+  UINT loc;
+  if (ShaderDest)
+  {
+    /* Sending params */
+    if (TextNumber != 0)
+    {
+      loc = glGetUniformLocation(ShaderDest, "DrawTexture");
+      if (loc != -1)
+        glUniform1i(loc, 0);
+      glEnable(GL_TEXTURE_2D);
+      /*glActiveTexture(GL_TEXTURE0);*/
+      glBindTexture(GL_TEXTURE_2D, TextNumber);
+      /*glActiveTexture(GL_TEXTURE1);*/
+      glBindTexture(GL_TEXTURE_2D, TextNumber);
+    }
+    loc = glGetUniformLocation(ShaderDest, "Kamb");
+    if (loc != -1)
+      glUniform3fv(loc, 1, &Kamb.X);
+    loc = glGetUniformLocation(ShaderDest, "Kdif");
+    if (loc != -1)
+      glUniform3fv(loc, 1, &Kdiff.X);
+    loc = glGetUniformLocation(ShaderDest, "Ksp");
+    if (loc != -1)
+      glUniform3fv(loc, 1, &Ksp.X);
+    loc = glGetUniformLocation(ShaderDest, "Phong");
+    if (loc != -1)
+      glUniform1f(loc, Phong);
+    loc = glGetUniformLocation(ShaderDest, "Trans");
+    if (loc != -1)
+      glUniform1f(loc, Trans);
+  }
+} /* End of 'RK2_RndShadSendMtlInfo' function */
 
 /* END OF 'ANIM.C' FILE */

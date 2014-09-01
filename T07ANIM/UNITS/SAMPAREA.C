@@ -42,9 +42,9 @@ static VOID UnitAreaInit( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
   GMtl.Kd = VecSet(0.3, 0.3, 0.3);
   GMtl.Ks = VecSet(0.3, 0.3, 0.3);
   GMtl.Phong = 50;
-  GMtl.Trans = 0.5;
+  GMtl.Trans = 0.9;
   Ani->WaterLevel = 10;
-  /// GMtl.Trans = sin(Ani->Time);
+  GMtl.Trans = sin(Ani->Time);
   RK2_GPrimCreateDesk(&GPrim, VecSet(0, 0, 0), VecSet(30, 0, 0), VecSet(0, 0, 30), VecSet(30, 0, 30), NULL);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
   RK2_GObjAddPrim(&Unit->GObj, &GPrim);
@@ -97,7 +97,7 @@ static VOID UnitAreaRender( rk2UNIT_AREA *Unit, rk2ANIM *Ani )
       Ani->RndMatrWorld = MatrTranslate(MatrDefault(), x * 30, Ani->WaterLevel, z * 30);
       RK2_RndBuildMatrix();
 
-      RK2_RndSendGlobInfo(Ani->ShaderDef, Ani);
+      RK2_RndShadSendGlobInfo(Ani->ShaderDef, Ani);
       RK2_GObjDraw(Ani->ShaderDef, Ani, &Unit->GObj);
     }
 } /* End of 'UnitAreaRender' function */

@@ -7,7 +7,7 @@
 #ifndef __ANIM_H_
 #define __ANIM_H_
 
-#include <windows.h>
+#include "../def.h"
 
 #include "../mth/mth.h"
 
@@ -154,7 +154,10 @@ VOID RK2_AnimAddUnitP( rk2UNIT *Unit );
 rk2UNIT *RK2_AnimUnitCreate( INT Size );
 
 /* Sending standart info to shader function. */
-VOID RK2_RndSendGlobInfo( UINT ShaderDest, rk2ANIM *Ani );
+VOID RK2_RndShadSendGlobInfo( UINT ShaderDest, rk2ANIM *Ani );
+/* Sending standart info to shader function. */
+VOID RK2_RndShadSendMtlInfo( UINT ShaderDest, UINT TextNumber, rk2VEC Kamb, rk2VEC Kdiff, rk2VEC Ksp, DBL Phong, DBL Trans );
+
 
 #endif /* __ANIM_H_ */
 

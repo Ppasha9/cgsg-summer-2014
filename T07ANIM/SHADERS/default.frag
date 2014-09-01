@@ -16,9 +16,10 @@ uniform vec4 LightColor;
 uniform vec3 ViewDir;
 
 /* Drawing material */
-uniform vec3 Ka;
-uniform vec3 Kd;
-uniform vec3 Ks;
+
+uniform vec3 Kamb;
+uniform vec3 Kdif;
+uniform vec3 Ksp;
 uniform float Phong;
 uniform float Trans;
 
@@ -46,7 +47,7 @@ vec3 Illum( vec3 N )
 {
   vec4 texc = texture2D(DrawTexture, FragTexCoord.xy);
 
-  vec3 color = Ka;
+  vec3 color = Kamb;
   vec3 Dir = mat3(MatrWorld) * ViewDir; 
 
   vec3 lPos = vec3(0, 100, 0);
@@ -55,13 +56,13 @@ vec3 Illum( vec3 N )
   N = faceforward(N, ViewDir, N);
   float nl = dot(N, l);
   
-  color = (texc.xyz + Kd) * abs(nl);
+  color = (texc.xyz + Kdif) * abs(nl);
   
   vec3 R = reflect(Dir, N);
   R = Dir - N * (2 * dot(Dir, N));
   float rl = dot(R, l);
   if (rl > 0)
-    color += Ks * pow(dot(R, l), 14);
+    color += Ksp * pow(dot(R, l), 14);
   
   return color;
 }

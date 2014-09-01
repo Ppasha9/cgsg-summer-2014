@@ -281,7 +281,7 @@ VOID RK2_GPrimDraw( rk2GPRIM *P )
   glEnableVertexAttribArray(2);
   glEnableVertexAttribArray(3);
 
-  glUseProgram(RK2_Anim.ShaderDef);
+  // glUseProgram(RK2_Anim.ShaderDef);
   if (P->Type == RK2_PRIM_TRIMESH)
   {
     /*
@@ -313,7 +313,7 @@ VOID RK2_GPrimDraw( rk2GPRIM *P )
       */
     }
   }
-  glUseProgram(0);
+  // glUseProgram(0);
 } /* End of 'RK2_GPrimFree' function */
 
 /* END OF 'PRIM.C' FILE */

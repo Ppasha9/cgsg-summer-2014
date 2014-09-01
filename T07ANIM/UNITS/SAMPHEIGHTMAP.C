@@ -54,7 +54,7 @@ static VOID UnitHeightMapInit( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
   RK2_GPrimCreateHeightField(&GPrim, Unit->FileMapName, 80, 2, Unit->FileTextureName);
   GPrim.Mtl = RK2_GObjAddMaterial(&Unit->GObj, &GMtl);
   RK2_GObjAddPrim(&Unit->GObj, &GPrim);
-  if ((Unit->ShaderProg = RK2_ShadProgInit("shaders\\default.vert", "shaders\\grass.frag")) == 0)
+  if ((Unit->ShaderProg = RK2_ShadProgInit("_shaders\\default.vert", "shaders\\grass.frag")) == 0)
     Unit->ShaderProg = Ani->ShaderDef;
 
 } /* End of 'UnitHeightMapInit' function */
@@ -106,7 +106,7 @@ static VOID UnitHeightMapRender( rk2UNIT_HEIGHTMAP *Unit, rk2ANIM *Ani )
   RK2_RndBuildMatrix();
 
   glUseProgram(Unit->ShaderProg);
-  RK2_RndSendGlobInfo(Unit->ShaderProg, Ani);
+  RK2_RndShadSendGlobInfo(Unit->ShaderProg, Ani);
 
   RK2_GObjDraw(Unit->ShaderProg, Ani, &Unit->GObj);
   glUseProgram(Ani->ShaderDef);

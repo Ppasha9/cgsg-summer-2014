@@ -95,7 +95,7 @@ VOID RK2_GObjDraw( UINT ShadProg, rk2ANIM *Ani, rk2GOBJ *G )
   INT i, loc;
 
   /* Shader setting parametres */
-  RK2_RndSendGlobInfo(ShadProg, Ani);
+  RK2_RndShadSendGlobInfo(ShadProg, Ani);
 
   for (i = 0; i < G->NumOfPrims; i++)
   {
@@ -137,22 +137,23 @@ VOID RK2_GObjDraw( UINT ShadProg, rk2ANIM *Ani, rk2GOBJ *G )
       /* передаем параметры */
       if (G->Mtls[mtl].TexNo != 0)
       {
-        loc = glGetUniformLocation(Ani->ShaderDef, "DrawTexture");
+        loc = glGetUniformLocation(ShadProg, "DrawTexture");
         if (loc != -1)
           glUniform1i(loc, 0);
+          // glUniform1i(loc, G->Mtls[mtl].TexNo);
         glEnable(GL_TEXTURE_2D);
         /*glActiveTexture(GL_TEXTURE0);*/
         glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
         /*glActiveTexture(GL_TEXTURE1);*/
         glBindTexture(GL_TEXTURE_2D, G->Mtls[mtl].TexNo);
       }
-      loc = glGetUniformLocation(ShadProg, "Ka");
+      loc = glGetUniformLocation(ShadProg, "Kamb");
       if (loc != -1)
         glUniform3fv(loc, 1, &G->Mtls[mtl].Ka.X);
-      loc = glGetUniformLocation(ShadProg, "Kd");
+      loc = glGetUniformLocation(ShadProg, "Kdif");
       if (loc != -1)
         glUniform3fv(loc, 1, &G->Mtls[mtl].Kd.X);
-      loc = glGetUniformLocation(ShadProg, "Ks");
+      loc = glGetUniformLocation(ShadProg, "Ksp");
       if (loc != -1)
         glUniform3fv(loc, 1, &G->Mtls[mtl].Ks.X);
       loc = glGetUniformLocation(ShadProg, "Phong");

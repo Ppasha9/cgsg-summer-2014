@@ -54,12 +54,10 @@ static VOID UnitBoatInit( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 
   RK2_RndCameraSet(&Unit->ObjCam, Unit->ObjCam.Loc, VecSumVec(Unit->ObjCam.Loc, VecSet(1, 0, 0)), VecSet(0, 1, 0));
   RK2_RndCameraUpdateInfo(&Unit->ObjCam);
+
   Unit->CamShift = VecSet(0, 2.0, -18);
 
-  // Unit->GObj.Mtls[0].Ka = rk2VEC(1.0, 1.0, 1.0);
-  // Unit->CamShift = VecSet(0, -30, 0);
   RK2_GObjLoad(&Unit->GObj, "..\\gobjects\\seagul\\seagul.object");
-  /* , Unit->VecPos); */
 } /* End of 'RK2_UnitBoatInit' function */
 
 /* Unit boat destructor function.
@@ -87,17 +85,11 @@ static VOID UnitBoatClose( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
  */
 static VOID UnitBoatCameraSet( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
 {
-  // Unit->Matr
   rk2MATR4x4 MatrVLACam;
   if (!Ani->IsPause)
   {
-    // rk2VEC ShiftVecRes = VecSet(-Unit->CamShift.X, Unit->CamShift.Y, -Unit->CamShift.Z);
     RK2_RndCameraUpdateInfo(&Unit->ObjCam);
     Unit->MatrVLA = MatrTranspose(MatrViewLookAt(VecSet(0, 0, 0), VecNeg(Unit->ObjCam.Dir), Unit->ObjCam.Up));
-
-    // rk2VEC Res = VecMultMatr(Unit->CamShift, Unit->MatrVLA);
-    // RK2_RndCameraSet(&Ani->RndCamera, VecSumVec(Unit->ObjCam.Loc, VecMultMatr(Unit->CamShift, Unit->MatrVLA)),
-      // Unit->ObjCam.Loc, Unit->ObjCam.Up);
 
     MatrVLACam = MatrTranspose(MatrViewLookAt(VecSet(0, 0, 0), VecNeg(Unit->ObjCam.Dir), VecSet(0, 1, 0)));
     RK2_RndCameraSet(&Ani->RndCamera, VecSumVec(Unit->ObjCam.Loc, VecMultMatr(Unit->CamShift, MatrVLACam)),
@@ -184,7 +176,7 @@ static VOID UnitBoatRender( rk2UNIT_BOAT *Unit, rk2ANIM *Ani )
   RK2_RndBuildMatrix();
 
   glUseProgram(Unit->ShaderProg);
-  RK2_RndSendGlobInfo(Unit->ShaderProg, Ani);
+  RK2_RndShadSendGlobInfo(Unit->ShaderProg, Ani);
   RK2_GObjDraw(Unit->ShaderProg, Ani, &Unit->GObj);
 
   glBegin(GL_LINES);

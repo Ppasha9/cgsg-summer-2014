@@ -94,7 +94,7 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
   RK2_RndBuildMatrix();
 
   glUseProgram(Unit->ShaderProg);
-  RK2_RndSendGlobInfo(Unit->ShaderProg, Ani);
+  RK2_RndShadSendGlobInfo(Unit->ShaderProg, Ani);
 
   RK2_GObjDraw(Unit->ShaderProg, Ani, &Unit->GObj);
 
