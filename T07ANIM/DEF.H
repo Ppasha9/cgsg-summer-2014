@@ -9,14 +9,13 @@
 
 #pragma warning(disable: 4244 4305)
 
-
 #include <windows.h>
 #include <glew.h>
 #include <gl/gl.h>
 #include <gl/glu.h>
 #include <mmsystem.h>
 
-#include "mth.h"
+#include "mth/mth.h"
 
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")

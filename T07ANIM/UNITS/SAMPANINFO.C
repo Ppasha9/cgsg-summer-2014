@@ -9,8 +9,7 @@
 #include <string.h>
 #include <math.h>
 
-#include "../anim.h"
-#include "../render.h"
+#include "../anim/anim.h"
 
 /* Unit Animation control render function.
  * ARGUMENTS:

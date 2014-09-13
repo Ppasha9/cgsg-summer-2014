@@ -9,8 +9,8 @@
 #include <string.h>
 #include <math.h>
 
-#include "../anim.h"
-#include "../render.h"
+#include "../anim/anim.h"
+#include "units.h"
 
 /* Unit Coord system struct definition */
 typedef struct tagrk2UNIT_CORSYS
@@ -28,9 +28,11 @@ typedef struct tagrk2UNIT_CORSYS
  */
 static VOID UnitCorSysRender( rk2UNIT_CORSYS *Unit, rk2ANIM *Ani )
 {
-  Ani->RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10);
+  Ani->RndMatrWorld = MatrDefault(); /* MatrRotateY(MatrDefault(), Ani->Time * 10); */
   RK2_RndBuildMatrix();
-  glLoadMatrixd(&Ani->RndMatrRes.A[0][0]);
+
+  glUseProgram(0);
+  glLoadMatrixf(&Ani->RndMatrRes.A[0][0]);
 
   glBegin(GL_LINES);
     glColor3d(1, 0, 0);

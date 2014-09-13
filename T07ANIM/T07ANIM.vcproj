@@ -221,10 +221,6 @@
 					Name="Resources"
 					>
 					<File
-						RelativePath=".\GOBJ.C"
-						>
-					</File>
-					<File
 						RelativePath=".\IMAGE.C"
 						>
 					</File>
@@ -232,6 +228,38 @@
 						RelativePath=".\IMAGE.H"
 						>
 					</File>
+					<Filter
+						Name="Geom. objects"
+						>
+						<File
+							RelativePath=".\GOBJECTS\GOBGHAND.C"
+							>
+						</File>
+						<File
+							RelativePath=".\GOBJECTS\GOBGLOAD.C"
+							>
+						</File>
+						<File
+							RelativePath=".\GOBJECTS\GOBJ.H"
+							>
+						</File>
+						<File
+							RelativePath=".\GOBJECTS\GOBJPRIM.C"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Shaders"
+						>
+						<File
+							RelativePath=".\SHADER.C"
+							>
+						</File>
+						<File
+							RelativePath=".\SHADER.H"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="Math"
@@ -258,6 +286,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UNITS\SAMPAREA.C"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS\SAMPBOAT.C"
+					>
+				</File>
+				<File
 					RelativePath=".\UNITS\SAMPCAMFLY.C"
 					>
 				</File>
@@ -267,6 +303,10 @@
 				</File>
 				<File
 					RelativePath=".\UNITS\SAMPGOBJ.C"
+					>
+				</File>
+				<File
+					RelativePath=".\UNITS\SAMPHEIGHTMAP.C"
 					>
 				</File>
 				<File

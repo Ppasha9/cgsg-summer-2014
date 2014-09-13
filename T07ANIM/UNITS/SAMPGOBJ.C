@@ -1,7 +1,7 @@
 /* FILENAME: SAMPCUBE.C
  * PROGRAMMER: RK2
  * PURPOSE: Animation unit handle module.
- * LAST UPDATE: 09.06.2014
+ * LAST UPDATE: 17.06.2014
  */
 
 #include <stdio.h>
@@ -9,10 +9,8 @@
 #include <string.h>
 #include <math.h>
 
-#include "../image.h"
-
-#include "../anim.h"
-#include "../render.h"
+#include "../anim/anim.h"
+#include "../gobjects/gobj.h"
 
 /* Unit GObject struct definition */
 typedef struct tagrk2UNIT_OBJ
@@ -22,9 +20,13 @@ typedef struct tagrk2UNIT_OBJ
   CHAR FileName[MAX_PATH];        /* File to object */
   rk2VEC VecPos;                  /* Postion of object on world map */
   DBL
-    RotAngleX,                   /* Angles of rotation unit */
+    RotAngleX,                    /* Angles of rotation unit */
     RotAngleY,
     RotAngleZ;
+  UINT ShaderProg;                /* Shader */
+  CHAR 
+    ShaderVFileName[MAX_PATH],    /* Shaders file names */
+    ShaderFFileName[MAX_PATH];
 } rk2UNIT_GOBJ;
 
 /* Unit GObject init function.
@@ -37,7 +39,11 @@ typedef struct tagrk2UNIT_OBJ
  */
 static VOID UnitGObjInit( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
-  RK2_GObjLoad(&Unit->GObj, Unit->FileName, Unit->VecPos);
+  if ((Unit->ShaderProg = RK2_ShadProgInit(Unit->ShaderVFileName, Unit->ShaderFFileName)) == 0)
+    Unit->ShaderProg = Ani->ShaderDef;
+
+  RK2_GObjLoad(&Unit->GObj, Unit->FileName);
+  /* , Unit->VecPos); */
 } /* End of 'RK2_UnitGObjInit' function */
 
 /* Unit GObject destructor function.
@@ -51,6 +57,8 @@ static VOID UnitGObjInit( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 static VOID UnitGObjClose(rk2UNIT_GOBJ *Unit, rk2ANIM *Ani)
 {
   RK2_GObjFree(&Unit->GObj);
+  if (Unit->ShaderProg != Ani->ShaderDef)
+    RK2_ShadProgClose(Unit->ShaderProg);
 } /* End of 'RK2_UnitGObjClose' function */
 
 /* Unit GObject response function.
@@ -75,20 +83,22 @@ static VOID UnitGObjResponse( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
  */
 static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
 {
-  /* R2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
+  /* RK2_RndMatrWorld = MatrRotate(Ani->Time * 30, 0, 0, 10); */
   /* RK2_RndMatrWorld = MatrRotate(MatrDefault(), Unit->RotAngleX, Unit->RotAngleX, Unit->RotAngleY, Unit->RotAngleZ); */
-  
-  Ani->RndMatrWorld = MatrRotateY(MatrDefault(), Ani->Time * 10 + Unit->RotAngleY);
+  UINT loc;
+  Ani->RndMatrWorld = MatrRotateY(Ani->RndMatrWorld, Unit->RotAngleY);
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateX(MatrDefault(), Unit->RotAngleX));
   Ani->RndMatrWorld = MatrMultMatr(Ani->RndMatrWorld, MatrRotateZ(MatrDefault(), Unit->RotAngleZ));
-
-  /* Ani->RndCamera.Loc = VecSumVec(Ani->RndCamera.Loc, Unit->VecPos); */
+  Ani->RndMatrWorld = MatrTranslate(MatrDefault(), Unit->VecPos.X, Unit->VecPos.Y, Unit->VecPos.Z);
 
   RK2_RndBuildMatrix();
-  /* Ani->RndCamera.Loc = VecSubVec(Ani->RndCamera.Loc, Unit->VecPos); */
 
-  glColor3d(0.3, 0.4, 0.5);
-  RK2_GObjDraw(&Unit->GObj, Ani->RndMatrRes);
+  glUseProgram(Unit->ShaderProg);
+  RK2_RndShadSendGlobInfo(Unit->ShaderProg, Ani);
+
+  RK2_GObjDraw(Unit->ShaderProg, Ani, &Unit->GObj);
+
+  glUseProgram(0);
 } /* End of 'RK2_UnitGObjRender' function */
 
 /* Unit GObject create function.
@@ -99,10 +109,15 @@ static VOID UnitGObjRender( rk2UNIT_GOBJ *Unit, rk2ANIM *Ani )
  *       INT PosXPosY;
  *   - Angles of rotation:
  *       DBL RotAngleX, RotAngleY, RotAngleZ;
+ *   - Shaders files names:
+ *       CHAR *ShaderVFileName, CHAR *ShaderFFileName;
  * RETURNS:
  *   (rk2UNIT_GOBJ *) - pointer for new animation unit.
  */
-rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ, DBL RotAngleX, DBL RotAngleY, DBL RotAngleZ )
+rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, 
+                             INT PosX, INT PosY, INT PosZ, 
+                             DBL RotAngleX, DBL RotAngleY, DBL RotAngleZ,
+                             CHAR *ShaderVFileName, CHAR *ShaderFFileName )
 {
   rk2UNIT_GOBJ *Unit;
 
@@ -121,6 +136,11 @@ rk2UNIT *RK2_UnitGObjCreate( CHAR *FileName, INT PosX, INT PosY, INT PosZ, DBL R
   Unit->RotAngleX = RotAngleX;
   Unit->RotAngleY = RotAngleY;
   Unit->RotAngleZ = RotAngleZ;
+  
+  if (ShaderFFileName != NULL)
+    strcpy(Unit->ShaderFFileName, ShaderFFileName);
+  if (ShaderVFileName != NULL)
+    strcpy(Unit->ShaderVFileName, ShaderVFileName);
 
   return (rk2UNIT *)Unit;
 } /* End of 'RK2_UnitGObjCreate' function */
